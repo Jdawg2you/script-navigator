@@ -325,6 +325,26 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   font-size:15px;font-weight:600;padding:14px;border-radius:8px}
 .modal .gcta:hover{background:var(--blue)}
 @media(max-width:640px){.modal .sheet{padding:22px 20px 20px}.modal h2{font-size:21px}}
+
+/* Recruiting callout */
+.recopen{appearance:none;cursor:pointer;font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif}
+.recstrip{background:#EFEADD;border-bottom:1px solid #E3DFD4;padding:9px 20px;text-align:center;
+  font-size:13px;color:#4A4A44;font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif}
+.recstrip .recopen{background:transparent;border:0;color:#A8853A;font-size:13px;font-weight:800;
+  text-decoration:underline;padding:0 0 0 5px}
+@media(max-width:640px){.recstrip{font-size:12px;padding:8px 14px;line-height:1.5}
+  .recstrip .recopen{font-size:12px}}
+#recModal .sheet{max-width:580px}
+#recModal .recnote{background:#F5F1E8;border-left:3px solid #C9A24E;border-radius:0 10px 10px 0;
+  padding:11px 15px;margin:14px 0 16px;font-size:13px;line-height:1.55;color:#4A4A44}
+#recModal .recnote b{color:#16203C}
+#recModal .recask{font-size:14.5px;line-height:1.6;color:#4A4A44;margin:0 0 4px}
+#recModal .recask b{color:#16203C}
+#recModal .recturn{font-size:13px;font-weight:700;color:#4A4A44;margin:16px 0 10px}
+#recModal .gcta{margin-top:20px}
+#recModal .rec2{margin:12px 0 0;text-align:center;font-size:13.5px}
+#recModal .rec2 a{color:#A8853A;font-weight:700;text-decoration:none}
+#recModal .rec2 a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -345,6 +365,7 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
       <span class="gshort">FREE Website, Card &amp; Calendar</span></a>
     <div class="o-suite"><button type="button">More free tools &#9662;</button><div class="o-suite-menu"></div></div>
   </div>
+  <div class="recstrip">Free for every agent, period.<button type="button" class="recopen" aria-haspopup="dialog">Not a Family First Life agent?</button></div>
   <div class="lbody">
     <div class="lwrap">
       <div class="ltitle">Choose your script</div>
@@ -396,6 +417,7 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   <div class="o-suite"><button type="button">More free tools &#9662;</button><div class="o-suite-menu"></div></div>
   <button class="pillbtn" id="restart">&#8635; Start over</button>
 </header>
+<div class="recstrip">Free for every agent, period.<button type="button" class="recopen" aria-haspopup="dialog">Not a Family First Life agent?</button></div>
 
 <div class="stages" id="stages"></div>
 
@@ -461,6 +483,44 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   </div>
 </div>
 
+
+<div class="modal" id="recModal" hidden>
+  <div class="backdrop" data-close></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="recTitle">
+    <button type="button" class="x" id="recClose" aria-label="Close">&#10005;</button>
+    <h2 id="recTitle">Not with Family First Life? You can still use these tools.</h2>
+
+    <p class="recask">They're free, and they stay free. But while you're running your numbers, it's
+    worth asking what you're actually being paid for that production &mdash; <b>a lower contract can
+    cost you six figures over a few years without ever showing up on a single statement.</b>
+    If they're not paying you what you're worth, that's worth a hard look.</p>
+
+    <div class="recnote"><b>Already with FFL?</b> You're in the best position there is &mdash;
+    congratulations.</div>
+
+    <p class="recturn">If you're outside Family First Life, here's the honest take:</p>
+
+    <div class="gitem"><h3>100% independent, never captive</h3>
+      <p>Forty-plus carriers. You write what's best for your client &mdash; not whatever a captive
+      shelf allows.</p></div>
+    <div class="gitem"><h3>Real leads, priced honestly</h3>
+      <p>High-intent leads from vetted independent partners. Not one overpriced in-house lead type
+      you're required to buy, and not &ldquo;free&rdquo; cold leads you quietly pay for in low comp.</p></div>
+    <div class="gitem"><h3>A plug-and-play system from day one</h3>
+      <p>You're handed something that already works. FFL writes over $110 million a month &mdash; more
+      than some brokerages do in a year &mdash; as the fastest-growing brokerage in the country.
+      The system is figured out. You just run it.</p></div>
+    <div class="gitem"><h3>Vested from day one</h3>
+      <p>Your business is yours &mdash; including all renewals.</p></div>
+    <div class="gitem"><h3>The highest compensation in the business</h3>
+      <p>Up to 145% on your own production, plus producer bonuses, manager bonuses, carrier
+      bonuses and company trips.</p></div>
+
+    <a class="gcta" href="https://www.ffloptimum.com/#apply" target="_blank" rel="noopener">Start the conversation &rarr;</a>
+    <p class="rec2"><a href="https://www.ffloptimum.com/#why" target="_blank" rel="noopener">Or read more about the agency first &rarr;</a></p>
+  </div>
+</div>
+
 <script>
 var DRAWERS={
 iulobj:{title:"Objections",html:'<div class="pending">&#9888; <b>Needs building.</b> The IUL script only handles &ldquo;they\'re busy.&rdquo; These are starting drafts, not locked language.</div><h3>Opening</h3><ul><li><b>I don\'t have time</b> &mdash; "I caught you at a bad time. Do you have one minute to see if it even makes sense for me to call you back later?"</li><li><b>I\'m not interested</b> &mdash; "Most people say that because they think it\'s a sales pitch, or they\'ve had something explained badly before. Which one was it for you?"</li><li><b>I don\'t remember filling this out</b> &mdash; "It was the request about building tax-free cash value with an Indexed Universal Life plan. Ringing a bell?"</li></ul><h3>IUL-specific &mdash; not yet written</h3><ul><li><b>Is this an investment?</b></li><li><b>I already have a 401(k)</b></li><li><b>Isn\'t life insurance a bad investment?</b></li></ul><h3>At the close</h3><ul><li><b>I need to think about it</b> &mdash; find out whether it\'s a question or an affordability issue before you drop the number. Lowering the premium doesn\'t answer a question about how the product works.</li></ul><h3>Application</h3><ul><li><b>SSN</b> &mdash; MIB explanation, then remind them you verified your license earlier.</li><li><b>Banking</b> &mdash; checking is the safest form of payment; same information a paper check carries.</li></ul>'},
@@ -480,7 +540,7 @@ obj:{title:"Objections",html:'<div class="agentnote">Everything here is already 
 
 /* ---------------- links ---------------- */
 var GOAT_URL    = "https://goatleads.com/registration/new?affiliate_id=66c4aa379e0123651ad2f0e6";
-var OPTIMUM_URL = "https://optimumprotects.com/";
+var OPTIMUM_URL = "https://www.ffloptimum.com/";
 
 var SCRIPTS=[
  {k:"veteran", ready:true,  title:"Veterans Life Insurance",
@@ -3274,5 +3334,14 @@ var SUITE_CURRENT = 'navigator';
 </script>
 <!-- ===== /OPTIMUM SUITE ===== -->
 
+<script>
+(function(){var rm=document.getElementById('recModal');if(!rm)return;
+ function op(){rm.hidden=false;document.getElementById('recClose').focus();}
+ function sh(){rm.hidden=true;}
+ document.getElementById('recClose').addEventListener('click',sh);
+ rm.querySelector('.backdrop').addEventListener('click',sh);
+ document.addEventListener('keydown',function(e){if(e.key==='Escape')sh();});
+ document.querySelectorAll('.recopen').forEach(function(b){b.addEventListener('click',op);});})();
+</script>
 </body>
 </html>
