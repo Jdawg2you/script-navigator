@@ -422,6 +422,11 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   background:#fff;border:1px solid var(--rule);border-radius:20px;padding:3px 11px}
 .chip:hover{border-color:var(--gold)}
 .chip.on{background:var(--goldsoft);border-color:var(--gold);color:var(--navy)}
+.medflag{margin-top:9px}
+.mfrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:var(--bluesoft);
+  border:1px dashed rgba(44,74,124,.4);border-radius:8px;padding:8px 11px;margin-bottom:6px;
+  font-family:var(--sans);font-size:12.5px;color:var(--blue)}
+.mfrow b{color:var(--navy)}
 .medchips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
 .medchip{display:inline-flex;align-items:center;gap:5px;font-family:var(--sans);font-size:12px;font-weight:600;
   background:var(--goldsoft);border:1px solid var(--gold);color:var(--navy);border-radius:20px;padding:3px 5px 3px 11px}
@@ -839,14 +844,15 @@ sit_what:{s:"3",pf:"have",t:"What they have",l:[
 ],b:[{k:"Got it",to:"sit_trigger",c:"go"}]},
 
 sit_trigger:{s:"3",pf:"why",t:"The trigger (why)",l:[
-{t:"ask",x:"Did something happen that got you looking now? Did someone pass away, something happen in the family, some kind of illness?"},
+{t:"say",x:"I'm not trying to get political, but I think 2020 opened our eyes to the fact that tomorrow isn't promised &mdash; we can be taken in the blink of an eye."},
+{t:"ask",x:"Was there something that got you looking now?"},
 {t:"do",x:"The trigger tells you the urgency."},
 {t:"note",x:"<b>If there's no trigger, name it for them:</b> &ldquo;So you just finally realized it's time to stop putting it off?&rdquo;"}
 ],b:[{k:"Move to the stakes",to:"sit_stakes",c:"go"}]},
 
 sit_stakes:{s:"3",pf:"why",t:"The stakes question",l:[
 {t:"ask",x:"Let's say you didn't wake up yesterday. Who was the first person who was getting a call this morning? Who's handling the arrangements, paying the bills? Who does this all end up falling on? ___(beneficiary)"},
-{t:"pf",ks:["married","spouse"]},
+{t:"pf",ks:["married","spouse","spouse_wants"]},
 {t:"train",x:"You are not asking their marital status out of nowhere &mdash; you are asking who this lands on, and they will usually name the spouse themselves. Tick it as they say it. If they name someone who is not a spouse, that tells you more than the question would have."},
 {t:"note",x:"<b>Past tense on purpose.</b> A hypothetical invites a hypothetical answer &mdash; &ldquo;if I died someday&rdquo; can be held at arm's length forever. Something that already happened this morning cannot."},
 {t:"do",x:"You are not done until you have a name. If they say &ldquo;my family&rdquo; or &ldquo;the kids&rdquo; &mdash; push once: &ldquo;Which one of them, specifically?&rdquo;"},
@@ -854,7 +860,7 @@ sit_stakes:{s:"3",pf:"why",t:"The stakes question",l:[
 ],b:[{k:"I have a name",to:"sit_why",c:"go"}]},
 
 sit_why:{s:"3",pf:"why",t:"Why it matters",l:[
-{t:"ask",x:"Why is protecting ___(the name) important to you?"},
+{t:"ask",x:"Why is protecting ___(the name) important to you? ___(their goal, in their words)"},
 {t:"ask",x:"What would ___(beneficiary)'s situation look like if you didn't have anything in place?"},
 {t:"ask",x:"Would ___(beneficiary) have the funds to cover it when that time comes?"},
 {t:"ask",x:"Is ___(beneficiary) there in ___(client's state) too?"},
@@ -974,7 +980,8 @@ h_meds:{s:"6",pf:"health",t:"Medications",l:[
 ],b:[{k:"Yes",to:"h_meds_yes"},{k:"No",to:"h_meds_no"}]},
 
 h_meds_yes:{s:"6",pf:"health",t:"On medications",l:[
-{t:"tip",x:"<b>Capture these in the client profile.</b> Start typing and it will find the drug &mdash; it knows brand names, and it copes with a rough spelling. Working off paper instead? Just write them down."},
+{t:"meds"},
+{t:"tip",x:"Type them here and they land on the profile. It knows brand names and copes with a rough spelling. Working off paper instead? Just write them down."},
 {t:"ask",x:"Are you on more than three?"},
 {t:"note",x:"<b>If more than three:</b> &ldquo;Take your time and go grab those for me.&rdquo;"},
 {t:"do",x:"Have them SPELL them, not read them. That's how you catch Eliquis versus Elavil."},
@@ -1029,11 +1036,12 @@ h_rest:{s:"6",pf:"health",t:"Memory, autoimmune, mobility",l:[
 ],b:[{k:"Next",to:"h_recent",c:"go"}]},
 
 h_recent:{s:"6",pf:"health",t:"Recent history",l:[
-{t:"ask",x:"Any major surgeries or overnight hospital stays in the last five years? And have you had COVID in the last two years &mdash; were you hospitalized for it?"}
+{t:"ask",x:"Any major surgeries or overnight hospital stays in the last five years? {{recent_stay}}"},
+{t:"ask",x:"And have you had COVID in the last two years &mdash; were you hospitalized for it? {{covid}}"}
 ],b:[{k:"Next",to:"h_catchall",c:"go"}]},
 
 h_catchall:{s:"6",pf:"health",t:"Catch-all",l:[
-{t:"ask",x:"Aside from what you've already told me, any other medical conditions, surgeries, or hospitalizations I need to know about?"},
+{t:"ask",x:"Aside from what you've already told me, any other medical conditions, surgeries, or hospitalizations I need to know about? ___(anything else)"},
 {t:"note",x:"<b>Standing rule on every yes:</b> when was it diagnosed &middot; when was it last treated &middot; what are you taking for it."}
 ],b:[{k:"Move to income",to:"inc_source",c:"go"}]},
 
@@ -1049,7 +1057,9 @@ inc_margin:{s:"7",pf:"income",t:"Income and margin",l:[
 {t:"ask",x:"And at the end of the month, after the bills are paid &mdash; what do you usually have left over? ___(left over)"},
 {t:"ask",x:"Are you more of a spender or a saver? {{money_style}}"},
 {t:"ask",x:"Is there anything else you're leaving ___(beneficiary) that acts like life insurance? A 401(k), an IRA, savings? {{has_assets}}"},
-{t:"pf",ks:["asset_where","asset_amt","asset_prot"]},
+{t:"pf",ks:["asset_where","asset_amt","asset_prot"],when:["has_assets","Yes"]},
+{t:"ask",x:"And do you have a mortgage? {{has_mortgage}}"},
+{t:"pf",ks:["m_balance","m_payment","m_years"],when:["has_mortgage","Yes"]},
 {t:"train",x:"<b>Protectable means you could actually move it.</b> Two things have to be true: they are 59&frac12; or older, and the money is not sitting in a plan tied to the job they are working now. An old employer's 401(k), or anything they hold themselves, is fair game. The plan at their current job usually is not, whatever their age."},
 {t:"note",x:"<b>If yes &mdash; flag the client.</b> This is how you find money to protect with an FIA/Annuity. Don't derail this sale chasing it."}
 ],b:[{k:"Move to education",to:"ed_types",c:"go"}]},
@@ -2994,11 +3004,13 @@ function $(id){return document.getElementById(id)}
 
 function fmt(x){
   return x.replace(/\{\{c:([^}]+)\}\}/g,function(m,c){
+            if(!PROFILE_ON) return "";
             var on=((typeof P!=="undefined"&&P.conds)||[]).indexOf(c)>-1;
             return '<input type="checkbox" class="cinline" data-cond="'+c.replace(/"/g,"&quot;")+
                    '" title="'+c.replace(/"/g,"&quot;")+'"'+(on?" checked":"")+'>';
           })
           .replace(/\{\{([a-z0-9_]+)\}\}/gi,function(m,k){
+            if(!PROFILE_ON) return "";
             var f=(typeof pSpecOf==="function")?pSpecOf(k):null;
             if(!f||!f.opt) return "";
             var v=(typeof pVal==="function")?pVal(k):"";
@@ -3010,7 +3022,7 @@ function fmt(x){
           .replace(/_{3,}\s*\(([^)]+)\)/g,function(m,lab){
             var k=(typeof BLANKMAP!=="undefined")?BLANKMAP[lab]:null;
             var v=(typeof pBlank==="function")?pBlank(lab):"";
-            if(k && k.indexOf("a_")!==0){
+            if(k && k.indexOf("a_")!==0 && PROFILE_ON){
               var w=Math.max(9,Math.min(26,(v||lab).length+2));
               return '<input class="iblank"'+(k==="state"?' list="statelist"':k==="branch"?' list="branchlist"':'')+' data-pk="'+k+'" data-inline="1" title="'+esc(lab)+'"'+
                      ' placeholder="'+esc(lab)+'" style="width:'+w+'ch" value="'+esc(v).replace(/"/g,"&quot;")+'">';
@@ -3096,6 +3108,51 @@ var MEDS=[
 ];
 
 /* unpadded soundex, so "elikwis" and "Eliquis" collapse to the same key */
+var MED_FOR={
+ "Eliquis":["Arrhythmia / AFib","Blood clots / DVT"],"Xarelto":["Arrhythmia / AFib","Blood clots / DVT"],
+ "Warfarin":["Arrhythmia / AFib","Blood clots / DVT"],"Plavix":["Heart attack","Stent"],
+ "Brilinta":["Heart attack","Stent"],"Pradaxa":["Arrhythmia / AFib"],
+ "Metformin":["Diabetes"],"Glipizide":["Diabetes"],"Glyburide":["Diabetes"],"Januvia":["Diabetes"],
+ "Jardiance":["Diabetes"],"Farxiga":["Diabetes"],"Trulicity":["Diabetes"],"Ozempic":["Diabetes"],
+ "Mounjaro":["Diabetes"],"Victoza":["Diabetes"],"Actos":["Diabetes"],"Lantus":["Diabetes"],
+ "Humalog":["Diabetes"],"Insulin":["Diabetes"],"Levemir":["Diabetes"],"Tresiba":["Diabetes"],
+ "Atorvastatin":["High cholesterol"],"Simvastatin":["High cholesterol"],"Rosuvastatin":["High cholesterol"],
+ "Lisinopril":["High blood pressure"],"Losartan":["High blood pressure"],"Amlodipine":["High blood pressure"],
+ "Metoprolol":["High blood pressure","Arrhythmia / AFib"],"Carvedilol":["High blood pressure"],
+ "Amiodarone":["Arrhythmia / AFib"],"Sotalol":["Arrhythmia / AFib"],"Flecainide":["Arrhythmia / AFib"],
+ "Entresto":["Heart disease / disorder"],"Digoxin":["Arrhythmia / AFib"],"Ranexa":["Angina (chest pain)"],
+ "Nitroglycerin":["Angina (chest pain)"],"Isosorbide":["Angina (chest pain)"],
+ "Albuterol":["Asthma (chronic)","COPD"],"Symbicort":["COPD","Asthma (chronic)"],"Advair":["COPD","Asthma (chronic)"],
+ "Trelegy":["COPD"],"Spiriva":["COPD"],"Breo":["COPD"],"Singulair":["Asthma (chronic)"],
+ "Levothyroxine":["Autoimmune disorder"],"Methotrexate":["Rheumatoid arthritis","Autoimmune disorder"],
+ "Humira":["Autoimmune disorder"],"Enbrel":["Rheumatoid arthritis"],"Plaquenil":["Lupus","Rheumatoid arthritis"],
+ "Sertraline":["Depression"],"Escitalopram":["Anxiety","Depression"],"Fluoxetine":["Depression"],
+ "Bupropion":["Depression"],"Venlafaxine":["Depression"],"Mirtazapine":["Depression"],
+ "Alprazolam":["Anxiety"],"Lorazepam":["Anxiety"],"Clonazepam":["Anxiety"],"Buspirone":["Anxiety"],
+ "Lithium":["Bipolar"],"Lamotrigine":["Bipolar"],"Quetiapine":["Bipolar"],"Aripiprazole":["Bipolar"],
+ "Olanzapine":["Schizophrenia / psychosis"],"Risperidone":["Schizophrenia / psychosis"],
+ "Donepezil":["Alzheimer's / dementia"],"Memantine":["Alzheimer's / dementia"],
+ "Levodopa":["Parkinson's disease"],"Ropinirole":["Parkinson's disease"],
+ "Phenytoin":["Epilepsy / seizures"],"Levetiracetam":["Epilepsy / seizures"],"Topiramate":["Epilepsy / seizures"],
+ "Gabapentin":["Neuropathy"],"Pregabalin":["Neuropathy"],"Duloxetine":["Neuropathy","Depression"],
+ "Allopurinol":["Autoimmune disorder"],"Sevelamer":["Kidney disease / failure"],"Epogen":["Kidney disease / failure"],
+ "Tacrolimus":["Transplant"],"Cyclosporine":["Transplant"],"Mycophenolate":["Transplant"],
+ "Tamoxifen":["Cancer"],"Anastrozole":["Cancer"],"Letrozole":["Cancer"],"Keytruda":["Cancer"],
+ "Revlimid":["Cancer"],"Imbruvica":["Cancer"],"Gleevec":["Cancer"],"Hydroxyurea":["Cancer"],
+ "Entecavir":["Hepatitis B"],"Epclusa":["Hepatitis C"],"Harvoni":["Hepatitis C"],
+ "Truvada":["AIDS / HIV / ARC"],"Biktarvy":["AIDS / HIV / ARC"],"Descovy":["AIDS / HIV / ARC"],
+ "Oxygen":["Oxygen / ventilator"],"Dialysis":["Dialysis"]
+};
+function medFlags(){
+  var on=(P.conds||[]), out=[];
+  (P.meds_list||[]).forEach(function(m){
+    (MED_FOR[m]||[]).forEach(function(c){
+      if(on.indexOf(c)<0 && (P.med_skip||[]).indexOf(m+"|"+c)<0 && !out.some(function(x){return x.m===m&&x.c===c})) out.push({m:m,c:c});
+    });
+  });
+  return out;
+}
+
 function medKey(w){
   var t=String(w||"").toUpperCase().replace(/[^A-Z]/g,"");
   if(!t) return "";
@@ -3235,7 +3292,12 @@ function render(){
     if(L.t==="train")return "";
     if(L.t==="tip")  return '<div class="line"><div class="note tipnote">'+x+'</div></div>';
     if(L.t==="alt")  return altHTML(L);
-    if(L.t==="pf")   return '<div class="line"><div class="pfline">'+pfInline(L.ks)+'</div></div>';
+    if(L.t==="meds") return !PROFILE_ON ? "" : '<div class="line">'+pMedsHTML(true)+'<div id="medflagwrap">'+medFlagHTML()+'</div></div>';
+    if(L.t==="pf"){
+      if(!PROFILE_ON) return "";
+      if(L.when && String(pVal(L.when[0])||"").toLowerCase()!==String(L.when[1]).toLowerCase()) return "";
+      return '<div class="line"><div class="pfline">'+pfInline(L.ks)+'</div></div>';
+    }
     if(L.t==="warn") return '<div class="line"><div class="note star"><span class="starbadge">&#9733;</span><div>'+x+'</div></div></div>';
     if(L.t==="copy") return '<div class="line"><details class="copyblk"><summary>'+(L.label||"Copy this")+'</summary><div class="copywrap"><button type="button" class="copybtn">Copy</button><pre class="copytext">'+L.x.replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</pre></div></details></div>';
     return '<div class="line"><div class="note">'+x+'</div></div>';
@@ -3329,6 +3391,7 @@ var PF_SPEC=[
  {k:"dob",l:"DOB",w:1},{k:"age",l:"Age (closest)",w:1},
  {k:"state",l:"State",w:1},{k:"branch",l:"Branch of service",w:1},
  {k:"married",l:"Married?",w:1,opt:["","Yes","No","Widowed"]},{k:"spouse",l:"Spouse",w:1,showIf:["married","Yes"]},
+ {k:"spouse_wants",l:"Spouse wants coverage too?",w:2,opt:["","No","Yes"],showIf:["married","Yes"]},
 
  {sec:"What they have now",id:"have"},
  {k:"inplace",l:"Anything in place?",w:2,opt:["","No","Yes"]},
@@ -3354,6 +3417,9 @@ var PF_SPEC=[
  {sec:"Health",id:"health"},
  {k:"conds",l:"Conditions",type:"conds"},
  {k:"meds",l:"Medications",type:"meds"},
+ {k:"recent_stay",l:"Surgery or overnight stay, last 5 yrs",w:1,opt:["","No","Yes"]},
+ {k:"covid",l:"COVID in last 2 yrs",w:1,opt:["","No","Not hospitalised","Hospitalised"]},
+ {k:"health_notes",l:"Anything else",w:2},
 
  {sec:"Income",id:"income"},
  {k:"inc_kind",l:"Source",w:2,multi:true,opt:["","Working","Retired","Social Security","Disability","Pension"]},
@@ -3366,6 +3432,7 @@ var PF_SPEC=[
  {k:"i_prot",l:"Retirement protected?",w:1,opt:["","No","Yes"]},
 
  {sec:"Mortgage &mdash; ask if it comes up",id:"mortgage"},
+ {k:"has_mortgage",l:"Mortgage?",w:2,opt:["","No","Yes"]},
  {k:"m_balance",l:"Balance left",money:"cov",w:1},{k:"m_payment",l:"Monthly payment",money:"plain",w:1},
  {k:"m_years",l:"Years left",w:1},{k:"m_equity",l:"Equity",money:"cov",w:1},
  {k:"m_co",l:"Co-borrower",w:2},
@@ -3410,10 +3477,10 @@ var PF_SPEC=[
 var PRINT_ORDER=[
  ["Client",["first","last","dob","age","phone","email","married","spouse","branch","address","city","state","zip","app_notes"]],
  ["Build & habits",["height","weight","smoker","varating","bank","bank_kind","bank_notes"]],
- ["Health",["conds","meds"]],
+ ["Health",["conds","meds","recent_stay","covid","health_notes"]],
  ["Why",["goal","burial"]],
  ["Coverage they already have",["inplace","inplace_carrier","inplace_src","inplace_amt","inplace_kind","inplace_prem","inplace_exp","inplace_notes"]],
- ["Mortgage",["m_balance","m_payment","m_years","m_equity","m_co"]],
+ ["Mortgage",["has_mortgage","m_balance","m_payment","m_years","m_equity","m_co"]],
  ["Retirement & money",["inc_kind","i_income","i_left","money_style","has_assets","asset_where","asset_amt","asset_prot","i_contrib","i_401k","i_roth","i_liquid","i_debt","i_retire","i_prot"]],
  ["Beneficiary",["ben","benphone","benrel","bendob","bencont","ben2","ben2phone","ben2rel","ben2split","crm"]],
  ["Referrals",["refs"]],
@@ -3465,7 +3532,7 @@ var BLANKMAP={
  "spell it":"a_name","spell it out":"a_name","last name":"last","client's state":"state",
  "spouse":"spouse","beneficiary":"ben","beneficiary / spouse":"ben","branch of service":"branch",
  "carrier":"carrier","coverage":"coverage","amount":"coverage","premium":"premium",
- "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","policy number":"policy","draft date":"draft","monthly income":"i_income","monthly amount":"premium","left over":"i_left","Carrier?":"inplace_carrier","how much coverage":"inplace_amt","their goal, in their words":"goal",
+ "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","policy number":"policy","draft date":"draft","monthly income":"i_income","anything else":"health_notes","their goal, in their words":"goal","monthly amount":"premium","left over":"i_left","Carrier?":"inplace_carrier","how much coverage":"inplace_amt","their goal, in their words":"goal",
  "address":"address","balance":"m_balance","monthly payment":"m_payment","equity":"m_equity",
  
  "your name":"a_name","your full name":"a_full","agent name":"a_name","your NPN":"a_npn",
@@ -3478,6 +3545,7 @@ var AGENT_SPEC=[
  {k:"a_name",l:"Your full name",w:1},{k:"a_npn",l:"Your NPN",w:1},
  {k:"a_phone",l:"Your direct number",w:2}
 ];
+var PROFILE_ON=false;
 var PKEY="osn_profile_v1", AKEY="osn_agent_v1", P={}, A={}, PSAVE=null;
 function pVal(k){ return (k.indexOf("a_")===0 ? A[k] : P[k]) || ""; }
 
@@ -3528,46 +3596,69 @@ function pRender(){
   pFollow();
 }
 
-function pMedsHTML(){
+function medFlagHTML(){
+  var f=medFlags(); if(!f.length) return "";
+  return '<div class="medflag">'+f.map(function(x){
+    return '<div class="mfrow"><span>'+esc(x.m)+' is usually for <b>'+esc(x.c)+'</b> &mdash; is that why?</span>'+
+      '<button type="button" class="chip" data-cond-add="'+esc(x.c).replace(/"/g,"&quot;")+'">Yes, add it</button>'+
+      '<button type="button" class="chip" data-cond-skip="'+esc(x.m)+'|'+esc(x.c).replace(/"/g,"&quot;")+'">No</button></div>';
+  }).join("")+'</div>';
+}
+document.addEventListener("click",function(e){
+  var a=e.target.closest && e.target.closest("[data-cond-add]");
+  if(a){ var c=a.getAttribute("data-cond-add"); var arr=(P.conds||[]).slice();
+         if(arr.indexOf(c)<0) arr.push(c); P.conds=arr; pStore();
+         if(document.getElementById("profbody")) pRender();
+         var fw=document.getElementById("medflagwrap"); if(fw) fw.innerHTML=medFlagHTML();
+         pFlash(); return; }
+  var n=e.target.closest && e.target.closest("[data-cond-skip]");
+  if(n){ var k=n.getAttribute("data-cond-skip"); var sk=(P.med_skip||[]).slice();
+         if(sk.indexOf(k)<0) sk.push(k); P.med_skip=sk; pStore();
+         var fw2=document.getElementById("medflagwrap"); if(fw2) fw2.innerHTML=medFlagHTML(); return; }
+});
+
+function pMedsHTML(inCard){
   var list=(P.meds_list||[]);
-  return '<div class="profsec" style="border:0;padding:0;margin:14px 0 6px">Medications</div>'+
-    '<div class="medchips" id="medchips">'+list.map(function(m,i){
+  return (inCard?'':'<div class="profsec" style="border:0;padding:0;margin:14px 0 6px">Medications</div>')+
+    '<div class="medchips">'+list.map(function(m,i){
       return '<span class="medchip">'+esc(m)+'<button type="button" data-meddel="'+i+'" title="Remove">&times;</button></span>';
     }).join("")+'</div>'+
-    '<div class="medbox"><input id="medinput" placeholder="Start typing a medication&hellip;" autocomplete="off">'+
-    '<div class="medsug" id="medsug"></div></div>';
+    '<div class="medbox"><input class="medinput" placeholder="Start typing a medication&hellip;" autocomplete="off">'+
+    '<div class="medsug"></div></div>';
 }
 
 function pMedsRefresh(){
-  var w=document.getElementById("medchips"); if(!w) return;
-  w.innerHTML=(P.meds_list||[]).map(function(m,i){
+  [].forEach.call(document.querySelectorAll(".medchips"),function(w){ w.innerHTML=(P.meds_list||[]).map(function(m,i){
     return '<span class="medchip">'+esc(m)+'<button type="button" data-meddel="'+i+'" title="Remove">&times;</button></span>';
-  }).join("");
+  }).join(""); });
+  var fw=document.getElementById("medflagwrap"); if(fw) fw.innerHTML=medFlagHTML();
 }
-function medAdd(name){
+function medAdd(name,from){
+  if(!name) return;
   var a=(P.meds_list||[]).slice();
   if(a.indexOf(name)<0) a.push(name);
   P.meds_list=a; P.meds=a.join(", "); pStore(); pMedsRefresh(); pFlash();
-  var inp=document.getElementById("medinput"); if(inp){ inp.value=""; inp.focus(); }
-  var sg=document.getElementById("medsug"); if(sg) sg.innerHTML="";
+  [].forEach.call(document.querySelectorAll(".medinput"),function(i){ i.value=""; });
+  [].forEach.call(document.querySelectorAll(".medsug"),function(g){ g.innerHTML=""; });
+  if(from) from.focus();
 }
 
 document.addEventListener("input",function(e){
-  if(e.target.id!=="medinput") return;
-  var sg=document.getElementById("medsug"); if(!sg) return;
+  if(!e.target.classList || !e.target.classList.contains("medinput")) return;
+  var sg=e.target.parentNode.querySelector(".medsug"); if(!sg) return;
   var hits=medSuggest(e.target.value,8);
   sg.innerHTML=hits.map(function(h){return '<button type="button" data-medadd="'+esc(h).replace(/"/g,"&quot;")+'">'+esc(h)+'</button>';}).join("");
 });
 document.addEventListener("keydown",function(e){
-  if(e.target.id!=="medinput") return;
+  if(!e.target.classList || !e.target.classList.contains("medinput")) return;
   if(e.key==="Enter"){ e.preventDefault();
-    var sg=document.getElementById("medsug"), first=sg&&sg.querySelector("[data-medadd]");
-    medAdd(first? first.getAttribute("data-medadd") : e.target.value.trim());
+    var sg=e.target.parentNode.querySelector(".medsug"), first=sg&&sg.querySelector("[data-medadd]");
+    medAdd(first? first.getAttribute("data-medadd") : e.target.value.trim(), e.target);
   }
 });
 document.addEventListener("click",function(e){
   var a=e.target.closest && e.target.closest("[data-medadd]");
-  if(a){ medAdd(a.getAttribute("data-medadd")); return; }
+  if(a){ var box=a.closest(".medbox"); medAdd(a.getAttribute("data-medadd"), box&&box.querySelector(".medinput")); return; }
   var d=e.target.closest && e.target.closest("[data-meddel]");
   if(d){ var i=+d.getAttribute("data-meddel"); var arr=(P.meds_list||[]).slice(); arr.splice(i,1);
          P.meds_list=arr; P.meds=arr.join(", "); pStore(); pMedsRefresh(); pFlash(); }
@@ -3694,7 +3785,7 @@ function pAge(dob){
   return { exact:a, nearest:(months>6? a+1 : a), pretty:("0"+m).slice(-2)+"/"+("0"+d).slice(-2)+"/"+y };
 }
 
-var PF_DRIVERS=["inplace","inplace_kind","ben2on"];
+var PF_DRIVERS=["inplace","inplace_kind","ben2on","married","has_assets","has_mortgage"];
 function pSet(k,v,fromCard){ if(k.indexOf("a_")===0){A[k]=v}else{P[k]=v} pStore(); pFlash();
   if(PF_DRIVERS.indexOf(k)>-1 && document.getElementById("profbody")) pRender();
   if(!fromCard && typeof render==="function"&&$("script")) render(); }
@@ -3720,21 +3811,22 @@ document.addEventListener("input",function(e){
 });
 document.addEventListener("change",function(e){
   var t=e.target;
-  if(t.getAttribute&&t.getAttribute("data-pk")==="dob"){ var a=pAge(t.value); if(a){ t.value=a.pretty; pSet("dob",a.pretty); } }
+  if(t.getAttribute&&t.getAttribute("data-pk")==="dob"){ var a=pAge(t.value); if(a){ t.value=a.pretty; pSet("dob",a.pretty,inCard); } }
+  var inCard = t.getAttribute && t.getAttribute("data-inline")==="1";
   if(t.getAttribute&&t.getAttribute("data-pk")){
     var mk=t.getAttribute("data-pk"), mf=pSpecOf(mk);
     if(mf&&mf.money){
       var mv=(mf.money==="cov")?pMoneyCov(t.value):(mf.money==="plain")?pMoneyPlain(t.value):pMoneyPrem(t.value);
-      if(mv){ pSet(mk,mv);
-        [].forEach.call(document.querySelectorAll('[data-pk="'+mk+'"]'),function(el){ el.value=mv; }); }
+      if(mv){ pSet(mk,mv,inCard);
+        [].forEach.call(document.querySelectorAll('[data-pk="'+mk+'"]'),function(el){ el.value=mv; if(el.classList.contains("iblank")) pFit(el); }); }
     }
   }
-  if(t.getAttribute&&t.getAttribute("data-pk")==="branch"){ var br=pBranch(t.value); if(br){ pSet("branch",br);
-      [].forEach.call(document.querySelectorAll('[data-pk="branch"]'),function(el){ el.value=br; }); } }
-  if(t.getAttribute&&t.getAttribute("data-pk")==="state"){ var st=pState(t.value); if(st){ pSet("state",st);
-      [].forEach.call(document.querySelectorAll('[data-pk="state"]'),function(el){ el.value=st; }); } }
-  if(t.getAttribute&&t.getAttribute("data-pk")==="height"){ var h=pHeight(t.value); if(h){ t.value=h; pSet("height",h);
-      [].forEach.call(document.querySelectorAll('[data-pk="height"]'),function(el){ el.value=h; }); } }
+  if(t.getAttribute&&t.getAttribute("data-pk")==="branch"){ var br=pBranch(t.value); if(br){ pSet("branch",br,inCard);
+      [].forEach.call(document.querySelectorAll('[data-pk="branch"]'),function(el){ el.value=br; if(el.classList.contains("iblank")) pFit(el); }); } }
+  if(t.getAttribute&&t.getAttribute("data-pk")==="state"){ var st=pState(t.value); if(st){ pSet("state",st,inCard);
+      [].forEach.call(document.querySelectorAll('[data-pk="state"]'),function(el){ el.value=st; if(el.classList.contains("iblank")) pFit(el); }); } }
+  if(t.getAttribute&&t.getAttribute("data-pk")==="height"){ var h=pHeight(t.value); if(h){ t.value=h; pSet("height",h,inCard);
+      [].forEach.call(document.querySelectorAll('[data-pk="height"]'),function(el){ el.value=h; if(el.classList.contains("iblank")) pFit(el); }); } }
   if(t.getAttribute&&t.getAttribute("data-cond")){
     var c=t.getAttribute("data-cond"), a=P.conds||[];
     if(t.checked){ if(a.indexOf(c)<0)a.push(c) } else { a=a.filter(function(x){return x!==c}) }
@@ -3750,6 +3842,7 @@ document.addEventListener("change",function(e){
 });
 
 function pSetup(){
+  PROFILE_ON=false;
   $("drawer").classList.remove("nomodal"); pDockApp(false);
   $("drawertitle").textContent="Set up";
   $("drawerbody").innerHTML=
@@ -3775,6 +3868,8 @@ function pOpen(){
     '<div id="profbody"></div>';
   pRender();
   pWire();
+  PROFILE_ON=true;
+  if(typeof render==="function"&&$("script")) render();
   $("drawer").classList.add("open");
   $("drawer").classList.add("nomodal");
   $("scrim").classList.remove("open");
@@ -3880,15 +3975,16 @@ function pPrint(){
 
 function openDrawer(key){
   var d=DRAWERS[key]; if(!d)return;
+  PROFILE_ON=false;
   $("drawer").classList.remove("nomodal"); pDockApp(false);
   $("drawertitle").textContent=d.title;
   $("drawerbody").innerHTML=d.html;
   $("drawer").classList.add("open"); $("scrim").classList.add("open");
 }
-function closeDrawer(){ $("drawer").classList.remove("open"); $("scrim").classList.remove("open");
+function closeDrawer(){ PROFILE_ON=false; $("drawer").classList.remove("open"); $("scrim").classList.remove("open");
   $("drawer").classList.remove("nomodal");
   var a=document.getElementById("app"); if(a) a.classList.remove("docked"); }
-$("closedrawer").onclick=closeDrawer;
+$("closedrawer").onclick=function(){ closeDrawer(); if(typeof render==="function"&&$("script")) render(); };
 $("scrim").onclick=closeDrawer;
 
 document.addEventListener("click",function(e){
@@ -3974,6 +4070,8 @@ $("toScripts").onclick=showLauncher;
 /* ---------------- readable script export ---------------- */
 function txt(x){
   return String(x)
+    .replace(/\{\{c:[^}]+\}\}/g,"")
+    .replace(/\{\{[a-z0-9_]+\}\}/gi,"")
     .replace(/<br\s*\/?>/gi,"\n")
     .replace(/<b>/gi,"").replace(/<\/b>/gi,"")
     .replace(/<i>/gi,"").replace(/<\/i>/gi,"")
