@@ -379,6 +379,16 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   #app.docked{padding-right:440px}
   #app.docked, .drawer.nomodal{transition:padding .2s ease}
 }
+.cfollow{background:#fff;border:1px solid var(--goldline);border-left:3px solid var(--gold);
+  border-radius:0 8px 8px 0;padding:10px 13px;margin:0 0 10px;display:flex;flex-wrap:wrap;align-items:center;gap:13px}
+.cfh{font-family:var(--sans);font-size:11.5px;font-weight:600;color:var(--golddk);flex-basis:100%;margin-bottom:2px}
+.cfh b{color:var(--navy)}
+.cinline{appearance:none;width:15px;height:15px;border:1.5px solid var(--navy);border-radius:3px;
+  background:#fff;vertical-align:-2px;margin:0 3px 0 2px;cursor:pointer;position:relative;flex:none}
+.cinline:hover{border-color:var(--gold)}
+.cinline:checked{background:var(--navy);border-color:var(--navy)}
+.cinline:checked:after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(42deg)}
 .ichips{display:inline-flex;gap:3px;vertical-align:baseline;margin:0 3px}
 .ichip{appearance:none;cursor:pointer;font-family:var(--sans);font-size:11px;font-weight:700;
   color:var(--blue);background:#fff;border:1.5px solid var(--navy);border-radius:4px;padding:1px 6px;line-height:1.5}
@@ -907,8 +917,10 @@ h_hipaa:{s:"6",pf:"health",t:"HIPAA and transition",l:[
 ],b:[{k:"Next",to:"h_knockout",c:"go"}]},
 
 h_knockout:{s:"6",pf:"health",t:"Knockouts",l:[
-{t:"ask",x:"Do you currently have any cancer or HIV? Are you confined to a wheelchair or on prescribed oxygen? Are you on dialysis?"},
+{t:"ask",x:"Do you currently have any cancer{{c:Cancer}} or HIV{{c:AIDS / HIV / ARC}}? Are you confined to a wheelchair{{c:Wheelchair / electric scooter}} or on prescribed oxygen{{c:Oxygen / ventilator}}? Are you on dialysis{{c:Dialysis}}?"},
 {t:"do",x:"Ask the deal-killers first, not at question nine."}
+,
+{t:"cfollow"}
 ],b:[{k:"Next",to:"h_meds",c:"go"}]},
 
 h_meds:{s:"6",pf:"health",t:"Medications",l:[
@@ -929,32 +941,44 @@ h_meds_no:{s:"6",t:"No medications",l:[
 ],b:[{k:"Move to conditions",to:"h_heart",c:"go"}]},
 
 h_heart:{s:"6",pf:"health",t:"Heart",l:[
-{t:"ask",x:"Any history of heart attack, stents, pacemaker, or any kind of heart surgery?"},
+{t:"ask",x:"Any history of heart attack{{c:Heart attack}}, stents{{c:Stent}}, pacemaker{{c:Defibrillator / pacemaker}}, or any kind of heart surgery{{c:Heart surgery}}?"},
 {t:"do",x:"If yes &mdash; ask about nitroglycerin. A pacemaker with a defibrillator can be a knockout."}
+,
+{t:"cfollow"}
 ],b:[{k:"Next",to:"h_stroke",c:"go"}]},
 
 h_stroke:{s:"6",pf:"health",t:"Stroke and cancer",l:[
-{t:"ask",x:"Any stroke, seizures, or aneurysm? Any cancer &mdash; active or in the past?"}
+{t:"ask",x:"Any stroke{{c:Stroke / TIA}}, seizures{{c:Epilepsy / seizures}}, or aneurysm{{c:Aneurysm}}? Any cancer{{c:Cancer}} &mdash; active or in the past?"}
+,
+{t:"cfollow"}
 ],b:[{k:"Next",to:"h_diabetes",c:"go"}]},
 
 h_diabetes:{s:"6",pf:"health",t:"Diabetes",l:[
-{t:"ask",x:"Any diabetes?"},
+{t:"ask",x:"Any diabetes{{c:Diabetes}}?"},
 {t:"note",x:"<b>If yes, work the chain:</b> &ldquo;Is that pill or insulin?&rdquo; &middot; &ldquo;Any neuropathy with it &mdash; tingling in the hands or feet?&rdquo; &middot; &ldquo;Do you know what your last A1C was?&rdquo;"},
-{t:"ask",x:"And how about high blood pressure or cholesterol?"},
+{t:"ask",x:"And how about high blood pressure{{c:High blood pressure}} or cholesterol{{c:High cholesterol}}?"},
 {t:"do",x:"Diabetes is a chain, not one question. Pill vs. insulin, neuropathy, and the A1C are what move the rate class."}
+,
+{t:"cfollow"}
 ],b:[{k:"Next",to:"h_breathing",c:"go"}]},
 
 h_breathing:{s:"6",pf:"health",t:"Breathing, kidney, liver",l:[
-{t:"ask",x:"Asthma or COPD? Emphysema? Any kidney or liver issues?"}
+{t:"ask",x:"Asthma{{c:Asthma (chronic)}} or COPD{{c:COPD}}? Emphysema{{c:Emphysema}}? Any kidney{{c:Kidney disease / failure}} or liver{{c:Liver disease}} issues?"}
+,
+{t:"cfollow"}
 ],b:[{k:"Next",to:"h_mental",c:"go"}]},
 
 h_mental:{s:"6",pf:"health",t:"Mental health",l:[
-{t:"ask",x:"Any anxiety, PTSD, or depression?"},
+{t:"ask",x:"Any anxiety{{c:Anxiety}}, PTSD{{c:PTSD}}, or depression{{c:Depression}}?"},
 {t:"do",x:"Common on veteran leads and rarely a knockout. Ask it flat &mdash; no softening, no apology. Hesitating signals it's a problem."}
+,
+{t:"cfollow"}
 ],b:[{k:"Next",to:"h_rest",c:"go"}]},
 
 h_rest:{s:"6",pf:"health",t:"Memory, autoimmune, mobility",l:[
-{t:"ask",x:"Anything with memory &mdash; Alzheimer's or dementia? Lupus, rheumatoid arthritis, anything autoimmune? Do you use a wheelchair or walker, or have anyone helping you at home?"}
+{t:"ask",x:"Anything with memory &mdash; Alzheimer's or dementia{{c:Alzheimer's / dementia}}? Lupus{{c:Lupus}}, rheumatoid arthritis{{c:Rheumatoid arthritis}}, anything autoimmune{{c:Autoimmune disorder}}? Do you use a wheelchair or walker, or have anyone helping you at home?"}
+,
+{t:"cfollow"}
 ],b:[{k:"Next",to:"h_recent",c:"go"}]},
 
 h_recent:{s:"6",pf:"health",t:"Recent history",l:[
@@ -967,16 +991,16 @@ h_catchall:{s:"6",pf:"health",t:"Catch-all",l:[
 ],b:[{k:"Move to income",to:"inc_source",c:"go"}]},
 
 inc_source:{s:"7",pf:"income",t:"Income source",l:[
-{t:"ask",x:"Are you working, retired, or on Social Security or disability?"},
-{t:"pf",ks:["inc_kind"]},
+{t:"ask",x:"Are you working, retired, or on Social Security or disability? {{inc_kind}}"},
+
 {t:"do",x:"If retired or working, ask what they do or did. It's rapport and it's free."}
 ],b:[{k:"Next",to:"inc_margin",c:"go"}]},
 
 inc_margin:{s:"7",pf:"income",t:"Income and margin",l:[
-{t:"ask",x:"What's your total monthly income &mdash; Social Security, pension, disability, anything else coming in?"},
+{t:"ask",x:"What's your total monthly income &mdash; Social Security, pension, disability, anything else coming in? ___(monthly income)"},
 {t:"do",x:"Take 5% of that number on your calculator. That is your basic tier target."},
-{t:"ask",x:"And at the end of the month, after the bills are paid &mdash; what do you usually have left over?"},
-{t:"ask",x:"Are you more of a spender or a saver?"},
+{t:"ask",x:"And at the end of the month, after the bills are paid &mdash; what do you usually have left over? ___(left over)"},
+{t:"ask",x:"Are you more of a spender or a saver? {{money_style}}"},
 {t:"ask",x:"Is there anything else you're leaving ___(beneficiary) that acts like life insurance? A 401(k), an IRA, savings?"},
 {t:"note",x:"<b>If yes &mdash; flag the client.</b> This is how you find money to protect with an FIA/Annuity. Don't derail this sale chasing it."}
 ],b:[{k:"Move to education",to:"ed_types",c:"go"}]},
@@ -2916,12 +2940,18 @@ var cur="start",hist=[],redo=[],t0=null,tick=null;
 function $(id){return document.getElementById(id)}
 
 function fmt(x){
-  return x.replace(/\{\{([a-z0-9_]+)\}\}/gi,function(m,k){
+  return x.replace(/\{\{c:([^}]+)\}\}/g,function(m,c){
+            var on=((typeof P!=="undefined"&&P.conds)||[]).indexOf(c)>-1;
+            return '<input type="checkbox" class="cinline" data-cond="'+c.replace(/"/g,"&quot;")+
+                   '" title="'+c.replace(/"/g,"&quot;")+'"'+(on?" checked":"")+'>';
+          })
+          .replace(/\{\{([a-z0-9_]+)\}\}/gi,function(m,k){
             var f=(typeof pSpecOf==="function")?pSpecOf(k):null;
             if(!f||!f.opt) return "";
             var v=(typeof pVal==="function")?pVal(k):"";
+            var sel = f.multi ? String(v||"").split(", ").filter(Boolean) : (v?[v]:[]);
             return '<span class="ichips">'+f.opt.filter(function(x){return x!==""}).map(function(oo){
-              return '<button type="button" class="ichip'+(v===oo?" on":"")+'" data-pfset="'+k+
+              return '<button type="button" class="ichip'+(sel.indexOf(oo)>-1?" on":"")+'" data-pfset="'+k+
                      '" data-pfval="'+oo.replace(/"/g,"&quot;")+'">'+oo+'</button>';}).join("")+'</span>';
           })
           .replace(/_{3,}\s*\(([^)]+)\)/g,function(m,lab){
@@ -2936,6 +2966,23 @@ function fmt(x){
                      : '<span class="blank"></span><span class="hint">('+lab+')</span>';
           })
           .replace(/_{3,}/g,'<span class="blank"></span>');
+}
+
+function cfollowHTML(names){
+  var on=(P.conds||[]), out=[];
+  names.forEach(function(c){
+    if(on.indexOf(c)<0) return;
+    var fu=PF_FOLLOW[c]; if(!fu) return;
+    out.push('<div class="cfollow"><div class="cfh">They said yes to <b>'+esc(c)+'</b> &mdash; ask:</div>'+
+      fu.map(function(f){
+        var v=pVal(f.k);
+        if(f.opt) return '<span class="pfi"><i>'+f.l+'</i>'+f.opt.filter(function(x){return x!==""}).map(function(oo){
+          return '<button type="button" class="chip'+(v===oo?" on":"")+'" data-pfset="'+f.k+'" data-pfval="'+oo+'">'+oo+'</button>';}).join("")+'</span>';
+        return '<span class="pfi"><i>'+f.l+'</i><input data-pk="'+f.k+'" data-inline="1" value="'+
+               esc(v).replace(/"/g,"&quot;")+'"></span>';
+      }).join("")+'</div>');
+  });
+  return out.length ? '<div class="line">'+out.join("")+'</div>' : "";
 }
 
 function pfInline(ks){
@@ -2959,13 +3006,27 @@ document.addEventListener("click",function(e){
   var b=e.target.closest && e.target.closest("[data-pfset]");
   if(!b) return;
   var k=b.getAttribute("data-pfset"), v=b.getAttribute("data-pfval");
-  if(pVal(k)===v) v="";                       /* click again to clear */
-  P[k]=v; pStore(); pFlash();
-  var wrap=b.parentNode;
-  [].forEach.call(wrap.querySelectorAll(".chip"),function(c){
-    c.classList.toggle("on", c.getAttribute("data-pfval")===v && v!==""); });
+  var f=pSpecOf(k);
+  if(f && f.multi){
+    var cur=String(pVal(k)||"").split(", ").filter(Boolean);
+    var at=cur.indexOf(v);
+    if(at>-1) cur.splice(at,1); else cur.push(v);
+    P[k]=cur.join(", ");
+  } else {
+    if(pVal(k)===v) v="";                     /* click again to clear */
+    P[k]=v;
+  }
+  pStore(); pFlash();
+  pSyncChips(k);
   if(document.getElementById("profbody")) pRender();
 });
+
+function pSyncChips(k){
+  var f=pSpecOf(k), cur=String(pVal(k)||"");
+  var picked = (f&&f.multi) ? cur.split(", ").filter(Boolean) : (cur?[cur]:[]);
+  [].forEach.call(document.querySelectorAll('[data-pfset="'+k+'"]'),function(c){
+    c.classList.toggle("on", picked.indexOf(c.getAttribute("data-pfval"))>-1); });
+}
 
 function pJump(id){
   var d=$("drawer"); if(!d.classList.contains("open")) return;
@@ -2990,7 +3051,13 @@ function render(){
   Array.prototype.slice.call(document.querySelectorAll("[data-stage]")).forEach(function(el){
     el.onclick=function(){ jumpSection(el.getAttribute("data-stage")) };});
 
+  var cardConds=[];
+  (n.l||[]).forEach(function(L){
+    var m,re=/\{\{c:([^}]+)\}\}/g;
+    while((m=re.exec(L.x||""))) if(cardConds.indexOf(m[1])<0) cardConds.push(m[1]);
+  });
   $("script").innerHTML=n.l.map(function(L){
+    if(L.t==="cfollow") return cfollowHTML(cardConds);
     var x=fmt(L.x||"");
     if(L.t==="say")  return '<div class="line say"><div class="txt">'+x+'</div></div>';
     if(L.t==="ask")  return '<div class="line ask"><span class="badge">ASK</span><div class="txt">'+x+'</div></div>';
@@ -3116,8 +3183,10 @@ var PF_SPEC=[
  {k:"meds",l:"Medications (spell them)",type:"area",w:2},
 
  {sec:"Income",id:"income"},
- {k:"inc_kind",l:"Source",w:2,opt:["","Working","Retired","Social Security","Disability"]},
- {k:"i_income",l:"Monthly income",w:1},{k:"i_prot",l:"Retirement protected?",w:1,opt:["","No","Yes"]},
+ {k:"inc_kind",l:"Source",w:2,multi:true,opt:["","Working","Retired","Social Security","Disability","Pension"]},
+ {k:"i_income",l:"Monthly income",w:1},{k:"i_left",l:"Left over each month",w:1},
+ {k:"money_style",l:"Spender or saver",w:1,opt:["","Spender","Saver","Bit of both"]},
+ {k:"i_prot",l:"Retirement protected?",w:1,opt:["","No","Yes"]},
 
  {sec:"Mortgage &mdash; ask if it comes up",id:"mortgage"},
  {k:"m_balance",l:"Balance left",w:1},{k:"m_payment",l:"Monthly payment",w:1},
@@ -3166,7 +3235,7 @@ var PRINT_ORDER=[
  ["Why",["goal","burial"]],
  ["Coverage they already have",["inplace","inplace_carrier","inplace_src","inplace_amt","inplace_kind","inplace_prem","inplace_exp","inplace_notes"]],
  ["Mortgage",["m_balance","m_payment","m_years","m_equity","m_co"]],
- ["Retirement & money",["inc_kind","i_income","i_contrib","i_401k","i_roth","i_liquid","i_debt","i_retire","i_prot"]],
+ ["Retirement & money",["inc_kind","i_income","i_left","money_style","i_contrib","i_401k","i_roth","i_liquid","i_debt","i_retire","i_prot"]],
  ["Beneficiary",["ben","benphone","benrel","bendob","bencont","ben2","ben2phone","ben2rel","ben2split","crm"]],
  ["The plan",["carrier","bank","opt1_cov","opt1_prem","opt2_cov","opt2_prem","opt3_cov","opt3_prem","chosen","coverage","premium","draft","policy"]]
 ];
@@ -3215,7 +3284,7 @@ var BLANKMAP={
  "spell it":"a_name","spell it out":"a_name","last name":"last","client's state":"state",
  "spouse":"spouse","beneficiary":"ben","beneficiary / spouse":"ben","branch of service":"branch",
  "carrier":"carrier","coverage":"coverage","amount":"coverage","premium":"premium",
- "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","Carrier?":"inplace_carrier","their goal, in their words":"goal",
+ "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","monthly income":"i_income","left over":"i_left","Carrier?":"inplace_carrier","their goal, in their words":"goal",
  "address":"address","balance":"m_balance","monthly payment":"m_payment","equity":"m_equity",
  "years":"m_years",
  "your name":"a_name","your full name":"a_full","agent name":"a_name","your NPN":"a_npn",
@@ -3238,6 +3307,13 @@ function pStore(){ try{ localStorage.setItem(PKEY,JSON.stringify(P));
 
 function pField(f){
   var v=pVal(f.k), id="pf_"+f.k;
+  if(f.opt && f.multi){
+    var picked=String(v||"").split(", ").filter(Boolean);
+    return '<div class="pf w100"><label>'+f.l+'</label><div class="conds">'+
+      f.opt.filter(function(x){return x!==""}).map(function(oo){
+        return '<button type="button" class="chip'+(picked.indexOf(oo)>-1?" on":"")+
+               '" data-pfset="'+f.k+'" data-pfval="'+oo+'">'+oo+'</button>';}).join("")+'</div></div>';
+  }
   var input = f.opt ? '<select id="'+id+'" data-pk="'+f.k+'">'+f.opt.map(function(o){
         return '<option'+(o===v?' selected':'')+'>'+o+'</option>'}).join("")+'</select>'
     : f.type==="area" ? '<textarea id="'+id+'" data-pk="'+f.k+'">'+esc(v)+'</textarea>'
@@ -3359,7 +3435,13 @@ document.addEventListener("change",function(e){
   if(t.getAttribute&&t.getAttribute("data-cond")){
     var c=t.getAttribute("data-cond"), a=P.conds||[];
     if(t.checked){ if(a.indexOf(c)<0)a.push(c) } else { a=a.filter(function(x){return x!==c}) }
-    P.conds=a; pStore(); t.parentNode.classList.toggle("on",t.checked); pFollow(); pFlash(); return;
+    P.conds=a; pStore();
+    if(t.parentNode && t.parentNode.tagName==="LABEL") t.parentNode.classList.toggle("on",t.checked);
+    [].forEach.call(document.querySelectorAll('[data-cond]'),function(el){
+      if(el.getAttribute("data-cond")===c) el.checked=t.checked; });
+    if(document.getElementById("profbody")) pRender();
+    if(t.classList && t.classList.contains("cinline") && typeof render==="function") render();
+    pFlash(); return;
   }
   if(t.getAttribute&&t.getAttribute("data-pk")) pSet(t.getAttribute("data-pk"),t.value);
 });
