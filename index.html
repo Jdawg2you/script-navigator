@@ -1084,13 +1084,13 @@ q_pen:{s:"9",t:"Soft hold, then pen and paper",l:[
 ],b:[{k:"Next",to:"q_max",c:"go"}]},
 
 q_max:{s:"9",pf:"plan",t:"The max",l:[
-{t:"say",x:"First one &mdash; I'm required to show you this. The most you could get at your age is ___(max coverage), and I'm not necessarily recommending this. I just have to put it in front of you so you know what's available. And that runs ___(monthly premium) a month."},
+{t:"say",x:"First one &mdash; I'm required to show you this. The most you could get at your age is ___(max coverage) for ___(max monthly) a month, and I'm not necessarily recommending this. I just have to put it in front of you so you know what's available. And that runs ___(monthly premium) a month."},
 {t:"do",x:"Beat &mdash; one second, not a long pause. Then keep moving."},
 {t:"note",x:"<b>Accuracy:</b> &ldquo;the most you could get,&rdquo; never &ldquo;you're approved for.&rdquo; Nothing has been run yet."}
 ],b:[{k:"Next",to:"q_rec",c:"go"}]},
 
 q_rec:{s:"9",pf:"plan",t:"The recommendation",l:[
-{t:"say",x:"Here's what I would personally recommend. ___(coverage) for ___(monthly premium) a month."},
+{t:"say",x:"Here's what I would personally recommend. ___(recommended coverage) for ___(recommended monthly) a month."},
 {t:"do",x:"Sound impressed. You're not apologizing for a price &mdash; you're showing them a good one. That's not bad, right?"},
 {t:"say",x:"Now the reason I'm recommending this is because earlier you told me you wanted ___(their stated wish), and you wanted to leave some money for ___(beneficiary). So this gives you enough for the ___(burial/cremation) &mdash; which like we said runs ___(the cost you quoted earlier) &mdash; and it would still leave about ___(the remainder) for ___(beneficiary). So it accomplishes exactly what you're looking to do, and for a really good price."},
 {t:"note",x:"<b>Worked example &mdash; the highlighted parts are what you fill in:</b><br><br>&ldquo;Now the reason I'm recommending this is because earlier you told me you wanted <mark>to be cremated</mark>, and you wanted to leave some money for <mark>Melissa</mark>. So this gives you enough for the <mark>cremation</mark> &mdash; which like we said runs <mark>around $5,000</mark> &mdash; and it would still leave about <mark>$10,000</mark> for <mark>Melissa</mark>. So it accomplishes exactly what you're looking to do, and for a really good price.&rdquo;"},
@@ -1098,7 +1098,7 @@ q_rec:{s:"9",pf:"plan",t:"The recommendation",l:[
 ],b:[{k:"Next",to:"q_basic",c:"go"}]},
 
 q_basic:{s:"9",pf:"plan",t:"Basic",l:[
-{t:"say",x:"And at our basic level &mdash; ___(coverage) for ___(monthly premium) a month."},
+{t:"say",x:"And at our basic level &mdash; ___(basic coverage) for ___(basic monthly) a month."},
 {t:"say",x:"Now this is going to cover your ___(burial/cremation), and the monthly on this may be a lot more comfortable for your budget. So this, at its core, is going to make sure ___(beneficiary) isn't going to have to come out of pocket for your final expenses &mdash; which I know you said earlier was really important to you."},
 {t:"do",x:"This is the honest floor, not the consolation prize. Say it without apology."},
 {t:"do",x:"When you construct this option, use the 5% rule below &mdash; but be extra mindful of their budget on this one. This is the number that has to survive a bad month."},
@@ -1186,7 +1186,7 @@ app_auth1:{s:"10",pf:"app",t:"First authorization &mdash; the MIB pull",l:[
 ],b:[{k:"Got the code",to:"app_draft",c:"go"}]},
 
 app_draft:{s:"10",pf:"wrap",t:"Draft date",l:[
-{t:"say",x:"Once you're approved they'll issue the coverage right away so you're protected immediately. The first premium drafts in about one to two business days, and then it's the ___(date) of every month after that."},
+{t:"say",x:"Once you're approved they'll issue the coverage right away so you're protected immediately. The first premium drafts in about one to two business days, and then it's the ___(draft date) of every month after that."},
 {t:"ask",x:"Make sense?"},
 {t:"do",x:"If they're on Social Security, you can line their draft up with their deposit date. Same money, less friction &mdash; and it meaningfully increases persistency."},
 {t:"do",x:"With some carriers you can run the initial draft right away so they're protected now, then set the monthly to a different day going forward. Only offer this if you sense hesitation, or if you think it genuinely helps this particular client."},
@@ -3450,7 +3450,7 @@ var BLANKMAP={
  "beneficiary / their specific situation":"ben","beneficiary / the surviving spouse":"ben",
  "their state":"state","state":"state","branch":"branch","DOB":"dob",
  "spouse 2":"spouse","surviving spouse":"spouse",
- "their goal":"goal","their stated wish":"goal","max coverage":"opt1_cov",
+ "their goal":"goal","their stated wish":"goal","max coverage":"opt1_cov","max monthly":"opt1_prem","recommended coverage":"opt2_cov","recommended monthly":"opt2_prem","basic coverage":"opt3_cov","basic monthly":"opt3_prem",
  "equity amount":"m_equity","mortgage balance":"m_balance",
  "spell it":"a_name","spell it out":"a_name","last name":"last","client's state":"state",
  "spouse":"spouse","beneficiary":"ben","beneficiary / spouse":"ben","branch of service":"branch",
@@ -3571,6 +3571,7 @@ function pRefsHTML(){
       '<div class="pf"><label>Name</label><input data-ref="'+i+':n" value="'+esc(r.n||"").replace(/"/g,"&quot;")+'"></div>'+
       '<div class="pf"><label>Phone</label><input data-ref="'+i+':p" value="'+esc(r.p||"").replace(/"/g,"&quot;")+'"></div>'+
       '<div class="pf"><label>Relationship</label><input data-ref="'+i+':r" value="'+esc(r.r||"").replace(/"/g,"&quot;")+'"></div>'+
+      '<div class="pf"><label>State</label><input list="statelist" data-ref="'+i+':s" value="'+esc(r.s||"").replace(/"/g,"&quot;")+'"></div>'+
       (i>0?'<button type="button" class="refx" data-refdel="'+i+'" title="Remove">&times;</button>':'')+
       '</div>';
   }).join("")+'<button type="button" class="refadd" id="refadd">+ Add another referral</button></div>';
@@ -3817,16 +3818,16 @@ function pPrint(){
   PRINT_ORDER.forEach(function(g){
     var any=g[1].some(function(k){
       if(k==="conds") return (P.conds||[]).length>0;
-      if(k==="refs")  return (P.refs||[]).some(function(r){return r.n||r.p||r.r});
+      if(k==="refs")  return (P.refs||[]).some(function(r){return r.n||r.p||r.r||r.s});
       return !!(P[k]&&String(P[k]).trim());
     });
     if(!any && OPTIONAL_SECTIONS.indexOf(g[0])>-1) return;
     rows.push('<h2>'+g[0]+'</h2>');
     g[1].forEach(function(k){
       if(k==="refs"){
-        var rl=(P.refs||[]).filter(function(r){return r.n||r.p||r.r});
+        var rl=(P.refs||[]).filter(function(r){return r.n||r.p||r.r||r.s});
         rows.push('<div class="cl">'+(rl.length? rl.map(function(r){
-          return (r.n||"&nbsp;")+" &middot; "+(r.p||"")+(r.r?" ("+r.r+")":"");}).join("<br>")
+          return (r.n||"&nbsp;")+" &middot; "+(r.p||"")+(r.r?" ("+r.r+")":"")+(r.s?" &middot; "+r.s:"");}).join("<br>")
           : '<u>&nbsp;</u><br><u>&nbsp;</u><br><u>&nbsp;</u>')+'</div>');
         return; }
       if(k==="conds"){
