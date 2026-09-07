@@ -379,6 +379,17 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   #app.docked{padding-right:440px}
   #app.docked, .drawer.nomodal{transition:padding .2s ease}
 }
+.altwrap{background:var(--fill);border:1px dashed var(--rule);border-radius:9px;padding:10px 12px;margin:0 0 12px}
+.althead{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:8px}
+.alt{display:flex;gap:9px;padding:5px 0;border-top:1px solid var(--rule-soft);font-family:var(--serif);
+  font-size:16px;font-style:italic;color:#8B8A82;line-height:1.5}
+.alt:first-of-type{border-top:0}
+.alt i{font-style:normal;font-family:var(--sans);font-size:10.5px;font-weight:700;color:var(--muted);
+  flex:0 0 108px;padding-top:4px;text-transform:uppercase;letter-spacing:.05em}
+.alt.on{color:var(--ink);font-style:normal;background:var(--goldsoft);border-radius:6px;
+  margin:2px -6px;padding:7px 6px}
+.alt.on i{color:var(--golddk)}
 .cfollow{background:#fff;border:1px solid var(--goldline);border-left:3px solid var(--gold);
   border-radius:0 8px 8px 0;padding:10px 13px;margin:0 0 10px;display:flex;flex-wrap:wrap;align-items:center;gap:13px}
 .cfh{font-family:var(--sans);font-size:11.5px;font-weight:600;color:var(--golddk);flex-basis:100%;margin-bottom:2px}
@@ -900,7 +911,14 @@ fw_both:{s:"4",pf:"why",t:"Unsure &mdash; give both",l:[
 ],b:[{k:"Continue",to:"fw_reiterate",c:"go"}]},
 
 fw_reiterate:{s:"4",pf:"why",t:"Reiterate to solidify",l:[
-{t:"say",x:"So it makes sense to me &mdash; since you ___(do/don't have coverage), you've got ___(the name) to think about, and you want to ___(their goal, in their words). Let's keep going and see what this looks like for you."},
+{t:"alt",opts:[
+ {k:"No coverage",when:["inplace","No"],x:"So it makes sense to me &mdash; since you don't have anything in place right now&hellip;"},
+ {k:"Term, private",when:[["inplace","Yes"],["inplace_kind","Term"],["inplace_src","Private"]],x:"So it makes sense to me &mdash; since what you have now will eventually expire&hellip;"},
+ {k:"Through work",when:[["inplace","Yes"],["inplace_src","Work"]],x:"So it makes sense to me &mdash; since coverage through work almost always ends when the job does&hellip;"},
+ {k:"Whole life",when:[["inplace","Yes"],["inplace_kind","Whole life"]],x:"So it makes sense to me &mdash; since what you have is permanent, but you're looking at whether ___(how much coverage) is really enough, or whether there's a better rate out there&hellip;"},
+ {k:"Not sure what",when:[["inplace","Yes"],["inplace_kind","Not sure"]],x:"So it makes sense to me &mdash; since you're not certain what you've actually got in place&hellip;"}
+]},
+{t:"say",x:"&hellip; you've got ___(the name) to think about, and you want to ___(their goal, in their words). Let's keep going and see what this looks like for you."},
 {t:"note",x:"Building the cost up from parts makes the number land as <b>math instead of a claim</b>. Planting inflation here does quiet work for you at the quote."}
 ],b:[{k:"Move to discounts",to:"disc_tobacco",c:"go"}]},
 
@@ -2995,6 +3013,23 @@ function fmt(x){
           .replace(/_{3,}/g,'<span class="blank"></span>');
 }
 
+function altHTML(L){
+  function fits(w){
+    if(!w) return false;
+    var pairs = Object.prototype.toString.call(w[0])==="[object Array]" ? w : [w];
+    return pairs.every(function(pr){
+      return String(pVal(pr[0])||"").toLowerCase()===String(pr[1]).toLowerCase(); });
+  }
+  var any=(L.opts||[]).some(function(op){return fits(op.when)});
+  return '<div class="line"><div class="altwrap">'+
+    '<div class="althead">Say whichever fits &mdash; '+
+      (any?'the one in gold matches what you\'ve recorded':'nothing recorded yet, so pick by ear')+'</div>'+
+    (L.opts||[]).map(function(op){
+      var on=fits(op.when);
+      return '<div class="alt'+(on?" on":"")+'"><i>'+op.k+'</i><span>'+fmt(op.x)+'</span></div>';
+    }).join("")+'</div></div>';
+}
+
 function cfollowHTML(names){
   var on=(P.conds||[]), out=[];
   names.forEach(function(c){
@@ -3190,6 +3225,7 @@ function render(){
     if(L.t==="dobig")return '<div class="line do lg"><div class="txt">'+x+'</div></div>';
     if(L.t==="train")return "";
     if(L.t==="tip")  return '<div class="line"><div class="note tipnote">'+x+'</div></div>';
+    if(L.t==="alt")  return altHTML(L);
     if(L.t==="pf")   return '<div class="line"><div class="pfline">'+pfInline(L.ks)+'</div></div>';
     if(L.t==="warn") return '<div class="line"><div class="note star"><span class="starbadge">&#9733;</span><div>'+x+'</div></div></div>';
     if(L.t==="copy") return '<div class="line"><details class="copyblk"><summary>'+(L.label||"Copy this")+'</summary><div class="copywrap"><button type="button" class="copybtn">Copy</button><pre class="copytext">'+L.x.replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</pre></div></details></div>';
