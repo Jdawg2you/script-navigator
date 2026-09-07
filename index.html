@@ -478,7 +478,43 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   border:1px solid var(--rule);border-radius:6px;padding:7px 9px;resize:vertical;color:var(--ink)}
 .pnote{font-family:var(--sans);font-size:11px;color:var(--muted);line-height:1.5;margin:5px 0 0}
 .filled{color:var(--navy);font-weight:600;border-bottom:2px solid var(--gold);padding:0 1px}
-}
+
+
+/* Feedback */
+.fbline{text-align:center;margin:78px 0 14px}
+.fbtrigger{display:inline-flex;align-items:center;gap:11px;appearance:none;border:0;background:transparent;
+  cursor:pointer;font-family:var(--sans);font-size:14.5px;color:var(--slate);padding:8px 6px}
+.fbtrigger:hover{color:var(--navy)}
+.fbtrigger:hover .fbq{background:var(--gold);color:var(--navy)}
+.fbq{flex:none;width:32px;height:32px;border-radius:50%;background:var(--navy);color:var(--gold);
+  display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;font-size:19px;
+  transition:background .15s ease,color .15s ease}
+#fbModal .fbl{display:block;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--golddk);margin:15px 0 5px}
+#fbModal .fbl span{text-transform:none;letter-spacing:0;font-weight:500;color:var(--muted);font-size:11.5px}
+#fbModal textarea,#fbModal input[type=text],#fbModal input[type=email],#fbModal input:not([type]),#fbModal select{
+  width:100%;font-family:var(--sans);font-size:13.5px;color:var(--ink);background:#fff;
+  border:1px solid var(--rule);border-radius:7px;padding:9px 11px;line-height:1.5}
+#fbModal textarea{resize:vertical;min-height:82px}
+#fbModal textarea:focus,#fbModal input:focus,#fbModal select:focus{outline:2px solid var(--goldline);border-color:var(--gold)}
+.fbrow{display:flex;gap:11px;flex-wrap:wrap}
+.fbrow>div{flex:1 1 190px;min-width:0}
+.fbcheck{display:flex;gap:10px;align-items:flex-start;margin:16px 0 0;padding:12px 14px;
+  background:var(--goldsoft);border:1px solid var(--goldline);border-radius:9px;cursor:pointer}
+.fbcheck input{appearance:none;flex:none;width:17px;height:17px;margin-top:1px;border:1.5px solid var(--navy);
+  border-radius:4px;background:#fff;position:relative;cursor:pointer}
+.fbcheck input:checked{background:var(--navy);border-color:var(--navy)}
+.fbcheck input:checked:after{content:"";position:absolute;left:5px;top:1px;width:4px;height:9px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(42deg)}
+.fbcheck span{font-family:var(--sans);font-size:12.5px;line-height:1.55;color:var(--slate)}
+.fbcheck b{color:var(--navy);display:block;margin-bottom:2px}
+.fbneed{font-family:var(--sans);font-size:12px;color:var(--rust);background:var(--rustsoft);
+  border-radius:7px;padding:9px 12px;margin-top:10px}
+.fbsend{margin-top:20px}
+.fbsub{font-family:var(--sans);font-size:13.5px;color:var(--slate);line-height:1.6;margin:0 0 6px}
+.fbfine{font-family:var(--sans);font-size:11.5px;color:var(--muted);line-height:1.55;margin:11px 0 0}
+.fbdone{padding:14px 2px 6px;font-family:var(--sans);font-size:13.5px;color:var(--slate);line-height:1.6}
+.fbdone b{display:block;font-family:var(--serif);font-size:20px;color:var(--navy);margin-bottom:5px}
 </style>
 </head>
 <body>
@@ -532,6 +568,14 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
         <div class="k">More free tools from Optimum</div>
         <a data-suite="wizard" href="#"><span class="n">&rarr;</span><div><b>Insurance Product Wizard</b><span>Enter age and conditions — see which IUL, term and final expense products a client can buy.</span></div></a>
         <a data-suite="planning" href="#"><span class="n">&rarr;</span><div><b>Agent Planning Tools</b><span>Income, activity, agency and commission calculators that pass numbers to each other.</span></div></a>
+      </div>
+
+      <div class="fbline">
+        <button type="button" class="fbtrigger" id="fbopen">
+          <span class="fbq">?</span>
+          <span>We love feedback &mdash; tell us what would make this better</span>
+        </button>
+      </div>
       </div>
     </div>
   </div>
@@ -624,6 +668,49 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 </div>
 
 
+
+<div class="modal" id="fbModal" hidden>
+  <div class="backdrop" data-close></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
+    <button type="button" class="x" id="fbClose" aria-label="Close">&#10005;</button>
+    <h2 id="fbTitle">Feedback is a gift</h2>
+    <p class="fbsub">Tell us what would make this tool even better.</p>
+    <p class="kick">Something confusing, something missing, something that didn't work.</p>
+    <form id="fbform">
+      <label class="fbl" for="fb_what">Feedback you would like to share</label>
+      <textarea id="fb_what" name="message" rows="4" placeholder="The more specific the better &mdash; which script, which part of the call, what you expected to happen." required></textarea>
+      <div class="fbrow">
+        <div>
+          <label class="fbl" for="fb_script">Which script were you in?</label>
+          <select id="fb_script" name="script">
+            <option value="">Not about a specific one</option>
+            <option>Veterans Life Insurance</option>
+            <option>Indexed Universal Life</option>
+            <option>Mortgage Protection</option>
+          </select>
+        </div>
+        <div>
+          <label class="fbl" for="fb_name">Your name</label>
+          <input id="fb_name" name="name" autocomplete="name">
+        </div>
+      </div>
+      <label class="fbl" for="fb_email">Email <span>only if you want a reply</span></label>
+      <input id="fb_email" name="email" type="email" autocomplete="email">
+      <label class="fbcheck">
+        <input type="checkbox" id="fb_join" name="interested_in_optimum" value="yes">
+        <span><b>I'm not with Family First Life, and I'd like to hear about Optimum.</b>
+        Forty-plus carriers, real leads, vested from day one. We'll reach out &mdash; no pitch if it isn't a fit.</span>
+      </label>
+      <div class="fbneed" id="fbneed" hidden>Pop your name and email above so we know who to get back to.</div>
+      <button type="submit" class="gcta fbsend" id="fbsend">Send it</button>
+      <p class="fbfine">Goes to the team at Optimum. Nothing about your clients is attached &mdash; only what you type here.</p>
+    </form>
+    <div class="fbdone" id="fbdone" hidden>
+      <b>Got it &mdash; thank you.</b>
+      <span id="fbdonesub">That goes straight to the team. If you left an email we'll come back to you.</span>
+    </div>
+  </div>
+</div>
 <div class="modal" id="recModal" hidden>
   <div class="backdrop" data-close></div>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="recTitle">
@@ -4661,6 +4748,42 @@ var SUITE_CURRENT = 'navigator';
  rm.querySelector('.backdrop').addEventListener('click',sh);
  document.addEventListener('keydown',function(e){if(e.key==='Escape')sh();});
  document.querySelectorAll('.recopen').forEach(function(b){b.addEventListener('click',op);});})();
+
+/* ---------- Feedback ---------- */
+(function(){
+  var fm=document.getElementById("fbModal"); if(!fm) return;
+  var form=document.getElementById("fbform");
+  function shut(){ fm.hidden=true; }
+  document.getElementById("fbopen").onclick=function(){
+    fm.hidden=false; setTimeout(function(){document.getElementById("fb_what").focus()},120);
+  };
+  document.getElementById("fbClose").addEventListener("click",shut);
+  fm.querySelector(".backdrop").addEventListener("click",shut);
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape") shut(); });
+  var join=document.getElementById("fb_join"), need=document.getElementById("fbneed");
+  var nm=document.getElementById("fb_name"), em=document.getElementById("fb_email");
+  function reqCheck(){
+    var want=join.checked, has=nm.value.trim()&&em.value.trim();
+    need.hidden = !(want && !has);
+    nm.required=want; em.required=want;
+    document.querySelector('label[for="fb_email"]').innerHTML =
+      want ? 'Email' : 'Email <span>only if you want a reply</span>';
+  }
+  join.onchange=reqCheck;
+  document.getElementById("fb_name").oninput=reqCheck;
+  document.getElementById("fb_email").oninput=reqCheck;
+
+  form.onsubmit=function(e){
+    e.preventDefault();
+    reqCheck();
+    if(!need.hidden){ (nm.value.trim()?em:nm).focus(); return; }
+    /* MOCK: no endpoint wired yet. This is where the POST goes. */
+    form.hidden=true;
+    var done=document.getElementById("fbdone"); done.hidden=false;
+    if(join.checked) document.getElementById("fbdonesub").textContent=
+      "Someone from Optimum will reach out about joining. No pitch if it isn't a fit.";
+  };
+})();
 </script>
 </body>
 </html>
