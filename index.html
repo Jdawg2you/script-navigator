@@ -827,7 +827,11 @@ sit_inplace:{s:"3",pf:"have",t:"Anything in place?",l:[
 ],b:[{k:"Nothing at all",to:"sit_trigger",c:"go",set:{inplace:"No"}},{k:"They have coverage",to:"sit_what",set:{inplace:"Yes"}}]},
 
 sit_what:{s:"3",pf:"have",t:"What they have",l:[
-{t:"ask",x:"Who's that through? ___(Carrier?) &hellip; Is that private, or through work? {{inplace_src}} &hellip; How much is it for? ___(how much coverage) &hellip; Do you know if it's whole life or term? {{inplace_kind}} &hellip; And what are you paying for it? ___(what they pay now)"},
+{t:"ask",x:"Is that through work, or do you have that privately? {{inplace_src}}"},
+{t:"ask",x:"And how much coverage do you have? ___(how much coverage)"},
+{t:"ask",x:"Do you know if that's whole life or term? {{inplace_kind}}"},
+{t:"ask",x:"Great &mdash; what company is it with? ___(Carrier?)"},
+{t:"ask",x:"And how much are you paying a month for that? ___(what they pay now)"},
 {t:"do",x:"Four questions, not an audit. You need to know whether what they have leaves a gap."},
 {t:"note",x:"<b>If it's through work:</b> &ldquo;Coverage through work doesn't follow you. If you leave, if you get sick, if you retire, it's gone. It's covering you while you're there, not covering ___ when it counts.&rdquo;"},
 {t:"ask",x:"When you reached out &mdash; were you looking to add coverage on top of what you have, or trying to see if you could get a better deal? Or both?"},
@@ -842,6 +846,8 @@ sit_trigger:{s:"3",pf:"why",t:"The trigger (why)",l:[
 
 sit_stakes:{s:"3",pf:"why",t:"The stakes question",l:[
 {t:"ask",x:"Let's say you didn't wake up yesterday. Who was the first person who was getting a call this morning? Who's handling the arrangements, paying the bills? Who does this all end up falling on? ___(beneficiary)"},
+{t:"pf",ks:["married","spouse"]},
+{t:"train",x:"You are not asking their marital status out of nowhere &mdash; you are asking who this lands on, and they will usually name the spouse themselves. Tick it as they say it. If they name someone who is not a spouse, that tells you more than the question would have."},
 {t:"note",x:"<b>Past tense on purpose.</b> A hypothetical invites a hypothetical answer &mdash; &ldquo;if I died someday&rdquo; can be held at arm's length forever. Something that already happened this morning cannot."},
 {t:"do",x:"You are not done until you have a name. If they say &ldquo;my family&rdquo; or &ldquo;the kids&rdquo; &mdash; push once: &ldquo;Which one of them, specifically?&rdquo;"},
 {t:"do",x:"If they're blunt with you, be blunt back. Match their energy."}
@@ -967,7 +973,8 @@ h_meds:{s:"6",pf:"health",t:"Medications",l:[
 {t:"ask",x:"Are you on any medications right now?"}
 ],b:[{k:"Yes",to:"h_meds_yes"},{k:"No",to:"h_meds_no"}]},
 
-h_meds_yes:{s:"6",t:"On medications",l:[
+h_meds_yes:{s:"6",pf:"health",t:"On medications",l:[
+{t:"tip",x:"<b>Capture these in the client profile.</b> Start typing and it will find the drug &mdash; it knows brand names, and it copes with a rough spelling. Working off paper instead? Just write them down."},
 {t:"ask",x:"Are you on more than three?"},
 {t:"note",x:"<b>If more than three:</b> &ldquo;Take your time and go grab those for me.&rdquo;"},
 {t:"do",x:"Have them SPELL them, not read them. That's how you catch Eliquis versus Elavil."},
@@ -1109,6 +1116,7 @@ q_ask:{s:"9",pf:"plan",t:"The ask",l:[
 {t:"say",x:"Now, like I mentioned, I don't make the final decision here &mdash; the insurance company does. So all we can do is submit it and see whether they'll approve you."},
 {t:"train",x:"This one line changes what you're asking. Without it you're asking them to buy; with it you're asking them to apply and find out. It also means an approval lands as good news later instead of as the moment they have to decide."},
 {t:"ask",x:"So if we're able to get you approved &mdash; which of these feels closest to what you need and fits for you on a monthly basis? Or is there an amount in between that you'd like me to look at?"},
+{t:"say",x:"Option one &mdash; ___(max coverage) for ___(max monthly) a month. Option two &mdash; ___(recommended coverage) for ___(recommended monthly). Option three &mdash; ___(basic coverage) for ___(basic monthly)."},
 {t:"do",x:"Wait. First to speak loses."}
 ],bh:"What did they say?",b:[
 {k:"They picked",to:"app_intro",c:"go"},
@@ -3140,7 +3148,8 @@ function medSuggest(q,limit){
 var PF_PLACEHOLDER={asset_where:"401k / IRA / Roth / etc"};
 
 function pFit(el){
-  var n=Math.max(9,Math.min(42,(el.value||el.placeholder||"").length+2));
+  var len=(el.value||el.placeholder||"").length;
+  var n=Math.max(9,Math.min(46,Math.ceil(len*1.25)+2));   /* serif letters are wider than a ch */
   el.style.width=n+"ch";
 }
 
@@ -3232,6 +3241,7 @@ function render(){
     return '<div class="line"><div class="note">'+x+'</div></div>';
   }).join("");
 
+  [].forEach.call(document.querySelectorAll("#script .iblank"),function(el){ pFit(el); });
   $("branchhead").textContent = n.bh || (n.b.length===1 ? "Next" : "They say");
   $("branches").innerHTML=n.b.map(function(b,i){
     return '<button class="branch '+(b.c||"")+'" data-to="'+b.to+'"'+
@@ -3318,6 +3328,7 @@ var PF_SPEC=[
  {k:"first",l:"First name",w:1},{k:"last",l:"Last name",w:1},
  {k:"dob",l:"DOB",w:1},{k:"age",l:"Age (closest)",w:1},
  {k:"state",l:"State",w:1},{k:"branch",l:"Branch of service",w:1},
+ {k:"married",l:"Married?",w:1,opt:["","Yes","No","Widowed"]},{k:"spouse",l:"Spouse",w:1,showIf:["married","Yes"]},
 
  {sec:"What they have now",id:"have"},
  {k:"inplace",l:"Anything in place?",w:2,opt:["","No","Yes"]},
@@ -3374,7 +3385,6 @@ var PF_SPEC=[
 
  {sec:"Application",id:"app"},
  {k:"phone",l:"Phone",w:1},{k:"email",l:"Email",w:1},
- {k:"spouse",l:"Spouse",w:2},
  {k:"address",l:"Address",w:2},
  {k:"city",l:"City",w:1},{k:"zip",l:"ZIP",w:1},
  {k:"app_notes",l:"Notes &mdash; licence, employer, anything else",type:"area",w:2},
@@ -3398,7 +3408,7 @@ var PF_SPEC=[
 
 /* print groups things logically instead of in call order */
 var PRINT_ORDER=[
- ["Client",["first","last","dob","age","phone","email","spouse","branch","address","city","state","zip","app_notes"]],
+ ["Client",["first","last","dob","age","phone","email","married","spouse","branch","address","city","state","zip","app_notes"]],
  ["Build & habits",["height","weight","smoker","varating","bank","bank_kind","bank_notes"]],
  ["Health",["conds","meds"]],
  ["Why",["goal","burial"]],
