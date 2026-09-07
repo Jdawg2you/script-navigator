@@ -523,7 +523,7 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 
 <script>
 var DRAWERS={
-iulobj:{title:"Objections",html:'<div class="pending">&#9888; <b>Needs building.</b> The IUL script only handles &ldquo;they\'re busy.&rdquo; These are starting drafts, not locked language.</div><h3>Opening</h3><ul><li><b>I don\'t have time</b> &mdash; "I caught you at a bad time. Do you have one minute to see if it even makes sense for me to call you back later?"</li><li><b>I\'m not interested</b> &mdash; "Most people say that because they think it\'s a sales pitch, or they\'ve had something explained badly before. Which one was it for you?"</li><li><b>I don\'t remember filling this out</b> &mdash; "It was the request about building tax-free cash value with an Indexed Universal Life plan. Ringing a bell?"</li></ul><h3>IUL-specific &mdash; not yet written</h3><ul><li><b>Is this an investment?</b></li><li><b>I already have a 401(k)</b></li><li><b>Isn\'t life insurance a bad investment?</b></li></ul><h3>At the close</h3><ul><li><b>I need to think about it</b> &mdash; find out whether it\'s a question or an affordability issue before you drop the number. Lowering the premium doesn\'t answer a question about how the product works.</li></ul><h3>Application</h3><ul><li><b>SSN</b> &mdash; MIB explanation, then remind them you verified your license earlier.</li><li><b>Banking</b> &mdash; checking is the safest form of payment; same information a paper check carries.</li></ul>'},
+iulobj:{title:"Objections",html:'<div class="agentnote">Every one of these is built into the script as a branch button. This panel is the whole set on one page, in call order.</div><h3>Opening</h3><ul><li><b>No longer interested</b> &mdash; find out whether something changed or they never wanted it, before you argue with it.</li><li><b>I already got one</b> &mdash; run the quick policy review. Half the time it isn\'t built the way they think it is, and that conversation is worth more than the objection.</li><li><b>I don\'t remember filling anything out</b> &mdash; re-anchor on the request itself, then on what they were trying to solve.</li><li><b>Not much cash available right now</b> &mdash; separate &ldquo;this month is tight&rdquo; from &ldquo;money is genuinely tight.&rdquo; They are different calls.</li><li><b>Money is genuinely tight</b> &mdash; forks on whether they have anything in place at all. If they have nothing, protection comes before wealth building.</li></ul><h3>At the close &mdash; &ldquo;I need to think about it&rdquo;</h3><div class="agentnote"><b>Never take this one at face value.</b> It is almost always the polite version of one of the three below. Ask &ldquo;while I\'ve got you, what questions can I answer?&rdquo; and listen for which one it actually is.</div><ul><li><b>It\'s the money</b> &mdash; the IUL is flexible, so go smaller rather than losing it. &ldquo;Start small, you can increase it later once you see how it performs.&rdquo; Then: <b>&ldquo;What would a more comfortable amount be for you?&rdquo;</b> Let them name the number &mdash; if you name it, they negotiate against it.</li><li><b>Something they aren\'t saying</b> &mdash; &ldquo;If you had to point at one thing making you want to sit on it, what would that be?&rdquo; If they still won\'t name it, give them doors: is it the amount, or how the plan works?</li><li><b>They want to talk to their spouse</b> &mdash; forks again: get the spouse on the phone, or find out whether they only need buy-in and can be direct.</li></ul><div class="agentnote"><b>Only book a follow-up if it is real.</b> Someone who genuinely needs to look at their numbers and then get set up is a real appointment. Someone being polite is not, and taking it costs you the call.</div><h3>During the application</h3><ul><li><b>The social</b> &mdash; the carrier verifies health through the MIB rather than taking your word for it, and the social is how they do it. Then remind them you sent your license information at the start.</li><li><b>Banking</b> &mdash; checking runs through their bank and is the safest form of payment; the same numbers are printed on the front of every paper check.</li></ul><h3>After underwriting</h3><ul><li><b>Hesitant about the changes</b> &mdash; when it comes back different from what you quoted, handle the change itself rather than re-selling the whole plan.</li></ul>'},
 
 mmath:{title:"Coverage Math",html:'<div class="agentnote"><b>Every option protects the home.</b> The only difference is how much time it buys. There are no losers in this lineup \u2014 even the smallest one prevents the foreclosure and saves the equity.</div><h3>How to build the three plans</h3><ul><li><b>The Full Payoff</b> \u2014 full mortgage balance + a final expense buffer of roughly $10\u201315K</li><li><b>The Time Plan</b> \u2014 about 24 months of mortgage payments + final expenses + a small buffer. <b>This is your recommendation.</b></li><li><b>The Safety Net</b> \u2014 about 6 to 12 months of mortgage payments + final expenses</li></ul><h3>Worked example</h3><ul><li>Mortgage: <b>$200,000 balance, $1,500/month</b></li><li>Full Payoff: <b>~$215,000</b></li><li>Time Plan: <b>~$45,000</b> (24 \u00d7 $1,500 + $10,000 final expense)</li><li>Safety Net: <b>~$25,000</b> (12 \u00d7 $1,500 + $7,000) or <b>~$17,000</b> (6 \u00d7 $1,500 + $8,000)</li></ul><h3>Product decision</h3><ul><li><b>Healthy, 35\u201355, decent income</b> \u2014 IUL. Permanent, locked rate, living benefits, growth. Especially strong if there is an old 401(k) in the picture.</li><li><b>Older, health-limited, fixed income</b> \u2014 whole life or final expense. Get them approved and protect the home.</li><li><b>Tight budget, permanent not possible</b> \u2014 term. Last resort, and only if the term outlasts the mortgage.</li></ul>'},
 
@@ -1219,7 +1219,7 @@ STAGES:[
 {n:5,lbl:"Submit",secs:["14","15","16"]}],
 ENTRY:{"1":"i_start","2":"i_appt","3":"i_creds","4":"i_why","5":"i_table","6":"i_elig",
 "7":"i_profile","8":"i_h_build","9":"i_path","10":"i_iul_how","11":"i_contrib_a",
-"12":"i_present_prot","13":"i_close_basic","14":"i_app","15":"i_uw","16":"i_wrap"},
+"12":"i_present_prot","13":"i_close_basic","14":"i_app_intro","15":"i_uw","16":"i_wrap"},
 ID:{
 i_start:"1.1", i_warm:"1.2a", i_sched:"1.2b",
 i_obj_notint:"1.3a", i_obj_cost:"1.3a1", i_obj_tight:"1.3a2", i_obj_tight_none:"1.3a3", i_obj_tight_has:"1.3a4", i_obj_have:"1.3b", i_review:"1.3b1", i_review_ok:"1.3b1a", i_review_bad:"1.3b1b", i_obj_forgot:"1.3c",
@@ -1240,9 +1240,9 @@ i_close_basic:"13.1a", i_close_confirm:"13.1b", i_hesitant:"13.2",
 i_hes_money:"13.2a", i_hes_unasked:"13.2b", i_hes_spouse:"13.2c",
 i_hes_spouse_book:"13.2c1", i_hes_spouse_direct:"13.2c2",
 i_pivot_basic:"13.3", i_pivot_product:"13.3a", i_pivot_wl:"13.3a1", i_pivot_term:"13.3a2", i_pivot_notnow:"13.3b",
-i_app:"14.1", i_app_ssn:"14.2", i_app_ssn_obj:"14.2a", i_app_auth1:"14.2b", i_app_ben:"14.3",
-i_app_draft:"14.3a", i_app_bank:"14.4", i_app_routing:"14.5", i_app_bank_obj:"14.5a",
-i_app_esign:"14.5b",
+i_app_intro:"14.1", i_app:"14.2", i_app_ssn:"14.3", i_app_ssn_obj:"14.3a", i_app_auth1:"14.3b", i_app_ben:"14.4",
+i_app_draft:"14.4a", i_app_bank:"14.5", i_app_routing:"14.6", i_app_bank_obj:"14.6a",
+i_app_esign:"14.6b",
 i_uw:"15.1", i_uw_pending:"15.2a", i_uw_changes:"15.2b", i_uw_changes_obj:"15.2b1", i_uw_denied:"15.2c",
 i_wrap:"16.1", i_wrap_recap:"16.2", i_wrap_ben:"16.2a", i_wrap_favors:"16.3",
 i_wrap_protect:"16.3a", i_wrap_agentlife:"16.4", i_wrap_saveme:"16.5",
@@ -1776,7 +1776,7 @@ i_close_basic:{s:"13",t:"Close &mdash; they're ready",l:[
 {t:"ask",x:"So just to confirm &mdash; the spelling of your last name is ___?"},
 {t:"dobig",x:"Start the application now. Don't pause, don't ask permission again. The confirmation question is your transition into the app &mdash; keep typing and keep talking."}
 ],b:[
-{k:"Into the application",to:"i_app",c:"go"},
+{k:"Into the application",to:"i_app_intro",c:"go"},
 {k:"They pumped the brakes",to:"i_hesitant",c:"alert"}]},
 
 i_close_confirm:{s:"13",t:"Close &mdash; confirmation",l:[
@@ -1790,7 +1790,7 @@ i_close_confirm:{s:"13",t:"Close &mdash; confirmation",l:[
 {t:"say",x:"So the next step is to submit a request to the carrier and see if we can get you set up for approval. Sound good?"},
 {t:"dobig",x:"Slight pause. Then: &ldquo;Let's get you started.&rdquo; And go. They'll either stop you or they won't &mdash; and most of the time they won't."}
 ],b:[
-{k:"Into the application",to:"i_app",c:"go"},
+{k:"Into the application",to:"i_app_intro",c:"go"},
 {k:"They pumped the brakes",to:"i_hesitant",c:"alert"}]},
 
 i_hesitant:{s:"13",t:"&ldquo;I need to think about it&rdquo;",l:[
@@ -1811,7 +1811,7 @@ i_hes_money:{s:"13",t:"It's the money",l:[
 {t:"note",x:"<b>If there is genuinely no money for an IUL</b>, don't just book and hope. Make one last effort to get their family protected with something basic. That path is on the next card."},
 {t:"warn",x:"<b>Only book a follow-up if they are genuinely going to go do something.</b> The one worth booking is the person who says they need to look at their actual numbers and then get set up with you. That's a real appointment.<br><br>Someone being polite to end the call is not. An appointment they never keep costs you the slot and teaches you nothing."}
 ],b:[
-{k:"They named a number &mdash; go",to:"i_app",c:"go"},
+{k:"They named a number &mdash; go",to:"i_app_intro",c:"go"},
 {k:"Truly no money &mdash; pivot to basic protection",to:"i_pivot_basic",c:"alert"},
 {k:"Book it &mdash; they'll review their finances first",to:"i_appt"}]},
 
@@ -1823,7 +1823,7 @@ i_hes_unasked:{s:"13",t:"There's something they aren't saying",l:[
 {t:"do",x:"Three specific options are much easier to answer than an open question. Whichever one they pick, you finally have something real to work with."},
 {t:"warn",x:"<b>Only book a follow-up if it's real.</b> If they genuinely want this and genuinely need to sit with it, book it. If it's a polite exit, don't take an appointment that was never going to happen."}
 ],b:[
-{k:"Handled &mdash; they're ready",to:"i_app",c:"go"},
+{k:"Handled &mdash; they're ready",to:"i_app_intro",c:"go"},
 {k:"It's actually the money",to:"i_hes_money",c:"alert"},
 {k:"Book a follow-up &mdash; they're serious",to:"i_appt"}]},
 
@@ -1854,7 +1854,7 @@ i_hes_spouse_direct:{s:"13",t:"They just want buy-in &mdash; be direct",l:[
 {t:"note",x:"<b>Aside &mdash; if it's a woman checking with her husband,</b> the protection framing lands differently. Go this direction instead: &ldquo;I thought you mentioned you make your own financial decisions? And really, at this point there isn't even a hard decision to make, because we don't know yet whether you'd be approved. Let's get you set, and then we can always do a policy delivery call with him &mdash; and see whether he'd like to get something in place to protect you, too.&rdquo;"},
 {t:"note",x:"<b>Keep the frame honest and it protects you too.</b> You're asking to find out whether they qualify &mdash; that's a different thing from asking someone to hide a purchase. Approval and delivery are two separate moments, so say it that way, and offer the delivery call with the spouse. That's what keeps this from becoming a first-month cancellation."}
 ],b:[
-{k:"That landed &mdash; keep going",to:"i_app",c:"go"},
+{k:"That landed &mdash; keep going",to:"i_app_intro",c:"go"},
 {k:"Still wants the conversation first",to:"i_hes_spouse_book"}]},
 
 i_pivot_basic:{s:"13",t:"Pivot to basic protection",l:[
@@ -1883,7 +1883,7 @@ i_pivot_wl:{s:"13",t:"Recommend &mdash; whole life",l:[
 {t:"ask",x:"Does that feel doable?"},
 {t:"do",x:"Do not apologize for the size of it. This is the same conversation at a number they can actually keep."}
 ],b:[
-{k:"They're in &mdash; start the application",to:"i_app",c:"go"},
+{k:"They're in &mdash; start the application",to:"i_app_intro",c:"go"},
 {k:"Not right now",to:"i_pivot_notnow"}]},
 
 i_pivot_term:{s:"13",t:"Recommend &mdash; term",l:[
@@ -1894,7 +1894,7 @@ i_pivot_term:{s:"13",t:"Recommend &mdash; term",l:[
 {t:"ask",x:"Does that feel doable?"},
 {t:"do",x:"Be straight that it's a different product. Don't blur it into what you presented earlier &mdash; they'll notice later and it'll cost you the relationship."}
 ],b:[
-{k:"They're in &mdash; start the application",to:"i_app",c:"go"},
+{k:"They're in &mdash; start the application",to:"i_app_intro",c:"go"},
 {k:"Not right now",to:"i_pivot_notnow"}]},
 
 i_pivot_notnow:{s:"13",t:"Not right now",l:[
@@ -1905,6 +1905,15 @@ i_pivot_notnow:{s:"13",t:"Not right now",l:[
 ],b:[{k:"End the call",to:"i_start",c:"go"}]},
 
 /* ---------- 14 APPLICATION ---------- *//* ---------- 14 APPLICATION ---------- */
+i_app_intro:{s:"14",t:"What happens now",l:[
+{t:"say",x:"Perfect. So here's what happens now &mdash; I'm going to fill out the application with you. It takes about five minutes, and then it goes to the carrier for their decision."},
+{t:"say",x:"It's your basic information, then your beneficiary, then a couple of verification steps. We always go after a plan with no medical exam first &mdash; no blood draw, nobody coming to your house &mdash; so the way the carrier verifies your health instead is through your records, and they do that with your social."},
+{t:"say",x:"Before we get into it, there's a piece I'm required to read you, because what we're talking about now is your medical information."},
+{t:"say",x:"The Health Insurance Portability and Accountability Act of 1996 &mdash; the Privacy Rule. This establishes national standards protecting your medical records and other individually identifiable health information.<br><br>Under this federal law, your protected health information cannot be released to the insurance company without your authorization. When you give that authorization, it allows the company you're applying to &mdash; and only that company &mdash; to obtain and review your records for one purpose: to verify your identity and assess your eligibility for coverage.<br><br>Misuse of protected health information is a federal offense, with penalties running as high as a $250,000 fine and ten years in prison."},
+{t:"ask",x:"___(first name), do you understand that the information you disclose is protected under the HIPAA Act of 1996?"},
+{t:"train",x:"Read this one slower and flatter than the rest of the call. It's meant to sound procedural &mdash; like something being read into a record. That formality is what settles the client down, because it signals a regulated process rather than a sales pitch. Don't warm it up."}
+],b:[{k:"They understand",to:"i_app",c:"go"}]},
+
 i_app:{s:"14",t:"Application, page one",l:[
 {t:"say",x:"Alright, we're nearly there &mdash; just pulling up everything for the carrier to get your approval."},
 {t:"say",x:"I've got the spelling of your first name as ___(first name). And your last name, and the spelling of your last name &mdash; I've got ___(last name)."},
@@ -2147,7 +2156,7 @@ STAGES:[
 {n:5,lbl:"Close",secs:["12","13","14"]}],
 ENTRY:{"1":"m_open","2":"m_appt","3":"m_creds","4":"m_frame","5":"m_home","6":"m_why",
 "7":"m_concept","8":"m_budget","9":"m_h_intro","10":"m_product","11":"m_quote",
-"12":"m_app","13":"m_uw","14":"m_wrap"},
+"12":"m_app_intro","13":"m_uw","14":"m_wrap"},
 ID:{
 m_open:"1.1", m_concern:"1.2", m_pen:"1.3",
 m_obj_what:"1.4a", m_obj_have:"1.4b", m_obj_lender:"1.4c", m_obj_notint:"1.4d",
@@ -2166,8 +2175,8 @@ m_product:"10.1", m_ed_types:"10.2", m_ed_iul:"10.3a", m_ed_wl:"10.3b", m_ed_ter
 m_benefits:"10.4",
 m_quote:"11.1", m_quote_ask:"11.2",
 m_obj_allornothing:"11.3a", m_obj_shop:"11.3b", m_obj_seen:"11.3c", m_obj_spouse:"11.3d", m_obj_high:"11.3e",
-m_app:"12.1", m_app_ssn:"12.2", m_app_ssn_obj:"12.2a", m_app_auth1:"12.2b", m_app_ben:"12.3",
-m_app_draft:"12.3a", m_app_bank:"12.4", m_app_routing:"12.5", m_app_bank_obj:"12.5a", m_app_esign:"12.5b",
+m_app_intro:"12.1", m_app:"12.2", m_app_ssn:"12.3", m_app_ssn_obj:"12.3a", m_app_auth1:"12.3b", m_app_ben:"12.4",
+m_app_draft:"12.4a", m_app_bank:"12.5", m_app_routing:"12.6", m_app_bank_obj:"12.6a", m_app_esign:"12.6b",
 m_uw:"13.1", m_uw_pending:"13.2a", m_uw_changes:"13.2b", m_uw_denied:"13.2c", m_uw_gi:"13.2d",
 m_wrap:"14.1", m_wrap_recap:"14.2", m_wrap_ben:"14.2a", m_wrap_favors:"14.3",
 m_wrap_protect:"14.3a", m_wrap_agentlife:"14.4", m_wrap_saveme:"14.5",
@@ -2567,7 +2576,7 @@ m_quote_ask:{s:"11",t:"The ask",l:[
 {t:"do",x:"Wait. First to speak loses."},
 {t:"ask",x:"Does that feel comfortable for your monthly budget?"}
 ],bh:"How did they respond?",b:[
-{k:"They picked one",to:"m_app",c:"go"},
+{k:"They picked one",to:"m_app_intro",c:"go"},
 {k:"I want to cover the whole mortgage",to:"m_obj_allornothing",c:"alert"},
 {k:"I want to shop around",to:"m_obj_shop",c:"alert"},
 {k:"I've seen it for less",to:"m_obj_seen",c:"alert"},
@@ -2580,33 +2589,42 @@ m_obj_allornothing:{s:"11",t:"&ldquo;I want all or nothing&rdquo;",l:[
 {t:"say",x:"What matters most is that ___(beneficiary / spouse) doesn't lose the house and doesn't lose the equity. Even six months of payments covered does that."},
 {t:"say",x:"Let's start with what's affordable and protects them. We can always look at adding more later if your situation changes."},
 {t:"note",x:"<b>If you're getting this objection, the concept card at 7.1 didn't land.</b> Go back to buying time and saving equity &mdash; not to the number."}
-],b:[{k:"They committed",to:"m_app",c:"go"},{k:"Back to the quote",to:"m_quote_ask"}]},
+],b:[{k:"They committed",to:"m_app_intro",c:"go"},{k:"Back to the quote",to:"m_quote_ask"}]},
 
 m_obj_shop:{s:"11",t:"&ldquo;I want to shop around&rdquo;",l:[
 {t:"say",x:"That makes sense &mdash; and I was able to do that for you. Remember, all insurance is state-regulated. Whether you go directly to the company or work with a broker, the price is the same. It's based on your health and your age. I've shopped the entire market for you."},
 {t:"ask",x:"Do you want me to go higher or lower, or is ___ good for you?"}
-],b:[{k:"They committed",to:"m_app",c:"go"},{k:"Back to the quote",to:"m_quote_ask"}]},
+],b:[{k:"They committed",to:"m_app_intro",c:"go"},{k:"Back to the quote",to:"m_quote_ask"}]},
 
 m_obj_seen:{s:"11",t:"&ldquo;I've seen it for less&rdquo;",l:[
 {t:"do",x:"They're usually just throwing a number at you. Don't chase it."},
 {t:"say",x:"All insurance is based on your health and your age. This is the best rate we could find for you, if I can get you approved."},
 {t:"ask",x:"Do you want me to go higher or lower, or is ___ good for you?"}
-],b:[{k:"They committed",to:"m_app",c:"go"},{k:"Back to the quote",to:"m_quote_ask"}]},
+],b:[{k:"They committed",to:"m_app_intro",c:"go"},{k:"Back to the quote",to:"m_quote_ask"}]},
 
 m_obj_spouse:{s:"11",t:"&ldquo;I need to talk to my spouse&rdquo;",l:[
 {t:"say",x:"That makes sense. But because we don't even know yet if we can get you approved, start with what you know in your heart would always be affordable."},
 {t:"say",x:"If we get approved, then you talk it over and adjust higher or lower. The hardest part is finding out whether they'll accept you at all."},
 {t:"ask",x:"Do you want me to go higher or lower, or is ___ good for you?"},
 {t:"warn",x:"<b>On a couples lead, this shouldn't be happening.</b> If the spouse is on the mortgage and isn't on the call, you booked it wrong. Better move: get them on the phone now, or reschedule with both."}
-],b:[{k:"They committed",to:"m_app",c:"go"},{k:"Book time with both",to:"m_appt"}]},
+],b:[{k:"They committed",to:"m_app_intro",c:"go"},{k:"Book time with both",to:"m_appt"}]},
 
 m_obj_high:{s:"11",t:"&ldquo;That's too high&rdquo;",l:[
 {t:"say",x:"Yeah, ___ is a lot of coverage."},
 {t:"ask",x:"I'm sure you'd agree any dollar amount going to ___(beneficiary) would help them keep the home, correct?"},
 {t:"say",x:"Because we don't even know yet if we can get you approved, start with what you know in your heart would always be affordable."}
-],b:[{k:"They committed",to:"m_app",c:"go"},{k:"Back to the quote",to:"m_quote_ask"}]},
+],b:[{k:"They committed",to:"m_app_intro",c:"go"},{k:"Back to the quote",to:"m_quote_ask"}]},
 
 /* ---------- 12 APPLICATION ---------- */
+m_app_intro:{s:"12",t:"What happens now",l:[
+{t:"say",x:"Okay, we're nearly there. Here's what happens now &mdash; I'm going to fill this out with you. It takes about five minutes, and then it goes to underwriting for their decision."},
+{t:"say",x:"It's your basic information, then your beneficiary, then a couple of verification steps. There's no medical exam on this &mdash; the way they verify everything instead is with your social, to confirm you're you and to check your records."},
+{t:"say",x:"Before we get into it, there's a piece I'm required to read you, because what we're talking about now is your medical information."},
+{t:"say",x:"The Health Insurance Portability and Accountability Act of 1996 &mdash; the Privacy Rule. This establishes national standards protecting your medical records and other individually identifiable health information.<br><br>Under this federal law, your protected health information cannot be released to the insurance company without your authorization. When you give that authorization, it allows the company you're applying to &mdash; and only that company &mdash; to obtain and review your records for one purpose: to verify your identity and assess your eligibility for coverage.<br><br>Misuse of protected health information is a federal offense, with penalties running as high as a $250,000 fine and ten years in prison."},
+{t:"ask",x:"___(first name), do you understand that the information you disclose is protected under the HIPAA Act of 1996?"},
+{t:"train",x:"Read this one slower and flatter than the rest of the call. It's meant to sound procedural &mdash; like something being read into a record. That formality is what settles the client down, because it signals a regulated process rather than a sales pitch. Don't warm it up."}
+],b:[{k:"They understand",to:"m_app",c:"go"}]},
+
 m_app:{s:"12",t:"Application, page one",l:[
 {t:"say",x:"Okay, we're nearly there. The next step is to collect a few final details to verify your identity and submit the request to underwriting."},
 {t:"say",x:"Let's go ahead and confirm the spelling of your full name. I've got ___(first name), and your last name is ___?"},
@@ -2704,7 +2722,7 @@ m_uw_changes:{s:"13",t:"Approved with changes",l:[
 {t:"warn",x:"<b>If you shop it, you'll live on this card for a while.</b> Run the next carrier's application and repeat the process. You do NOT need to re-collect anything they already gave you."}
 ],b:[
 {k:"They're approved",to:"m_wrap",c:"go"},
-{k:"Starting the next carrier",to:"m_app",c:"go"}]},
+{k:"Starting the next carrier",to:"m_app_intro",c:"go"}]},
 
 m_uw_denied:{s:"13",t:"Not approved",l:[
 {t:"do",x:"Stay assumptive. Your tone here decides whether they stay on the phone."},
@@ -2714,7 +2732,7 @@ m_uw_denied:{s:"13",t:"Not approved",l:[
 {t:"warn",x:"<b>You'll live on this card for a while.</b> Run the next carrier's application. Repeat with as many carriers as it takes. When they come back approved, continue below."}
 ],b:[
 {k:"They're approved",to:"m_wrap",c:"go"},
-{k:"Starting the next carrier",to:"m_app",c:"go"}]},
+{k:"Starting the next carrier",to:"m_app_intro",c:"go"}]},
 
 m_uw_gi:{s:"13",t:"Guaranteed issue",l:[
 {t:"note",x:"<b>Tone is everything here.</b> They can get covered &mdash; that's good news. Do not sound disappointed."},
@@ -3387,11 +3405,11 @@ if(want && LIB[want]){
 <script>
 /* ---- SUITE CONFIG: edit URLs here only. Same block lives in every tool. ---- */
 var SUITE = {
-  wizard:    { name:'Insurance Product Wizard',  url:'https://REPLACE-ME-wizard.example.com/',
+  wizard:    { name:'Insurance Product Wizard',  url:'https://wizard.ffloptimum.com/',
                blurb:'Enter age and conditions — see which IUL, term and final expense products a client can buy.' },
   navigator: { name:'Insurance Script Navigator', url:'https://script.ffloptimum.com/',
                blurb:'Card-by-card call scripts for veteran life, IUL and mortgage protection.' },
-  planning:  { name:'Agent Planning Tools',       url:'https://REPLACE-ME-planning.example.com/',
+  planning:  { name:'Agent Planning Tools',       url:'https://tools.ffloptimum.com/',
                blurb:'Income, activity, agency and commission calculators that pass numbers to each other.' },
   goat:      { name:'Free agent website, digital card & booking calendar',
                url:'https://goatleads.com/registration/new?affiliate_id=66c4aa379e0123651ad2f0e6' }
