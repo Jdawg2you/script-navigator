@@ -411,6 +411,20 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   background:#fff;border:1px solid var(--rule);border-radius:20px;padding:3px 11px}
 .chip:hover{border-color:var(--gold)}
 .chip.on{background:var(--goldsoft);border-color:var(--gold);color:var(--navy)}
+.medchips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
+.medchip{display:inline-flex;align-items:center;gap:5px;font-family:var(--sans);font-size:12px;font-weight:600;
+  background:var(--goldsoft);border:1px solid var(--gold);color:var(--navy);border-radius:20px;padding:3px 5px 3px 11px}
+.medchip button{appearance:none;border:0;background:transparent;color:var(--golddk);cursor:pointer;
+  font-size:14px;line-height:1;padding:0 3px}
+.medchip button:hover{color:var(--rust)}
+.medbox{position:relative}
+.medbox input{width:100%;font-family:var(--sans);font-size:13px;color:var(--ink);background:#fff;
+  border:1px solid var(--rule);border-radius:6px;padding:6px 8px}
+.medbox input:focus{outline:2px solid var(--goldline);border-color:var(--gold)}
+.medsug{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.medsug button{appearance:none;cursor:pointer;font-family:var(--sans);font-size:12px;color:var(--blue);
+  background:#fff;border:1px solid var(--rule);border-radius:5px;padding:3px 9px}
+.medsug button:hover{background:var(--bluesoft);border-color:var(--blue)}
 .refrow{align-items:flex-end}
 .refx{appearance:none;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--muted);
   border-radius:6px;padding:5px 9px;font-size:14px;line-height:1;flex:none;margin-bottom:1px}
@@ -802,7 +816,7 @@ sit_inplace:{s:"3",pf:"have",t:"Anything in place?",l:[
 ],b:[{k:"Nothing at all",to:"sit_trigger",c:"go",set:{inplace:"No"}},{k:"They have coverage",to:"sit_what",set:{inplace:"Yes"}}]},
 
 sit_what:{s:"3",pf:"have",t:"What they have",l:[
-{t:"ask",x:"Who's that through? ___(Carrier?) &hellip; Is that private, or through work? {{inplace_src}} &hellip; Do you know if it's whole life or term? {{inplace_kind}} &hellip; And what are you paying for it? ___(what they pay now)"},
+{t:"ask",x:"Who's that through? ___(Carrier?) &hellip; Is that private, or through work? {{inplace_src}} &hellip; How much is it for? ___(how much coverage) &hellip; Do you know if it's whole life or term? {{inplace_kind}} &hellip; And what are you paying for it? ___(what they pay now)"},
 {t:"do",x:"Four questions, not an audit. You need to know whether what they have leaves a gap."},
 {t:"note",x:"<b>If it's through work:</b> &ldquo;Coverage through work doesn't follow you. If you leave, if you get sick, if you retire, it's gone. It's covering you while you're there, not covering ___ when it counts.&rdquo;"},
 {t:"ask",x:"When you reached out &mdash; were you looking to add coverage on top of what you have, or trying to see if you could get a better deal? Or both?"},
@@ -1009,7 +1023,9 @@ inc_margin:{s:"7",pf:"income",t:"Income and margin",l:[
 {t:"do",x:"Take 5% of that number on your calculator. That is your basic tier target."},
 {t:"ask",x:"And at the end of the month, after the bills are paid &mdash; what do you usually have left over? ___(left over)"},
 {t:"ask",x:"Are you more of a spender or a saver? {{money_style}}"},
-{t:"ask",x:"Is there anything else you're leaving ___(beneficiary) that acts like life insurance? A 401(k), an IRA, savings?"},
+{t:"ask",x:"Is there anything else you're leaving ___(beneficiary) that acts like life insurance? A 401(k), an IRA, savings? {{has_assets}}"},
+{t:"pf",ks:["asset_where","asset_amt","asset_prot"]},
+{t:"train",x:"<b>Protectable means you could actually move it.</b> Two things have to be true: they are 59&frac12; or older, and the money is not sitting in a plan tied to the job they are working now. An old employer's 401(k), or anything they hold themselves, is fair game. The plan at their current job usually is not, whatever their age."},
 {t:"note",x:"<b>If yes &mdash; flag the client.</b> This is how you find money to protect with an FIA/Annuity. Don't derail this sale chasing it."}
 ],b:[{k:"Move to education",to:"ed_types",c:"go"}]},
 
@@ -1044,7 +1060,7 @@ ed_goals:{s:"8",t:"Hits your goals",l:[
 q_pen:{s:"9",t:"Soft hold, then pen and paper",l:[
 {t:"say",x:"Okay ___(first name), I'm going to put you on a very brief soft hold while I talk to one of our senior underwriters and make sure we're getting you the best coverage at the best price. Like I mentioned earlier, we work with a lot of carriers, so I want to make sure we get you the best value with an A-rated carrier. I'll be right back."},
 {t:"do",x:"Place them on hold and ask the room. Dial from the dial room and stay off mute &mdash; hearing other agents do this all day is how you learn which carrier fits which client."},
-{t:"pf",ks:["carrier"]},
+{t:"tip",x:"<b>Fill the three options in the client profile</b> &mdash; carrier, and the coverage and monthly for Max, Recommended and Basic. They fill themselves into the next three cards as you read them out."},
 {t:"note",x:"<b>Room is empty, or you're dialing off hours?</b> Use the <a href=\"https://wizard.ffloptimum.com/\" target=\"_blank\" rel=\"noopener\">Product Wizard</a> &mdash; put in their age and conditions and it tells you which carriers will actually take them."},
 {t:"ask",x:"You still have that pen and paper? Perfect &mdash; I'm going to give you three numbers."}
 ],b:[{k:"Next",to:"q_max",c:"go"}]},
@@ -2996,6 +3012,97 @@ function cfollowHTML(names){
   return out.length ? '<div class="line">'+out.join("")+'</div>' : "";
 }
 
+var MEDS=[
+["Eliquis","apixaban"],["Xarelto","rivaroxaban"],["Warfarin","Coumadin"],["Plavix","clopidogrel"],
+["Brilinta","ticagrelor"],["Pradaxa","dabigatran"],["Aspirin"],
+["Metoprolol","Lopressor","Toprol"],["Carvedilol","Coreg"],["Atenolol","Tenormin"],["Bisoprolol"],
+["Lisinopril","Zestril","Prinivil"],["Losartan","Cozaar"],["Valsartan","Diovan"],["Amlodipine","Norvasc"],
+["Hydrochlorothiazide","HCTZ"],["Furosemide","Lasix"],["Spironolactone","Aldactone"],["Clonidine"],
+["Diltiazem","Cardizem"],["Digoxin","Lanoxin"],["Isosorbide","Imdur"],["Nitroglycerin","Nitrostat"],
+["Amiodarone","Cordarone"],["Sotalol"],["Flecainide"],["Entresto","sacubitril"],["Ranexa","ranolazine"],
+["Atorvastatin","Lipitor"],["Simvastatin","Zocor"],["Rosuvastatin","Crestor"],["Pravastatin","Pravachol"],
+["Ezetimibe","Zetia"],["Fenofibrate","Tricor"],["Repatha","evolocumab"],
+["Metformin","Glucophage"],["Glipizide","Glucotrol"],["Glyburide"],["Januvia","sitagliptin"],
+["Jardiance","empagliflozin"],["Farxiga","dapagliflozin"],["Trulicity","dulaglutide"],
+["Ozempic","semaglutide"],["Mounjaro","tirzepatide"],["Victoza","liraglutide"],["Actos","pioglitazone"],
+["Lantus","insulin glargine"],["Humalog","insulin lispro"],["Levemir"],["NovoLog"],["Tresiba"],["Basaglar"],
+["Insulin"],["Gabapentin","Neurontin"],["Pregabalin","Lyrica"],["Duloxetine","Cymbalta"],
+["Levothyroxine","Synthroid"],["Methimazole","Tapazole"],["Prednisone"],["Methotrexate"],
+["Humira","adalimumab"],["Enbrel","etanercept"],["Plaquenil","hydroxychloroquine"],["Imuran","azathioprine"],
+["Albuterol","ProAir","Ventolin"],["Symbicort"],["Advair"],["Trelegy"],["Breo"],["Spiriva","tiotropium"],
+["Singulair","montelukast"],["Prednisolone"],["Oxygen"],
+["Sertraline","Zoloft"],["Escitalopram","Lexapro"],["Fluoxetine","Prozac"],["Citalopram","Celexa"],
+["Bupropion","Wellbutrin"],["Venlafaxine","Effexor"],["Trazodone"],["Mirtazapine","Remeron"],
+["Alprazolam","Xanax"],["Lorazepam","Ativan"],["Clonazepam","Klonopin"],["Diazepam","Valium"],
+["Buspirone","Buspar"],["Lithium"],["Lamotrigine","Lamictal"],["Quetiapine","Seroquel"],
+["Aripiprazole","Abilify"],["Risperidone","Risperdal"],["Olanzapine","Zyprexa"],["Haloperidol","Haldol"],
+["Donepezil","Aricept"],["Memantine","Namenda"],["Levodopa","Sinemet","carbidopa"],["Ropinirole"],
+["Phenytoin","Dilantin"],["Levetiracetam","Keppra"],["Topiramate","Topamax"],["Valproate","Depakote"],
+["Oxycodone","Percocet","OxyContin"],["Hydrocodone","Norco","Vicodin"],["Tramadol","Ultram"],
+["Morphine","MS Contin"],["Fentanyl"],["Methadone"],["Suboxone","buprenorphine"],["Naltrexone"],
+["Meloxicam","Mobic"],["Ibuprofen","Motrin","Advil"],["Naproxen","Aleve"],["Celecoxib","Celebrex"],
+["Omeprazole","Prilosec"],["Pantoprazole","Protonix"],["Famotidine","Pepcid"],
+["Allopurinol","Zyloprim"],["Colchicine"],["Tamsulosin","Flomax"],["Finasteride","Proscar"],
+["Sildenafil","Viagra"],["Tadalafil","Cialis"],["Alendronate","Fosamax"],["Vitamin D"],
+["Furosemide"],["Potassium","K-Dur"],["Amoxicillin"],["Azithromycin","Z-Pak"],["Doxycycline"],
+["Tamoxifen"],["Anastrozole","Arimidex"],["Letrozole","Femara"],["Keytruda","pembrolizumab"],
+["Revlimid","lenalidomide"],["Imbruvica","ibrutinib"],["Gleevec","imatinib"],
+["Entecavir"],["Epclusa"],["Harvoni"],["Truvada"],["Biktarvy"],["Descovy"],
+["Dialysis"],["Sevelamer","Renvela"],["Epogen","epoetin"],["Tacrolimus","Prograf"],["Cyclosporine"],
+["Mycophenolate","CellCept"],["Hydroxyurea"],["Eliquis"]
+];
+
+/* unpadded soundex, so "elikwis" and "Eliquis" collapse to the same key */
+function medKey(w){
+  var t=String(w||"").toUpperCase().replace(/[^A-Z]/g,"");
+  if(!t) return "";
+  var code={B:1,F:1,P:1,V:1,C:2,G:2,J:2,K:2,Q:2,S:2,X:2,Z:2,D:3,T:3,L:4,M:5,N:5,R:6};
+  var out=t[0], last=code[t[0]]||0;
+  for(var i=1;i<t.length;i++){
+    var c=t[i], d=code[c];
+    if(d && d!==last) out+=d;
+    if(c!=="H" && c!=="W") last=d||0;
+  }
+  return out;
+}
+/* same idea, but the first letter is coded too, so Xanax and "zanax" agree */
+function medKey2(w){
+  var t=String(w||"").toUpperCase().replace(/[^A-Z]/g,"");
+  if(!t) return "";
+  var code={B:1,F:1,P:1,V:1,C:2,G:2,J:2,K:2,Q:2,S:2,X:2,Z:2,D:3,T:3,L:4,M:5,N:5,R:6};
+  var out="", last=null;
+  for(var i=0;i<t.length;i++){
+    var c=t[i], d=code[c];
+    if(d && d!==last) out+=d;
+    if(c!=="H" && c!=="W") last=d||null;
+  }
+  return out;
+}
+var MED_INDEX=(function(){
+  var ix=[];
+  MEDS.forEach(function(row){ row.forEach(function(n){
+    ix.push({n:n,label:row[0],k:medKey(n),k2:medKey2(n)}); }); });
+  return ix;
+})();
+function medSuggest(q,limit){
+  var t=String(q||"").trim(); if(t.length<2) return [];
+  var lt=t.toLowerCase(), kt=medKey(t), seen={}, out=[];
+  function push(l){ if(!seen[l]){ seen[l]=1; out.push(l); } }
+  MED_INDEX.forEach(function(m){ if(m.n.toLowerCase().indexOf(lt)===0) push(m.label); });          /* types it right */
+  MED_INDEX.forEach(function(m){ if(m.n.toLowerCase().indexOf(lt)>0) push(m.label); });            /* mid-word */
+  if(kt.length>=2) MED_INDEX.forEach(function(m){ if(m.k.indexOf(kt)===0) push(m.label); });       /* sounds like it */
+  var k2=medKey2(t);
+  if(k2.length>=3) MED_INDEX.forEach(function(m){ if(m.k2.indexOf(k2)===0) push(m.label); });      /* wrong first letter */
+  return out.slice(0,limit||8);
+}
+
+var PF_PLACEHOLDER={asset_where:"401k / IRA / Roth / etc"};
+
+function pFit(el){
+  var n=Math.max(9,Math.min(42,(el.value||el.placeholder||"").length+2));
+  el.style.width=n+"ch";
+}
+
 function pfInline(ks){
   return (ks||[]).map(function(k){
     var f=pSpecOf(k); if(!f) return "";
@@ -3007,8 +3114,9 @@ function pfInline(ks){
         return '<button type="button" class="chip'+(v===oo?" on":"")+'" data-pfset="'+k+'" data-pfval="'+oo+'">'+oo+'</button>';
       }).join("")+'</span>';
     }
-    return '<span class="pfi"><i>'+f.l+'</i><input id="'+id+'" data-pk="'+k+'" data-inline="1" value="'+
-           esc(v).replace(/"/g,"&quot;")+'"></span>';
+    var ph=PF_PLACEHOLDER[k]||"";
+    return '<span class="pfi"><i>'+f.l+'</i><input id="'+id+'" data-pk="'+k+'" data-inline="1"'+
+           (ph?' placeholder="'+ph+'"':'')+' value="'+esc(v).replace(/"/g,"&quot;")+'"></span>';
   }).join("");
 }
 
@@ -3192,23 +3300,27 @@ var PF_SPEC=[
 
  {sec:"Health",id:"health"},
  {k:"conds",l:"Conditions",type:"conds"},
- {k:"meds",l:"Medications (spell them)",type:"area",w:2},
+ {k:"meds",l:"Medications",type:"meds"},
 
  {sec:"Income",id:"income"},
  {k:"inc_kind",l:"Source",w:2,multi:true,opt:["","Working","Retired","Social Security","Disability","Pension"]},
- {k:"i_income",l:"Monthly income",money:"prem",w:1},{k:"i_left",l:"Left over each month",money:"prem",w:1},
+ {k:"i_income",l:"Monthly income",money:"plain",w:1},{k:"i_left",l:"Left over each month",money:"plain",w:1},
  {k:"money_style",l:"Spender or saver",w:1,opt:["","Spender","Saver","Bit of both"]},
+ {k:"has_assets",l:"Anything that acts like insurance?",w:1,opt:["","No","Yes"]},
+ {k:"asset_where",l:"Where is it",w:1,showIf:["has_assets","Yes"]},
+ {k:"asset_amt",l:"Roughly how much",w:1,money:"plain",showIf:["has_assets","Yes"]},
+ {k:"asset_prot",l:"Protectable?",w:1,opt:["","Yes","No","Not sure"],showIf:["has_assets","Yes"]},
  {k:"i_prot",l:"Retirement protected?",w:1,opt:["","No","Yes"]},
 
  {sec:"Mortgage &mdash; ask if it comes up",id:"mortgage"},
- {k:"m_balance",l:"Balance left",money:"cov",w:1},{k:"m_payment",l:"Monthly payment",money:"prem",w:1},
+ {k:"m_balance",l:"Balance left",money:"cov",w:1},{k:"m_payment",l:"Monthly payment",money:"plain",w:1},
  {k:"m_years",l:"Years left",w:1},{k:"m_equity",l:"Equity",money:"cov",w:1},
  {k:"m_co",l:"Co-borrower",w:2},
 
  {sec:"Retirement &amp; money &mdash; ask if it comes up",id:"retirement"},
- {k:"i_contrib",l:"Monthly contribution",money:"prem",w:1},{k:"i_401k",l:"401k / TSP",w:1},
- {k:"i_roth",l:"Roth / IRA",w:1},{k:"i_liquid",l:"Liquid savings",money:"cov",w:1},
- {k:"i_debt",l:"Debt",money:"cov",w:1},{k:"i_retire",l:"Retire timeline",w:1},
+ {k:"i_contrib",l:"Monthly contribution",money:"plain",w:1},{k:"i_401k",l:"401k / TSP",w:1},
+ {k:"i_roth",l:"Roth / IRA",w:1},{k:"i_liquid",l:"Liquid savings",money:"plain",w:1},
+ {k:"i_debt",l:"Debt",money:"plain",w:1},{k:"i_retire",l:"Retire timeline",w:1},
 
  {sec:"The plan",id:"plan"},
  {k:"carrier",l:"Carrier",w:2},
@@ -3250,11 +3362,12 @@ var PRINT_ORDER=[
  ["Why",["goal","burial"]],
  ["Coverage they already have",["inplace","inplace_carrier","inplace_src","inplace_amt","inplace_kind","inplace_prem","inplace_exp","inplace_notes"]],
  ["Mortgage",["m_balance","m_payment","m_years","m_equity","m_co"]],
- ["Retirement & money",["inc_kind","i_income","i_left","money_style","i_contrib","i_401k","i_roth","i_liquid","i_debt","i_retire","i_prot"]],
+ ["Retirement & money",["inc_kind","i_income","i_left","money_style","has_assets","asset_where","asset_amt","asset_prot","i_contrib","i_401k","i_roth","i_liquid","i_debt","i_retire","i_prot"]],
  ["Beneficiary",["ben","benphone","benrel","bendob","bencont","ben2","ben2phone","ben2rel","ben2split","crm"]],
  ["Referrals",["refs"]],
  ["The plan",["carrier","bank","opt1_cov","opt1_prem","opt2_cov","opt2_prem","opt3_cov","opt3_prem","chosen","coverage","premium","draft","policy"]]
 ];
+var OPTIONAL_SECTIONS=["Mortgage","Retirement & money","Referrals"];
 function pSpecOf(k){ for(var i=0;i<PF_SPEC.length;i++){ if(PF_SPEC[i].k===k) return PF_SPEC[i]; } return null; }
 
 
@@ -3300,7 +3413,7 @@ var BLANKMAP={
  "spell it":"a_name","spell it out":"a_name","last name":"last","client's state":"state",
  "spouse":"spouse","beneficiary":"ben","beneficiary / spouse":"ben","branch of service":"branch",
  "carrier":"carrier","coverage":"coverage","amount":"coverage","premium":"premium",
- "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","policy number":"policy","draft date":"draft","monthly income":"i_income","monthly amount":"premium","left over":"i_left","Carrier?":"inplace_carrier","their goal, in their words":"goal",
+ "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","policy number":"policy","draft date":"draft","monthly income":"i_income","monthly amount":"premium","left over":"i_left","Carrier?":"inplace_carrier","how much coverage":"inplace_amt","their goal, in their words":"goal",
  "address":"address","balance":"m_balance","monthly payment":"m_payment","equity":"m_equity",
  
  "your name":"a_name","your full name":"a_full","agent name":"a_name","your NPN":"a_npn",
@@ -3347,6 +3460,7 @@ function pRender(){
       o.push('<div class="profsec" id="ps_'+(f.id||'')+'">'+f.sec+'</div>'); return; }
     if(skip) return;
     if(f.type==="refs"){ flush(); o.push(pRefsHTML()); return; }
+    if(f.type==="meds"){ flush(); o.push(pMedsHTML()); return; }
     if(f.type==="conds"){ flush();
       o.push('<div class="conds">'+PF_CONDS.map(function(c){
         var on=(P.conds||[]).indexOf(c)>-1;
@@ -3361,6 +3475,51 @@ function pRender(){
   var pn=document.getElementById("pnotes"); if(pn) pn.value=P.notes||"";
   pFollow();
 }
+
+function pMedsHTML(){
+  var list=(P.meds_list||[]);
+  return '<div class="profsec" style="border:0;padding:0;margin:14px 0 6px">Medications</div>'+
+    '<div class="medchips" id="medchips">'+list.map(function(m,i){
+      return '<span class="medchip">'+esc(m)+'<button type="button" data-meddel="'+i+'" title="Remove">&times;</button></span>';
+    }).join("")+'</div>'+
+    '<div class="medbox"><input id="medinput" placeholder="Start typing a medication&hellip;" autocomplete="off">'+
+    '<div class="medsug" id="medsug"></div></div>';
+}
+
+function pMedsRefresh(){
+  var w=document.getElementById("medchips"); if(!w) return;
+  w.innerHTML=(P.meds_list||[]).map(function(m,i){
+    return '<span class="medchip">'+esc(m)+'<button type="button" data-meddel="'+i+'" title="Remove">&times;</button></span>';
+  }).join("");
+}
+function medAdd(name){
+  var a=(P.meds_list||[]).slice();
+  if(a.indexOf(name)<0) a.push(name);
+  P.meds_list=a; P.meds=a.join(", "); pStore(); pMedsRefresh(); pFlash();
+  var inp=document.getElementById("medinput"); if(inp){ inp.value=""; inp.focus(); }
+  var sg=document.getElementById("medsug"); if(sg) sg.innerHTML="";
+}
+
+document.addEventListener("input",function(e){
+  if(e.target.id!=="medinput") return;
+  var sg=document.getElementById("medsug"); if(!sg) return;
+  var hits=medSuggest(e.target.value,8);
+  sg.innerHTML=hits.map(function(h){return '<button type="button" data-medadd="'+esc(h).replace(/"/g,"&quot;")+'">'+esc(h)+'</button>';}).join("");
+});
+document.addEventListener("keydown",function(e){
+  if(e.target.id!=="medinput") return;
+  if(e.key==="Enter"){ e.preventDefault();
+    var sg=document.getElementById("medsug"), first=sg&&sg.querySelector("[data-medadd]");
+    medAdd(first? first.getAttribute("data-medadd") : e.target.value.trim());
+  }
+});
+document.addEventListener("click",function(e){
+  var a=e.target.closest && e.target.closest("[data-medadd]");
+  if(a){ medAdd(a.getAttribute("data-medadd")); return; }
+  var d=e.target.closest && e.target.closest("[data-meddel]");
+  if(d){ var i=+d.getAttribute("data-meddel"); var arr=(P.meds_list||[]).slice(); arr.splice(i,1);
+         P.meds_list=arr; P.meds=arr.join(", "); pStore(); pMedsRefresh(); pFlash(); }
+});
 
 function pRefsHTML(){
   var list=P.refs||[];
@@ -3416,9 +3575,14 @@ function pMoneyCov(v){                       /* 35 -> $35,000 ; 35000 -> $35,000
   if(t.indexOf(".")<0 && t.length<=3) n=n*1000;
   return "$"+Math.round(n).toLocaleString("en-US");
 }
+function pMoneyPlain(v){                    /* 5478 -> $5,478 ; 300 -> $300 */
+  var t=String(v||"").replace(/[$,\s]/g,""); if(!t||!/^\d+(\.\d+)?$/.test(t)) return null;
+  return "$"+Math.round(parseFloat(t)).toLocaleString("en-US");
+}
 function pMoneyPrem(v){                      /* 7847 -> $78.47 ; 68 -> $68.00 ; 68.50 -> $68.50 */
   var t=String(v||"").replace(/[$,\s]/g,""); if(!t) return null;
   if(/^\d+\.\d{1,2}$/.test(t)) return "$"+parseFloat(t).toFixed(2);
+  if(/^\d+\.\d{3,}$/.test(t)) t=t.replace(".","");     /* they appended to an already-formatted value */
   if(!/^\d+$/.test(t)) return null;
   var n = t.length<=2 ? parseFloat(t) : parseInt(t,10)/100;
   return "$"+n.toFixed(2);
@@ -3490,7 +3654,9 @@ document.addEventListener("input",function(e){
     var k=t.getAttribute("data-pk");
     pSet(k,t.value,t.getAttribute("data-inline")==="1");
     [].forEach.call(document.querySelectorAll('[data-pk="'+k+'"]'),function(el){
-      if(el!==t && el.value!==t.value) el.value=t.value; });
+      if(el!==t && el.value!==t.value) el.value=t.value;
+      if(el.classList && el.classList.contains("iblank")) pFit(el); });
+    if(t.classList && t.classList.contains("iblank")) pFit(t);
     if(k==="dob"){
       var a=pAge(t.value);
       if(a){ var ae=document.getElementById("pf_age");
@@ -3505,7 +3671,7 @@ document.addEventListener("change",function(e){
   if(t.getAttribute&&t.getAttribute("data-pk")){
     var mk=t.getAttribute("data-pk"), mf=pSpecOf(mk);
     if(mf&&mf.money){
-      var mv=(mf.money==="cov")?pMoneyCov(t.value):pMoneyPrem(t.value);
+      var mv=(mf.money==="cov")?pMoneyCov(t.value):(mf.money==="plain")?pMoneyPlain(t.value):pMoneyPrem(t.value);
       if(mv){ pSet(mk,mv);
         [].forEach.call(document.querySelectorAll('[data-pk="'+mk+'"]'),function(el){ el.value=mv; }); }
     }
@@ -3581,13 +3747,16 @@ function pWire(){
   var op=document.getElementById("profopen");  if(op) op.onclick=function(){ $("proffile").click(); };
 }
 
+var SCRIPT_CODE={veteran:"VET",mortgage:"MP",iul:"IUL"};
 function pSaveFile(){
   var d=new Date(), pad=function(n){return (n<10?"0":"")+n};
-  var stamp=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
-  var name=((P.first||"client")+"-"+(P.last||"")).replace(/[^A-Za-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+stamp;
+  var stamp=pad(d.getMonth()+1)+"."+pad(d.getDate())+"."+d.getFullYear();
+  var who=((P.first||"")+" "+(P.last||"")).replace(/\s+/g," ").trim() || "Client";
+  var code=SCRIPT_CODE[(typeof curScript!=="undefined"&&curScript)||"veteran"]||"VET";
+  var name=(who+" Profile - "+code+" - "+stamp).replace(/[\/\\:*?"<>|]/g,"");
   var blob=new Blob([JSON.stringify(P,null,1)],{type:"application/json"});
   var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
-  a.download=name+"-profile.json"; a.style.display="none";
+  a.download=name+".json"; a.style.display="none";
   document.body.appendChild(a); a.click();
   setTimeout(function(){URL.revokeObjectURL(a.href);document.body.removeChild(a)},600);
 }
@@ -3604,6 +3773,12 @@ function pPrint(){
   var w=window.open("","_blank"); if(!w){alert("Allow pop-ups to print the profile.");return;}
   var rows=[], cur=(typeof curScript!=="undefined"&&curScript)||"veteran";
   PRINT_ORDER.forEach(function(g){
+    var any=g[1].some(function(k){
+      if(k==="conds") return (P.conds||[]).length>0;
+      if(k==="refs")  return (P.refs||[]).some(function(r){return r.n||r.p||r.r});
+      return !!(P[k]&&String(P[k]).trim());
+    });
+    if(!any && OPTIONAL_SECTIONS.indexOf(g[0])>-1) return;
     rows.push('<h2>'+g[0]+'</h2>');
     g[1].forEach(function(k){
       if(k==="refs"){
