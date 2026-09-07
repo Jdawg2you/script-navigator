@@ -422,6 +422,21 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   background:#fff;border:1px solid var(--rule);border-radius:20px;padding:3px 11px}
 .chip:hover{border-color:var(--gold)}
 .chip.on{background:var(--goldsoft);border-color:var(--gold);color:var(--navy)}
+.pickwrap{display:flex;flex-direction:column;gap:6px;margin:0 0 12px}
+.pick{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--rule);
+  border-radius:8px;padding:8px 11px;cursor:pointer;font-family:var(--sans);font-size:13px;color:var(--slate)}
+.pick:hover{border-color:var(--gold)}
+.pick.on{background:var(--goldsoft);border-color:var(--gold)}
+.pick input[type=checkbox]{appearance:none;width:16px;height:16px;border:1.5px solid var(--navy);
+  border-radius:4px;background:#fff;position:relative;flex:none;cursor:pointer}
+.pick input[type=checkbox]:checked{background:var(--navy)}
+.pick input[type=checkbox]:checked:after{content:"";position:absolute;left:5px;top:1px;width:4px;height:9px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(42deg)}
+.pkl{font-weight:700;color:var(--navy);flex:0 0 150px}
+.pkin{font-family:var(--sans);font-size:13px;color:var(--ink);background:#fff;border:1px solid var(--rule);
+  border-radius:5px;padding:3px 7px;width:104px}
+.pkin:focus{outline:2px solid var(--goldline);border-color:var(--gold)}
+.pkf{color:var(--muted);font-size:12px}
 .medflag{margin-top:9px}
 .mfrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:var(--bluesoft);
   border:1px dashed rgba(44,74,124,.4);border-radius:8px;padding:8px 11px;margin-bottom:6px;
@@ -1038,6 +1053,7 @@ h_rest:{s:"6",pf:"health",t:"Memory, autoimmune, mobility",l:[
 
 h_recent:{s:"6",pf:"health",t:"Recent history",l:[
 {t:"ask",x:"Any major surgeries or overnight hospital stays in the last five years? {{recent_stay}}"},
+{t:"pf",ks:["recent_what"],when:["recent_stay","Yes"]},
 {t:"ask",x:"And have you had COVID in the last two years &mdash; were you hospitalized for it? {{covid}}"}
 ],b:[{k:"Next",to:"h_catchall",c:"go"}]},
 
@@ -1099,7 +1115,9 @@ ed_goals:{s:"8",t:"Hits your goals",l:[
 q_pen:{s:"9",t:"Soft hold, then pen and paper",l:[
 {t:"say",x:"Okay ___(first name), I'm going to put you on a very brief soft hold while I talk to one of our senior underwriters and make sure we're getting you the best coverage at the best price. Like I mentioned earlier, we work with a lot of carriers, so I want to make sure we get you the best value with an A-rated carrier. I'll be right back."},
 {t:"do",x:"Place them on hold and ask the room. Dial from the dial room and stay off mute &mdash; hearing other agents do this all day is how you learn which carrier fits which client."},
-{t:"tip",x:"<b>Fill the three options in the client profile</b> &mdash; carrier, and the coverage and monthly for Max, Recommended and Basic. They fill themselves into the next three cards as you read them out."},
+{t:"tip",x:"<b>Fill the three options in here</b> &mdash; they read themselves into the next three cards, and into the pick list at 9.5."},
+{t:"pf",ks:["carrier"]},
+{t:"pick"},
 {t:"note",x:"<b>Room is empty, or you're dialing off hours?</b> Use the <a href=\"https://wizard.ffloptimum.com/\" target=\"_blank\" rel=\"noopener\">Product Wizard</a> &mdash; put in their age and conditions and it tells you which carriers will actually take them."},
 {t:"ask",x:"You still have that pen and paper? Perfect &mdash; I'm going to give you three numbers."}
 ],b:[{k:"Next",to:"q_max",c:"go"}]},
@@ -1132,7 +1150,7 @@ q_ask:{s:"9",pf:"plan",t:"The ask",l:[
 {t:"say",x:"Now, like I mentioned, I don't make the final decision here &mdash; the insurance company does. So all we can do is submit it and see whether they'll approve you."},
 {t:"train",x:"This one line changes what you're asking. Without it you're asking them to buy; with it you're asking them to apply and find out. It also means an approval lands as good news later instead of as the moment they have to decide."},
 {t:"ask",x:"So if we're able to get you approved &mdash; which of these feels closest to what you need and fits for you on a monthly basis? Or is there an amount in between that you'd like me to look at?"},
-{t:"say",x:"Option one &mdash; ___(max coverage) for ___(max monthly) a month. Option two &mdash; ___(recommended coverage) for ___(recommended monthly). Option three &mdash; ___(basic coverage) for ___(basic monthly)."},
+{t:"pick"},
 {t:"do",x:"Wait. First to speak loses."}
 ],bh:"What did they say?",b:[
 {k:"They picked",to:"app_intro",c:"go"},
@@ -1182,6 +1200,7 @@ app_page1:{s:"10",pf:"app",t:"Application, page one",l:[
 {t:"pf",ks:["address","city","state","zip"]},
 {t:"pf",ks:["phone","email"]},
 {t:"ask",x:"And for the beneficiary &mdash; I've got ___(beneficiary). What's their full legal name, and what's the best phone number for them?"},
+{t:"bens"},
 {t:"note",x:"<b>Get the beneficiary's phone number every single time.</b> They are your first referral off this call. You will need to reach them once the policy is issued to introduce yourself, and to text them so they know who you are long before they ever have to call you."},
 {t:"warn",x:"<b>Complete the entire page before you ask for the social.</b><br>If the SSN field sits in the middle of the page, skip past it, finish everything below it, then come back up to it."}
 ],b:[{k:"Ready for the social",to:"app_ssn",c:"go"}]},
@@ -1306,7 +1325,7 @@ w_ben:{s:"12",t:"Reaching out to the beneficiary",l:[
 {t:"say",x:"I'm sure you'd agree &mdash; we don't want them in the dark about something this important. You wouldn't believe how many policies go unpaid every year because the beneficiary never knew their parent or their loved one had one in the first place."},
 {t:"do",x:"This is a statement, not a question. You're assuming the yes. They'll nod along, and if they disagree they'll stop you &mdash; but you don't need them to say anything."},
 {t:"dobig",x:"Actually send it. Text the message below along with your digital business card."},
-{t:"copy",label:"Text to send the beneficiary",x:"Hi ___,\n\nMy name is ___, and I'm the life insurance agent who worked with ___ on their coverage. They named you as a beneficiary on their policy, and they wanted to make sure you had a real person to reach out to rather than just a 1-800 number and a stack of paperwork.\n\nThere's nothing you need to do right now \u2014 I just wanted to introduce myself and put my information in your hands. Whenever the time comes, you can call or text me directly. My job is to make the process simple: I'll walk you through the few steps needed and help get the funds released quickly, so the immediate expenses are taken care of and you've got a little breathing room when you need it most.\n\nGo ahead and save my number. I hope it's a long while before you ever need it \u2014 but when you do, I'll be here.\n\nAll the best,\n\n___ (agent name)\n___ (agent phone)\n___ (agent email)"},
+{t:"copy",label:"Text to send the beneficiary",x:"Hi ___(beneficiary),\n\nMy name is ___(your full name), and I'm the life insurance agent who worked with ___(first name) on their coverage. They named you as a beneficiary on their policy, and they wanted to make sure you had a real person to reach out to rather than just a 1-800 number and a stack of paperwork.\n\nThere's nothing you need to do right now \u2014 I just wanted to introduce myself and put my information in your hands. Whenever the time comes, you can call or text me directly. My job is to make the process simple: I'll walk you through the few steps needed and help get the funds released quickly, so the immediate expenses are taken care of and you've got a little breathing room when you need it most.\n\nGo ahead and save my number. I hope it's a long while before you ever need it \u2014 but when you do, I'll be here.\n\nAll the best,\n\n___ (agent name)\n___ (agent phone)\n___ (agent email)"},
 {t:"do",x:"Get their number here if you don't already have it &mdash; though this should be part of your standard process any time you collect a beneficiary name on an application."}
 ],b:[{k:"Next",to:"w_favors",c:"go"}]},
 
@@ -2245,7 +2264,7 @@ i_wrap_ben:{s:"16",t:"Reaching out to the beneficiary",l:[
 {t:"say",x:"I'm sure you'd agree &mdash; we don't want them in the dark about something this important. You wouldn't believe how many policies go unpaid every year because the beneficiary never knew their loved one had one in the first place."},
 {t:"do",x:"This is a statement, not a question. You're assuming the yes. They'll nod along, and if they disagree they'll stop you &mdash; but you don't need them to say anything."},
 {t:"dobig",x:"Actually send it. Text the message below along with your digital business card."},
-{t:"copy",label:"Text to send the beneficiary",x:"Hi ___,\n\nMy name is ___, and I'm the life insurance agent who worked with ___ on their coverage. They named you as a beneficiary on their policy, and they wanted to make sure you had a real person to reach out to rather than just a 1-800 number and a stack of paperwork.\n\nThere's nothing you need to do right now \u2014 I just wanted to introduce myself and put my information in your hands. Whenever the time comes, you can call or text me directly. My job is to make the process simple: I'll walk you through the few steps needed and help get the funds released quickly, so the immediate expenses are taken care of and you've got a little breathing room when you need it most.\n\nGo ahead and save my number. I hope it's a long while before you ever need it \u2014 but when you do, I'll be here.\n\nAll the best,\n\n___ (agent name)\n___ (agent phone)\n___ (agent email)"}
+{t:"copy",label:"Text to send the beneficiary",x:"Hi ___(beneficiary),\n\nMy name is ___(your full name), and I'm the life insurance agent who worked with ___(first name) on their coverage. They named you as a beneficiary on their policy, and they wanted to make sure you had a real person to reach out to rather than just a 1-800 number and a stack of paperwork.\n\nThere's nothing you need to do right now \u2014 I just wanted to introduce myself and put my information in your hands. Whenever the time comes, you can call or text me directly. My job is to make the process simple: I'll walk you through the few steps needed and help get the funds released quickly, so the immediate expenses are taken care of and you've got a little breathing room when you need it most.\n\nGo ahead and save my number. I hope it's a long while before you ever need it \u2014 but when you do, I'll be here.\n\nAll the best,\n\n___ (agent name)\n___ (agent phone)\n___ (agent email)"}
 ],b:[{k:"Next",to:"i_wrap_favors",c:"go"}]},
 
 i_wrap_favors:{s:"16",t:"Two favors",l:[
@@ -2945,7 +2964,7 @@ m_wrap_ben:{s:"14",t:"Reaching out to the beneficiary",l:[
 {t:"say",x:"That way, if that day ever comes, they already know who I am and exactly who to call. They won't be trying to figure it out on the hardest day of their life."},
 {t:"say",x:"I'm sure you'd agree &mdash; we don't want them in the dark about something this important. You wouldn't believe how many policies go unpaid every year because the beneficiary never knew their loved one had one in the first place."},
 {t:"dobig",x:"Actually send it. Text the message below along with your digital business card."},
-{t:"copy",label:"Text to send the beneficiary",x:"Hi ___,\n\nMy name is ___, and I'm the life insurance agent who worked with ___ on their coverage. They named you as a beneficiary on their policy, and they wanted to make sure you had a real person to reach out to rather than just a 1-800 number and a stack of paperwork.\n\nThere's nothing you need to do right now \u2014 I just wanted to introduce myself and put my information in your hands. Whenever the time comes, you can call or text me directly. My job is to make the process simple: I'll walk you through the few steps needed and help get the funds released quickly, so the immediate expenses are taken care of and you've got a little breathing room when you need it most.\n\nGo ahead and save my number. I hope it's a long while before you ever need it \u2014 but when you do, I'll be here.\n\nAll the best,\n\n___ (agent name)\n___ (agent phone)\n___ (agent email)"}
+{t:"copy",label:"Text to send the beneficiary",x:"Hi ___(beneficiary),\n\nMy name is ___(your full name), and I'm the life insurance agent who worked with ___(first name) on their coverage. They named you as a beneficiary on their policy, and they wanted to make sure you had a real person to reach out to rather than just a 1-800 number and a stack of paperwork.\n\nThere's nothing you need to do right now \u2014 I just wanted to introduce myself and put my information in your hands. Whenever the time comes, you can call or text me directly. My job is to make the process simple: I'll walk you through the few steps needed and help get the funds released quickly, so the immediate expenses are taken care of and you've got a little breathing room when you need it most.\n\nGo ahead and save my number. I hope it's a long while before you ever need it \u2014 but when you do, I'll be here.\n\nAll the best,\n\n___ (agent name)\n___ (agent phone)\n___ (agent email)"}
 ],b:[{k:"Next",to:"m_wrap_favors",c:"go"}]},
 
 m_wrap_favors:{s:"14",t:"Two favors",l:[
@@ -3007,6 +3026,13 @@ var S,STAGES,ENTRY,ID,N,curScript=null;
 
 var cur="start",hist=[],redo=[],t0=null,tick=null;
 function $(id){return document.getElementById(id)}
+
+function copyFill(x){
+  return String(x).replace(/_{3,}\s*\(([^)]+)\)/g,function(m,lab){
+    var v=(typeof pBlank==="function")?pBlank(lab):"";
+    return v || "________";
+  }).replace(/_{3,}/g,"________");
+}
 
 function fmt(x){
   return x.replace(/\{\{c:([^}]+)\}\}/g,function(m,c){
@@ -3252,6 +3278,7 @@ document.addEventListener("click",function(e){
   pStore(); pFlash();
   pSyncChips(k);
   if(document.getElementById("profbody")) pRender();
+  if(f && f.drives && typeof render==="function") render();   /* a chip that opens follow-ups must redraw the card */
 });
 
 function pSyncChips(k){
@@ -3299,6 +3326,8 @@ function render(){
     if(L.t==="train")return "";
     if(L.t==="tip")  return '<div class="line"><div class="note tipnote">'+x+'</div></div>';
     if(L.t==="alt")  return altHTML(L);
+    if(L.t==="pick") return pickHTML();
+    if(L.t==="bens") return !PROFILE_ON ? "" : '<div class="line">'+pBensHTML()+'</div>';
     if(L.t==="meds") return !PROFILE_ON ? "" : '<div class="line">'+pMedsHTML(true)+'<div id="medflagwrap">'+medFlagHTML()+'</div></div>';
     if(L.t==="pf"){
       if(!PROFILE_ON) return "";
@@ -3306,7 +3335,7 @@ function render(){
       return '<div class="line"><div class="pfline">'+pfInline(L.ks)+'</div></div>';
     }
     if(L.t==="warn") return '<div class="line"><div class="note star"><span class="starbadge">&#9733;</span><div>'+x+'</div></div></div>';
-    if(L.t==="copy") return '<div class="line"><details class="copyblk"><summary>'+(L.label||"Copy this")+'</summary><div class="copywrap"><button type="button" class="copybtn">Copy</button><pre class="copytext">'+L.x.replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</pre></div></details></div>';
+    if(L.t==="copy") return '<div class="line"><details class="copyblk"><summary>'+(L.label||"Copy this")+'</summary><div class="copywrap"><button type="button" class="copybtn">Copy</button><pre class="copytext">'+copyFill(L.x).replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</pre></div></details></div>';
     return '<div class="line"><div class="note">'+x+'</div></div>';
   }).join("");
 
@@ -3403,9 +3432,9 @@ var PF_SPEC=[
  {sec:"What they have now",id:"have"},
  {k:"inplace",l:"Anything in place?",w:2,opt:["","No","Yes"]},
  {k:"inplace_carrier",l:"Their current carrier",w:1,showIf:["inplace","Yes"]},
- {k:"inplace_src",l:"Through work or private?",w:1,opt:["","Work","Private","Both"],showIf:["inplace","Yes"]},
+ {k:"inplace_src",drives:true,l:"Through work or private?",w:1,opt:["","Work","Private","Both"],showIf:["inplace","Yes"]},
  {k:"inplace_amt",l:"How much coverage",money:"cov",w:1,showIf:["inplace","Yes"]},
- {k:"inplace_kind",l:"Term or whole life?",w:1,opt:["","Term","Whole life","Not sure"],showIf:["inplace","Yes"]},
+ {k:"inplace_kind",drives:true,l:"Term or whole life?",w:1,opt:["","Term","Whole life","Not sure"],showIf:["inplace","Yes"]},
  {k:"inplace_prem",l:"What they pay",money:"prem",w:1,showIf:["inplace","Yes"]},
  {k:"inplace_exp",l:"When does the term expire?",w:2,showIf:["inplace_kind","Term"]},
  {k:"inplace_notes",l:"Notes on their existing coverage",type:"area",w:2,showIf:["inplace","Yes"]},
@@ -3424,7 +3453,8 @@ var PF_SPEC=[
  {sec:"Health",id:"health"},
  {k:"conds",l:"Conditions",type:"conds"},
  {k:"meds",l:"Medications",type:"meds"},
- {k:"recent_stay",l:"Surgery or overnight stay, last 5 yrs",w:1,opt:["","No","Yes"]},
+ {k:"recent_stay",drives:true,l:"Surgery or overnight stay, last 5 yrs",w:1,opt:["","No","Yes"]},
+ {k:"recent_what",l:"What, and when",w:2,showIf:["recent_stay","Yes"]},
  {k:"covid",l:"COVID in last 2 yrs",w:1,opt:["","No","Not hospitalised","Hospitalised"]},
  {k:"health_notes",l:"Anything else",w:2},
 
@@ -3432,14 +3462,14 @@ var PF_SPEC=[
  {k:"inc_kind",l:"Source",w:2,multi:true,opt:["","Working","Retired","Social Security","Disability","Pension"]},
  {k:"i_income",l:"Monthly income",money:"plain",w:1},{k:"i_left",l:"Left over each month",money:"plain",w:1},
  {k:"money_style",l:"Spender or saver",w:1,opt:["","Spender","Saver","Bit of both"]},
- {k:"has_assets",l:"Anything that acts like insurance?",w:1,opt:["","No","Yes"]},
+ {k:"has_assets",drives:true,l:"Anything that acts like insurance?",w:1,opt:["","No","Yes"]},
  {k:"asset_where",l:"Where is it",w:1,showIf:["has_assets","Yes"]},
  {k:"asset_amt",l:"Roughly how much",w:1,money:"plain",showIf:["has_assets","Yes"]},
  {k:"asset_prot",l:"Protectable?",w:1,opt:["","Yes","No","Not sure"],showIf:["has_assets","Yes"]},
  {k:"i_prot",l:"Retirement protected?",w:1,opt:["","No","Yes"]},
 
  {sec:"Mortgage &mdash; ask if it comes up",id:"mortgage"},
- {k:"has_mortgage",l:"Mortgage?",w:2,opt:["","No","Yes"]},
+ {k:"has_mortgage",drives:true,l:"Mortgage?",w:2,opt:["","No","Yes"]},
  {k:"m_balance",l:"Balance left",money:"cov",w:1},{k:"m_payment",l:"Monthly payment",money:"plain",w:1},
  {k:"m_years",l:"Years left",w:1},{k:"m_equity",l:"Equity",money:"cov",w:1},
  {k:"m_co",l:"Co-borrower",w:2},
@@ -3478,7 +3508,7 @@ var PF_SPEC=[
 var PRINT_ORDER=[
  ["Client",["first","last","dob","age","phone","email","married","spouse","branch","address","city","state","zip","app_notes"]],
  ["Build & habits",["height","weight","smoker","varating","bank","bank_kind","bank_notes"]],
- ["Health",["conds","meds","recent_stay","covid","health_notes"]],
+ ["Health",["conds","meds","recent_stay","recent_what","covid","health_notes"]],
  ["Why",["goal","burial"]],
  ["Coverage they already have",["inplace","inplace_carrier","inplace_src","inplace_amt","inplace_kind","inplace_prem","inplace_exp","inplace_notes"]],
  ["Mortgage",["has_mortgage","m_balance","m_payment","m_years","m_equity","m_co"]],
@@ -3596,6 +3626,39 @@ function pRender(){
   var pn=document.getElementById("pnotes"); if(pn) pn.value=P.notes||"";
   pFollow();
 }
+
+var PICKS=[["Max","opt1_cov","opt1_prem"],["Recommended","opt2_cov","opt2_prem"],
+            ["Basic","opt3_cov","opt3_prem"],["Other","coverage","premium"]];
+function pickHTML(){
+  if(!PROFILE_ON) return "";
+  var chosen=pVal("chosen");
+  return '<div class="line"><div class="pickwrap">'+PICKS.map(function(o,i){
+    var cov=pVal(o[1]), prem=pVal(o[2]), on=(chosen===o[0]);
+    var label = o[0]==="Other" ? "Other" : "Option "+(i+1)+" &middot; "+o[0];
+    return '<label class="pick'+(on?" on":"")+'">'+
+      '<input type="checkbox" data-pick="'+o[0]+'"'+(on?" checked":"")+'>'+
+      '<span class="pkl">'+label+'</span>'+
+      '<input class="pkin" data-pk="'+o[1]+'" data-inline="1" placeholder="coverage" value="'+esc(cov).replace(/"/g,"&quot;")+'">'+
+      '<span class="pkf">for</span>'+
+      '<input class="pkin" data-pk="'+o[2]+'" data-inline="1" placeholder="monthly" value="'+esc(prem).replace(/"/g,"&quot;")+'">'+
+      '<span class="pkf">a month</span></label>';
+  }).join("")+'</div></div>';
+}
+document.addEventListener("click",function(e){
+  var b=e.target.closest && e.target.closest("[data-pick]");
+  if(!b) return;
+  var name=b.getAttribute("data-pick");
+  if(pVal("chosen")===name){ P.chosen=""; }
+  else {
+    P.chosen=name;
+    var row=PICKS.filter(function(x){return x[0]===name})[0];
+    if(row && name!=="Other"){ P.coverage=pVal(row[1]); P.premium=pVal(row[2]); }
+  }
+  pStore();
+  if(document.getElementById("profbody")) pRender();
+  if(typeof render==="function") render();
+  pFlash();
+});
 
 function medFlagHTML(){
   var f=medFlags(); if(!f.length) return "";
@@ -3806,6 +3869,20 @@ function pState(v){
   return hits.length===1 ? hits[0] : null;
 }
 
+function pDraft(v){
+  var t=String(v||"").trim(); if(!t) return null;
+  var ord=function(n){ var sfx=["th","st","nd","rd"], m=n%100;
+    return n+(sfx[(m-20)%10]||sfx[m]||sfx[0]); };
+  var m;
+  if((m=t.match(/^\s*(\d{1,2})\s*(?:st|nd|rd|th)?\s*$/i))){
+    var d=+m[1]; if(d<1||d>31) return null; return ord(d)+" of the month";
+  }
+  if(/^(1st|first)$/i.test(t)) return "1st of the month";
+  if(/^(15|15th|mid)$/i.test(t)) return "15th of the month";
+  if(/^(eom|end|last)$/i.test(t)) return "last day of the month";
+  if(/^(ss|social|social security)$/i.test(t)) return "with their Social Security deposit";
+  return null;
+}
 function pHeight(v){
   var t=String(v||"").trim(); if(!t) return null;
   var ft=null, inch=null, m;
@@ -3834,7 +3911,7 @@ function pAge(dob){
   return { exact:a, nearest:(months>6? a+1 : a), pretty:("0"+m).slice(-2)+"/"+("0"+d).slice(-2)+"/"+y };
 }
 
-var PF_DRIVERS=["inplace","inplace_kind","ben2on","married","has_assets","has_mortgage"];
+var PF_DRIVERS=["inplace","inplace_kind","married","has_assets","has_mortgage","recent_stay"];
 function pSet(k,v,fromCard){ if(k.indexOf("a_")===0){A[k]=v}else{P[k]=v} pStore(); pFlash();
   if(PF_DRIVERS.indexOf(k)>-1 && document.getElementById("profbody")) pRender();
   if(!fromCard && typeof render==="function"&&$("script")) render(); }
@@ -3862,6 +3939,10 @@ document.addEventListener("change",function(e){
   var t=e.target;
   if(t.getAttribute&&t.getAttribute("data-pk")==="dob"){ var a=pAge(t.value); if(a){ t.value=a.pretty; pSet("dob",a.pretty,inCard); } }
   var inCard = t.getAttribute && t.getAttribute("data-inline")==="1";
+  if(inCard && (t.getAttribute("data-pk")==="coverage"||t.getAttribute("data-pk")==="premium")
+     && typeof cur!=="undefined" && cur==="w_recap"){
+    if(pVal("chosen")!=="Other"){ P.chosen="Other"; pStore(); if(document.getElementById("profbody")) pRender(); }
+  }
   if(t.getAttribute&&t.getAttribute("data-pk")){
     var mk=t.getAttribute("data-pk"), mf=pSpecOf(mk);
     if(mf&&mf.money){
@@ -3874,6 +3955,8 @@ document.addEventListener("change",function(e){
       [].forEach.call(document.querySelectorAll('[data-pk="branch"]'),function(el){ el.value=br; if(el.classList.contains("iblank")) pFit(el); }); } }
   if(t.getAttribute&&t.getAttribute("data-pk")==="state"){ var st=pState(t.value); if(st){ pSet("state",st,inCard);
       [].forEach.call(document.querySelectorAll('[data-pk="state"]'),function(el){ el.value=st; if(el.classList.contains("iblank")) pFit(el); }); } }
+  if(t.getAttribute&&t.getAttribute("data-pk")==="draft"){ var dv=pDraft(t.value); if(dv){ pSet("draft",dv,inCard);
+      [].forEach.call(document.querySelectorAll('[data-pk="draft"]'),function(el){ el.value=dv; if(el.classList.contains("iblank")) pFit(el); }); } }
   if(t.getAttribute&&t.getAttribute("data-pk")==="height"){ var h=pHeight(t.value); if(h){ t.value=h; pSet("height",h,inCard);
       [].forEach.call(document.querySelectorAll('[data-pk="height"]'),function(el){ el.value=h; if(el.classList.contains("iblank")) pFit(el); }); } }
   if(t.getAttribute&&t.getAttribute("data-cond")){
