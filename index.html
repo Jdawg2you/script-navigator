@@ -425,6 +425,12 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .chip:hover{border-color:var(--gold)}
 .chip.on{background:var(--goldsoft);border-color:var(--gold);color:var(--navy)}
 .pickwrap{display:flex;flex-direction:column;gap:6px;margin:0 0 12px}
+.pickgap{height:1px;background:var(--rule);margin:8px 2px 6px}
+.pick.other{background:var(--fill);border-style:dashed}
+.pick.other.on{background:var(--goldsoft);border-style:solid}
+.mwarn{font-family:var(--sans);font-size:12px;color:#8a5a1f;background:#FCF4E3;
+  border:1px solid var(--goldline);border-radius:7px;padding:8px 11px;margin-top:8px}
+.mwarn b{color:var(--navy)}
 .pick{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--rule);
   border-radius:8px;padding:8px 11px;cursor:pointer;font-family:var(--sans);font-size:13px;color:var(--slate)}
 .pick:hover{border-color:var(--gold)}
@@ -1108,10 +1114,7 @@ h_meds:{s:"6",pf:"health",t:"Medications",l:[
 h_meds_yes:{s:"6",pf:"health",t:"On medications",l:[
 {t:"meds"},
 {t:"tip",x:"Type them here and they land on the profile. It knows brand names and copes with a rough spelling. Working off paper instead? Just write them down."},
-{t:"ask",x:"Are you on more than three?"},
-{t:"note",x:"<b>If more than three:</b> &ldquo;Take your time and go grab those for me.&rdquo;"},
-{t:"do",x:"Have them SPELL them, not read them. That's how you catch Eliquis versus Elavil."},
-{t:"note",x:"<b>If three or fewer:</b> &ldquo;What are they, and what's each one for?&rdquo;"},
+{t:"paper",x:"<b>Are you on more than three?</b><br>If more than three: &ldquo;Take your time and go grab those for me.&rdquo; &middot; If three or fewer: &ldquo;What are they, and what\'s each one for?&rdquo;<br>Have them SPELL them, not read them. That\'s how you catch Eliquis versus Elavil."},
 {t:"do",x:"The med list is your lie detector. They'll say no heart problems while you're looking at Eliquis on your notepad."}
 ],b:[{k:"Move to conditions",to:"h_heart",c:"go"}]},
 
@@ -3450,6 +3453,7 @@ function render(){
     if(L.t==="do")   return '<div class="line do"><div class="txt">'+x+'</div></div>';
     if(L.t==="dobig")return '<div class="line do lg"><div class="txt">'+x+'</div></div>';
     if(L.t==="train")return "";
+    if(L.t==="paper") return PROFILE_ON ? "" : '<div class="line"><div class="note">'+x+'</div></div>';
     if(L.t==="askif"){
       if(!PROFILE_ON) return "";
       if(L.when && String(pVal(L.when[0])||"").toLowerCase()!==String(L.when[1]).toLowerCase()) return "";
@@ -3459,7 +3463,7 @@ function render(){
     if(L.t==="alt"){ if(L.when && String(pVal(L.when[0])||"").toLowerCase()!==String(L.when[1]).toLowerCase()) return ""; pAgeHint(); return altHTML(L); }
     if(L.t==="pick") return pickHTML();
     if(L.t==="mmath") return !PROFILE_ON ? "" : mMathHTML();
-    if(L.t==="bens") return !PROFILE_ON ? "" : '<div class="line">'+pBensHTML()+'</div>';
+    if(L.t==="bens") return !PROFILE_ON ? "" : '<div class="line" id="benscard">'+pBensHTML()+'</div>';
     if(L.t==="meds") return !PROFILE_ON ? "" : '<div class="line">'+pMedsHTML(true)+'<div id="medflagwrap">'+medFlagHTML()+'</div></div>';
     if(L.t==="pf"){
       if(!PROFILE_ON) return "";
@@ -3789,15 +3793,16 @@ function pickHTML(){
   var chosen=pVal("chosen");
   return '<div class="line"><div class="pickwrap">'+PICKS.map(function(o,i){
     var cov=pVal(o[1]), prem=pVal(o[2]), on=(chosen===o[0]);
-    var label = o[0]==="Other" ? "Other" : "Option "+(i+1)+" &middot; "+o[0];
-    return '<label class="pick'+(on?" on":"")+'">'+
+    var label = o[0]==="Other" ? "Other &mdash; they landed somewhere else" : "Option "+(i+1)+" &middot; "+o[0];
+    return (o[0]==="Other" ? '<div class="pickgap"></div>' : '')+
+      '<label class="pick'+(on?" on":"")+(o[0]==="Other"?" other":"")+'">'+
       '<input type="checkbox" data-pick="'+o[0]+'"'+(on?" checked":"")+'>'+
       '<span class="pkl">'+label+'</span>'+
       '<input class="pkin" data-pk="'+o[1]+'" data-inline="1" placeholder="coverage" value="'+esc(cov).replace(/"/g,"&quot;")+'">'+
       '<span class="pkf">for</span>'+
       '<input class="pkin" data-pk="'+o[2]+'" data-inline="1" placeholder="monthly" value="'+esc(prem).replace(/"/g,"&quot;")+'">'+
       '<span class="pkf">a month</span></label>';
-  }).join("")+'</div></div>';
+  }).join("")+'<div id="mwarnwrap"></div></div></div>';
 }
 document.addEventListener("click",function(e){
   var b=e.target.closest && e.target.closest("[data-pick]");
@@ -3910,10 +3915,16 @@ function pBensHTML(){
 }
 document.addEventListener("click",function(e){
   var add=e.target.closest && e.target.closest("#benadd");
-  if(add){ P.bens=(P.bens||[{role:"Primary"}]).concat([{role:"Contingent"}]); pStore(); pRender(); return; }
+  if(add){ P.bens=(P.bens||[{role:"Primary"}]).concat([{role:"Contingent"}]); pStore();
+           if(document.getElementById("profbody")) pRender();
+           var bc=document.getElementById("benscard"); if(bc) bc.innerHTML=pBensHTML();
+           return; }
   var del=e.target.closest && e.target.closest("[data-bendel]");
   if(del){ var i=+del.getAttribute("data-bendel"); var a=(P.bens||[]).slice(); a.splice(i,1);
-           P.bens=a.length?a:[{role:"Primary"}]; pStore(); pRender(); pFlash(); }
+           P.bens=a.length?a:[{role:"Primary"}]; pStore();
+           if(document.getElementById("profbody")) pRender();
+           var bc2=document.getElementById("benscard"); if(bc2) bc2.innerHTML=pBensHTML();
+           pFlash(); }
 });
 function benSet(rk,val){
   var parts=rk.split(":"), i=+parts[0], f=parts[1];
@@ -3924,7 +3935,10 @@ function benSet(rk,val){
 }
 document.addEventListener("input",function(e){
   var rk=e.target.getAttribute && e.target.getAttribute("data-ben");
-  if(rk) benSet(rk,e.target.value);
+  if(!rk) return;
+  benSet(rk,e.target.value);
+  [].forEach.call(document.querySelectorAll('[data-ben="'+rk+'"]'),function(el){
+    if(el!==e.target && el.value!==e.target.value) el.value=e.target.value; });
 });
 document.addEventListener("change",function(e){
   var rk=e.target.getAttribute && e.target.getAttribute("data-ben");
@@ -3986,6 +4000,26 @@ function pMoneyCov(v){                       /* 35 -> $35,000 ; 35000 -> $35,000
   if(t.indexOf(".")<0 && t.length<=3) n=n*1000;
   return "$"+Math.round(n).toLocaleString("en-US");
 }
+var MONEY_SANE={
+  prem:{lo:20,hi:999, why:"A monthly premium under $20 or over $999 is rare &mdash; worth a second look."},
+  cov:{lo:2000,hi:1000000, why:"Coverage under $2,000 or over $1,000,000 is rare &mdash; worth a second look."}
+};
+function moneyWarn(k){
+  var f=pSpecOf(k); if(!f||!f.money||f.money==="plain") return "";
+  var lim=MONEY_SANE[f.money]; if(!lim) return "";
+  var n=parseFloat(String(pVal(k)||"").replace(/[^0-9.]/g,""));
+  if(!n) return "";
+  return (n<lim.lo||n>lim.hi) ? lim.why : "";
+}
+function moneyWarnHTML(){
+  var seen={}, out=[];
+  [].forEach.call(document.querySelectorAll("#script [data-pk]"),function(el){
+    var k=el.getAttribute("data-pk"); if(seen[k]) return; seen[k]=1;
+    var w=moneyWarn(k); if(w) out.push('<div class="mwarn"><b>'+esc(pVal(k))+'</b> '+w+'</div>');
+  });
+  var box=document.getElementById("mwarnwrap"); if(box) box.innerHTML=out.join("");
+}
+
 function pMoneyPlain(v){                    /* 5478 -> $5,478 ; 300 -> $300 */
   var t=String(v||"").replace(/[$,\s]/g,""); if(!t||!/^\d+(\.\d+)?$/.test(t)) return null;
   return "$"+Math.round(parseFloat(t)).toLocaleString("en-US");
@@ -4103,7 +4137,8 @@ document.addEventListener("change",function(e){
     if(mf&&mf.money){
       var mv=(mf.money==="cov")?pMoneyCov(t.value):(mf.money==="plain")?pMoneyPlain(t.value):pMoneyPrem(t.value);
       if(mv){ pSet(mk,mv,inCard);
-        [].forEach.call(document.querySelectorAll('[data-pk="'+mk+'"]'),function(el){ el.value=mv; if(el.classList.contains("iblank")) pFit(el); }); }
+        [].forEach.call(document.querySelectorAll('[data-pk="'+mk+'"]'),function(el){ el.value=mv; if(el.classList.contains("iblank")) pFit(el); });
+        moneyWarnHTML(); }
     }
   }
   if(t.getAttribute&&t.getAttribute("data-pk")==="branch"){ var br=pBranch(t.value); if(br){ pSet("branch",br,inCard);
@@ -4428,6 +4463,7 @@ function readableHTML(key){
         if(mode==="training") o.push('<div class="note">'+x+'</div>');
       }
       else if(line.t==="tip"||line.t==="pf"){ /* navigator only, never printed */ }
+      else if(line.t==="paper"){ o.push('<div class="note">'+x+'</div>'); }
       else { /* note + warn */
         o.push('<div class="note'+(line.t==="warn"?" warn":"")+'">'+x+'</div>');
       }
