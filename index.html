@@ -411,6 +411,13 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   background:#fff;border:1px solid var(--rule);border-radius:20px;padding:3px 11px}
 .chip:hover{border-color:var(--gold)}
 .chip.on{background:var(--goldsoft);border-color:var(--gold);color:var(--navy)}
+.refrow{align-items:flex-end}
+.refx{appearance:none;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--muted);
+  border-radius:6px;padding:5px 9px;font-size:14px;line-height:1;flex:none;margin-bottom:1px}
+.refx:hover{border-color:var(--rust);color:var(--rust)}
+.refadd{appearance:none;cursor:pointer;font-family:var(--sans);font-size:12px;font-weight:600;
+  color:var(--golddk);background:#fff;border:1px dashed var(--goldline);border-radius:6px;padding:6px 12px;margin-top:2px}
+.refadd:hover{background:var(--goldsoft);border-style:solid}
 .psflash{background:var(--goldsoft);border-radius:4px;transition:background .5s ease}
 .ptools{display:flex;align-items:center;gap:6px;margin:0 0 12px}
 .pbtn{appearance:none;cursor:pointer;font-family:var(--sans);font-size:11.5px;font-weight:600;
@@ -1036,6 +1043,7 @@ ed_goals:{s:"8",t:"Hits your goals",l:[
 q_pen:{s:"9",t:"Soft hold, then pen and paper",l:[
 {t:"say",x:"Okay ___(first name), I'm going to put you on a very brief soft hold while I talk to one of our senior underwriters and make sure we're getting you the best coverage at the best price. Like I mentioned earlier, we work with a lot of carriers, so I want to make sure we get you the best value with an A-rated carrier. I'll be right back."},
 {t:"do",x:"Place them on hold and ask the room. Dial from the dial room and stay off mute &mdash; hearing other agents do this all day is how you learn which carrier fits which client."},
+{t:"pf",ks:["carrier"]},
 {t:"note",x:"<b>Room is empty, or you're dialing off hours?</b> Use the <a href=\"https://wizard.ffloptimum.com/\" target=\"_blank\" rel=\"noopener\">Product Wizard</a> &mdash; put in their age and conditions and it tells you which carriers will actually take them."},
 {t:"ask",x:"You still have that pen and paper? Perfect &mdash; I'm going to give you three numbers."}
 ],b:[{k:"Next",to:"q_max",c:"go"}]},
@@ -1176,7 +1184,7 @@ app_esign:{s:"10",pf:"wrap",t:"Final signature",l:[
 {t:"do",x:"If a carrier uses a link, a button, or a voice signature instead of a code, adjust the wording &mdash; but keep it to one small step at a time."}
 ],b:[{k:"Submitted",to:"uw_submitted",c:"go"}]},
 
-uw_submitted:{s:"11",t:"Submitted",l:[
+uw_submitted:{pf:"wrap",s:"11",t:"Submitted",l:[
 {t:"say",x:"Alright, that's submitted. You'll either come back approved as quoted, approved with some changes, or not approved. If you're approved, the first payment processes and your policy goes in the mail."}
 ],bh:"What came back?",b:[
 {k:"Approved",to:"w_goodnews",c:"go"},
@@ -1191,7 +1199,7 @@ uw_denied:{s:"11",t:"Denied",l:[
 {t:"warn",x:"<b>You are going to live on this card for a while &mdash; that is normal.</b><br>Fill out the next carrier's application and run the same process again: the authorization, the code, all of it. You do NOT need to re-collect anything they already gave you. Repeat with as many carriers as it takes. When they come back approved, continue below."}
 ],b:[{k:"They're approved",to:"w_goodnews",c:"go"}]},
 
-uw_graded:{s:"11",t:"Graded",l:[
+uw_graded:{pf:"wrap",s:"11",t:"Graded",l:[
 {t:"say",x:"Good news is we passed the pre-check &mdash; they just put us in a different rate class."},
 {t:"do",x:"Two paths from here. Decide whether this rate class is genuinely the best they'll do, or whether another carrier can beat it. That judgment is what they're paying you for."}
 ],bh:"Click the path you want to go with this client",b:[
@@ -1210,7 +1218,7 @@ uw_graded_shop:{s:"11",t:"Graded &mdash; shop another carrier",l:[
 {t:"warn",x:"<b>You are going to live on this card for a while &mdash; that is normal.</b><br>Fill out the next carrier's application and run the same process again: the authorization, the code, all of it. You do NOT need to re-collect anything they already gave you. Repeat with as many carriers as it takes. When they come back approved, continue below."}
 ],b:[{k:"They're approved",to:"w_goodnews",c:"go"}]},
 
-uw_gi:{s:"11",t:"Guaranteed issue",l:[
+uw_gi:{pf:"wrap",s:"11",t:"Guaranteed issue",l:[
 {t:"note",x:"<b>Tone is everything here.</b> They can get covered &mdash; that's good news. Do not sound disappointed, because they'll catch it and you'll lose the sale."},
 {t:"say",x:"So based on everything you've told me, we can still apply for the best type of coverage available to you. This one's called a building benefits plan."},
 {t:"say",x:"Here's how it works. In the first two years, if you pass from natural causes, ___(beneficiary) gets back everything you've paid in, plus 10% on top of it."},
@@ -1219,15 +1227,15 @@ uw_gi:{s:"11",t:"Guaranteed issue",l:[
 {t:"say",x:"So there's really no risk here &mdash; you don't lose anything. They're actually paying you to put money in. Make sense?"}
 ],b:[{k:"They're on board",to:"w_goodnews",c:"go"}]},
 
-w_goodnews:{s:"12",t:"Good news",l:[
+w_goodnews:{pf:"wrap",s:"12",t:"Good news",l:[
 {t:"ask",x:"So &mdash; do you want the good news, or the even better news?"},
 {t:"say",x:"Good news is you're approved. Even better news is I'm your agent for life. Congratulations &mdash; ___(beneficiary) is protected."}
 ],b:[{k:"Next",to:"w_recap",c:"go"}]},
 
-w_recap:{s:"12",t:"Policy recap",l:[
+w_recap:{pf:"wrap",s:"12",t:"Policy recap",l:[
 {t:"say",x:"So I've got some information I want you to write down &mdash; but I'll be texting all of this to you as well."},
 {t:"say",x:"Your carrier is ___(carrier). They're A-rated and they've been around over ___(years), so they're not going anywhere."},
-{t:"say",x:"Policy number ___. Coverage amount ___. Monthly premium ___, and that never changes."},
+{t:"say",x:"Policy number ___(policy number). Coverage amount ___(coverage). Monthly premium ___(premium), and that never changes."},
 {t:"say",x:"You'll get a paper copy in the mail 7 to 10 business days after your first payment goes through. When it shows up, give me a call so I can mark your file complete. And if I don't hear from you, I'll follow up in a few weeks to make sure it got there."},
 {t:"say",x:"One more thing &mdash; if your draft date passes and the money's still in your account, leave it there. Payments can take three to five business days to clear."},
 {t:"note",x:"<b>Two quiet wins here.</b> The call-me-when-it-arrives loop gives them a legitimate reason to contact you and confirms delivery. The leave-the-money line stops them from spending what they think didn't get taken &mdash; a real cause of month-one lapses."}
@@ -1281,7 +1289,7 @@ w_legacy:{s:"12",t:"Legacy Safeguard",l:[
 {t:"note",x:"Full details and the enrollment link for Legacy Safeguard are linked at the bottom of this page."}
 ],b:[{k:"Next",to:"w_referral",c:"go"}]},
 
-w_referral:{s:"12",t:"Referral ask",l:[
+w_referral:{pf:"refs",s:"12",t:"Referral ask",l:[
 {t:"say",x:"Last thing &mdash; you're actually able to refer up to five people, and they'll get the same benefits and discounts that were available to you. So who do you know and care about that would benefit from getting some information on this?"},
 {t:"do",x:"Then stop talking. Let the silence do the work."},
 {t:"say",x:"And I do have a referral program for all my clients. Now, legally I can't send you big wads of cash for helping people get life insurance. But what I can tell you is I'm always very thankful, and I love to show that to my clients &mdash; especially the ones who help us build our family of clients."},
@@ -1289,7 +1297,7 @@ w_referral:{s:"12",t:"Referral ask",l:[
 {t:"note",x:"<b>If they say they'll call the person themselves:</b> &ldquo;___, you're the best. But listen &mdash; I'm not here to add a burden or make more stress for you. It's the opposite. I'll take all of that on so you don't have to worry about any of it. It's not your responsibility to do that. I'll do that for you.&rdquo; Then go quiet and wait."}
 ],b:[{k:"Next",to:"w_close",c:"go"}]},
 
-w_close:{s:"12",t:"Close",l:[
+w_close:{pf:"wrap",s:"12",t:"Close",l:[
 {t:"say",x:"Lastly &mdash; thank you. I don't take it lightly when somebody trusts me with something this important. I'm honored to be able to help you protect your family and your legacy."},
 {t:"say",x:"And I'm glad we got this handled today. That means you can stop looking. You can sleep well at night knowing it's taken care of."},
 {t:"say",x:"Talk soon, ___(name) &mdash; and congratulations again on putting this plan in place and getting it done."},
@@ -1884,7 +1892,7 @@ i_present_b:{s:"12",t:"Present the whole life plan",l:[
 
 /* ---------- 13 CLOSE ---------- */
 i_close_basic:{s:"13",t:"Close &mdash; they're ready",l:[
-{t:"say",x:"So ___(name), it feels like ___(amount) is the right amount to start with?"},
+{t:"say",x:"So ___(name), it feels like ___(monthly amount) is the right amount to start with?"},
 {t:"say",x:"Alright, let's get your paperwork set up and we'll get that submitted for you."},
 {t:"ask",x:"So just to confirm &mdash; the spelling of your last name is ___?"},
 {t:"dobig",x:"Start the application now. Don't pause, don't ask permission again. The confirmation question is your transition into the app &mdash; keep typing and keep talking."}
@@ -1895,7 +1903,7 @@ i_close_basic:{s:"13",t:"Close &mdash; they're ready",l:[
 i_close_confirm:{s:"13",t:"Close &mdash; confirmation",l:[
 {t:"do",x:"Use this when you're not certain they're there yet. You're getting them to say it back to you before you touch the paperwork."},
 {t:"say",x:"___(name), I want to make sure we're aligned."},
-{t:"ask",x:"It seems like you feel good about ___(amount) per month, and this helping you reach ___(their goal). Correct?"},
+{t:"ask",x:"It seems like you feel good about ___(monthly amount) per month, and this helping you reach ___(their goal). Correct?"},
 {t:"do",x:"Let them answer. Don't stack the next question on top of it."},
 {t:"ask",x:"And it seems like you're clear on how this works. Was there anything else you had questions about?"},
 {t:"do",x:"Let them answer. If there's a question, answer it fully and come back here &mdash; don't move to paperwork with something open."},
@@ -3226,6 +3234,9 @@ var PF_SPEC=[
  {k:"ben2split",l:"Split %",w:1,showIf:["ben2on","Yes"]},
  {k:"crm",l:"Saved to GOAT / CRM?",w:2,opt:["","Not yet","Added to CRM"]},
 
+ {sec:"Referrals",id:"refs"},
+ {k:"refs",type:"refs"},
+
  {sec:"Wrap",id:"wrap"},
  {k:"draft",l:"Draft date",w:1},{k:"policy",l:"Policy #",w:1}
 ];
@@ -3240,6 +3251,7 @@ var PRINT_ORDER=[
  ["Mortgage",["m_balance","m_payment","m_years","m_equity","m_co"]],
  ["Retirement & money",["inc_kind","i_income","i_left","money_style","i_contrib","i_401k","i_roth","i_liquid","i_debt","i_retire","i_prot"]],
  ["Beneficiary",["ben","benphone","benrel","bendob","bencont","ben2","ben2phone","ben2rel","ben2split","crm"]],
+ ["Referrals",["refs"]],
  ["The plan",["carrier","bank","opt1_cov","opt1_prem","opt2_cov","opt2_prem","opt3_cov","opt3_prem","chosen","coverage","premium","draft","policy"]]
 ];
 function pSpecOf(k){ for(var i=0;i<PF_SPEC.length;i++){ if(PF_SPEC[i].k===k) return PF_SPEC[i]; } return null; }
@@ -3287,9 +3299,9 @@ var BLANKMAP={
  "spell it":"a_name","spell it out":"a_name","last name":"last","client's state":"state",
  "spouse":"spouse","beneficiary":"ben","beneficiary / spouse":"ben","branch of service":"branch",
  "carrier":"carrier","coverage":"coverage","amount":"coverage","premium":"premium",
- "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","monthly income":"i_income","left over":"i_left","Carrier?":"inplace_carrier","their goal, in their words":"goal",
+ "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","policy number":"policy","draft date":"draft","monthly income":"i_income","monthly amount":"premium","left over":"i_left","Carrier?":"inplace_carrier","their goal, in their words":"goal",
  "address":"address","balance":"m_balance","monthly payment":"m_payment","equity":"m_equity",
- "years":"m_years",
+ 
  "your name":"a_name","your full name":"a_full","agent name":"a_name","your NPN":"a_npn",
  "your phone":"a_phone","your phone number":"a_phone","agent phone":"a_phone",
  "agent email":"a_email","your state":"a_state"
@@ -3333,6 +3345,7 @@ function pRender(){
       if(skip) return;
       o.push('<div class="profsec" id="ps_'+(f.id||'')+'">'+f.sec+'</div>'); return; }
     if(skip) return;
+    if(f.type==="refs"){ flush(); o.push(pRefsHTML()); return; }
     if(f.type==="conds"){ flush();
       o.push('<div class="conds">'+PF_CONDS.map(function(c){
         var on=(P.conds||[]).indexOf(c)>-1;
@@ -3347,6 +3360,35 @@ function pRender(){
   var pn=document.getElementById("pnotes"); if(pn) pn.value=P.notes||"";
   pFollow();
 }
+
+function pRefsHTML(){
+  var list=P.refs||[];
+  if(!list.length) list=[{}];
+  return '<div id="refswrap">'+list.map(function(r,i){
+    return '<div class="prow refrow">'+
+      '<div class="pf"><label>Name</label><input data-ref="'+i+':n" value="'+esc(r.n||"").replace(/"/g,"&quot;")+'"></div>'+
+      '<div class="pf"><label>Phone</label><input data-ref="'+i+':p" value="'+esc(r.p||"").replace(/"/g,"&quot;")+'"></div>'+
+      '<div class="pf"><label>Relationship</label><input data-ref="'+i+':r" value="'+esc(r.r||"").replace(/"/g,"&quot;")+'"></div>'+
+      (i>0?'<button type="button" class="refx" data-refdel="'+i+'" title="Remove">&times;</button>':'')+
+      '</div>';
+  }).join("")+'<button type="button" class="refadd" id="refadd">+ Add another referral</button></div>';
+}
+
+document.addEventListener("click",function(e){
+  var add=e.target.closest && e.target.closest("#refadd");
+  if(add){ P.refs=(P.refs||[{}]).concat([{}]); pStore(); pRender(); return; }
+  var del=e.target.closest && e.target.closest("[data-refdel]");
+  if(del){ var i=+del.getAttribute("data-refdel"); var a=(P.refs||[]).slice(); a.splice(i,1);
+           P.refs=a.length?a:[{}]; pStore(); pRender(); pFlash(); return; }
+});
+
+document.addEventListener("input",function(e){
+  var t=e.target, rk=t.getAttribute && t.getAttribute("data-ref");
+  if(!rk) return;
+  var parts=rk.split(":"), i=+parts[0], fld=parts[1];
+  var a=(P.refs||[]).slice(); while(a.length<=i) a.push({});
+  a[i][fld]=t.value; P.refs=a; pStore(); pFlash();
+});
 
 function pFollow(){
   var on=P.conds||[], o=[];
@@ -3546,6 +3588,12 @@ function pPrint(){
   PRINT_ORDER.forEach(function(g){
     rows.push('<h2>'+g[0]+'</h2>');
     g[1].forEach(function(k){
+      if(k==="refs"){
+        var rl=(P.refs||[]).filter(function(r){return r.n||r.p||r.r});
+        rows.push('<div class="cl">'+(rl.length? rl.map(function(r){
+          return (r.n||"&nbsp;")+" &middot; "+(r.p||"")+(r.r?" ("+r.r+")":"");}).join("<br>")
+          : '<u>&nbsp;</u><br><u>&nbsp;</u><br><u>&nbsp;</u>')+'</div>');
+        return; }
       if(k==="conds"){
         rows.push('<div class="cl">'+PF_CONDS.map(function(c){
           var on=(P.conds||[]).indexOf(c)>-1;
