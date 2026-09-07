@@ -4045,8 +4045,8 @@ document.addEventListener("input",function(e){
 });
 document.addEventListener("change",function(e){
   var t=e.target;
-  if(t.getAttribute&&t.getAttribute("data-pk")==="dob"){ var a=pAge(t.value); if(a){ t.value=a.pretty; pSet("dob",a.pretty,inCard); } }
   var inCard = t.getAttribute && t.getAttribute("data-inline")==="1";
+  if(t.getAttribute&&t.getAttribute("data-pk")==="dob"){ var a=pAge(t.value); if(a){ t.value=a.pretty; pSet("dob",a.pretty,inCard); } }
   if(inCard && (t.getAttribute("data-pk")==="coverage"||t.getAttribute("data-pk")==="premium")
      && typeof cur!=="undefined" && cur==="w_recap"){
     if(pVal("chosen")!=="Other"){ P.chosen="Other"; pStore(); if(document.getElementById("profbody")) pRender(); }
@@ -4078,7 +4078,7 @@ document.addEventListener("change",function(e){
     if(t.classList && t.classList.contains("cinline") && typeof render==="function") render();
     pFlash(); return;
   }
-  if(t.getAttribute&&t.getAttribute("data-pk")) pSet(t.getAttribute("data-pk"),t.value);
+  if(t.getAttribute&&t.getAttribute("data-pk")) pSet(t.getAttribute("data-pk"),t.value,inCard);
 });
 
 function pSetup(){
