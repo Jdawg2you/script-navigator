@@ -3086,14 +3086,20 @@ var MED_INDEX=(function(){
 })();
 function medSuggest(q,limit){
   var t=String(q||"").trim(); if(t.length<2) return [];
-  var lt=t.toLowerCase(), kt=medKey(t), seen={}, out=[];
-  function push(l){ if(!seen[l]){ seen[l]=1; out.push(l); } }
-  MED_INDEX.forEach(function(m){ if(m.n.toLowerCase().indexOf(lt)===0) push(m.label); });          /* types it right */
-  MED_INDEX.forEach(function(m){ if(m.n.toLowerCase().indexOf(lt)>0) push(m.label); });            /* mid-word */
-  if(kt.length>=2) MED_INDEX.forEach(function(m){ if(m.k.indexOf(kt)===0) push(m.label); });       /* sounds like it */
-  var k2=medKey2(t);
-  if(k2.length>=3) MED_INDEX.forEach(function(m){ if(m.k2.indexOf(k2)===0) push(m.label); });      /* wrong first letter */
-  return out.slice(0,limit||8);
+  var lt=t.toLowerCase(), kt=medKey(t), k2=medKey2(t);
+  var best={};
+  function offer(label,score){ if(best[label]===undefined || score<best[label]) best[label]=score; }
+  MED_INDEX.forEach(function(m){
+    var ln=m.n.toLowerCase();
+    if(ln===lt)            return offer(m.label,0);                 /* typed it exactly */
+    if(ln.indexOf(lt)===0) return offer(m.label,1+ (m.n.length-t.length)/100);
+    if(ln.indexOf(lt)>0)   return offer(m.label,3);                 /* somewhere inside */
+    if(kt.length>=2 && m.k.indexOf(kt)===0)
+      return offer(m.label,4+Math.abs(m.k.length-kt.length)/10);    /* sounds like it */
+    if(k2.length>=3 && m.k2.indexOf(k2)===0)
+      return offer(m.label,6+Math.abs(m.k2.length-k2.length));      /* wrong first letter, so weigh length */
+  });
+  return Object.keys(best).sort(function(a,b){return best[a]-best[b];}).slice(0,limit||8);
 }
 
 var PF_PLACEHOLDER={asset_where:"401k / IRA / Roth / etc"};
