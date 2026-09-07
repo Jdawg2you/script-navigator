@@ -480,6 +480,16 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .filled{color:var(--navy);font-weight:600;border-bottom:2px solid var(--gold);padding:0 1px}
 
 
+.lcard.vid{background:var(--navy);border-left-color:var(--gold);position:relative;text-decoration:none;display:block}
+.lcard.vid h2{color:#fff}
+.lcard.vid p{color:rgba(255,255,255,.68)}
+.lcard.vid:hover{background:var(--navy-deep)}
+.lbadge.vid{background:rgba(201,162,78,.16);color:var(--gold);border:1px solid rgba(201,162,78,.42)}
+.vplay{position:absolute;top:18px;right:18px;width:34px;height:34px;border-radius:50%;
+  background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;
+  padding-left:2px;transition:transform .15s ease}
+.lcard.vid:hover .vplay{transform:scale(1.08)}
+
 /* Feedback */
 .fbline{text-align:center;margin:78px 0 14px}
 .fbtrigger{display:inline-flex;align-items:center;gap:11px;appearance:none;border:0;background:transparent;
@@ -4267,7 +4277,13 @@ function buildLauncher(){
       (x.ready?'':' disabled')+'>'+
       '<span class="lbadge '+(x.ready?"on":"off")+'">'+(x.ready?"Ready":"In development")+'</span>'+
       '<h2>'+x.title+'</h2><p>'+x.desc+'</p></button>';
-  }).join("");
+  }).join("") +
+  '<a class="lcard vid" href="https://youtube.com/shorts/0rxtYeJYehM" target="_blank" rel="noopener noreferrer">'+
+    '<span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17">'+
+      '<path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>'+
+    '<span class="lbadge vid">Watch first &middot; 2 min</span>'+
+    '<h2>To script, or not to script?</h2>'+
+    '<p>Why working from a script gets a new agent producing faster &mdash; and why the ones who have been doing this for years never stopped using one.</p></a>';
   Array.prototype.slice.call(document.querySelectorAll(".lcard.ready")).forEach(function(b){
     b.onclick=function(){openScript(b.getAttribute("data-script"))};
   });
