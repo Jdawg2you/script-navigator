@@ -1261,16 +1261,21 @@ q_rec:{s:"9",pf:"plan",t:"The recommendation",l:[
 {t:"recmath"},
 {t:"say",when:["_covfit","over"],dflt:true,x:"So this covers the ___(burial/cremation) at the ___(their number) we talked about, and it still leaves about ___(the remainder) for ___(beneficiary). That's exactly what you told me you wanted &mdash; and at a price that works."},
 {t:"say",when:["_covfit","exact"],iff:"it covers the arrangement almost exactly",x:"So this covers the ___(burial/cremation) at the ___(their number) we talked about &mdash; just about to the dollar. That's exactly what you told me you wanted, and at a price that works."},
-{t:"say",when:["_covfit","short"],iff:"it does not cover the arrangement",x:"Now &mdash; I want to be straight with you here. This is ___(recommended coverage) against the ___(their number) you gave me, so it's about ___(the shortfall) short of the whole thing. It gets you most of the way there, and I'd rather you hear that from me now than have ___(beneficiary) find it out later."},
-{t:"do",when:["_covfit","short"],iff:"it does not cover the arrangement",x:"Do not skate past this. Say the gap, then stop talking. If they want to close it, the option above does &mdash; if this is where the budget is, this is still far better than nothing, and you can say that too."},
+{t:"say",when:["_covfit","short"],iff:"it does not cover the arrangement",x:"Now, I'll be straight with you &mdash; this is ___(recommended coverage) against the ___(their number) you gave me, so it's about ___(the shortfall) shy of the whole thing."},
+{t:"say",when:["_covfit","short"],iff:"it does not cover the arrangement",x:"But look at where that puts you. Today, if something happened, ___(beneficiary) is starting from ___(what they have today). This hands them ___(recommended coverage) of it, on a payment you can actually hold onto every single month. It's ___(how far behind) &mdash; and it is so much closer than where you are right now."},
+{t:"do",when:["_covfit","short"],iff:"it does not cover the arrangement",x:"Say the gap once, plainly, then go straight to what it does buy &mdash; do not linger there and do not apologise. They are looking at this tier because of the budget, so the comparison that matters is not the perfect policy, it is where they stand today. If they want to close the gap, the option above does it."},
 {t:"note",x:"<b>Worked example &mdash; the highlighted parts are what you fill in:</b><br><br>&ldquo;Now, the reason I'm recommending this one is that it came from you. Your words earlier were &mdash; <mark>I don't want my kids stuck with a bill like I was when my mom passed</mark>. So this covers the <mark>cremation</mark> at the <mark>$5,000</mark> we talked about, and it still leaves about <mark>$10,000</mark> for <mark>Melissa</mark>. That's exactly what you told me you wanted &mdash; and at a price that works.&rdquo;"},
 {t:"do",x:"In this tier you're constructing a plan to protect their family, and you're cashing in on the emotional currency they gave you earlier. This number should be logical &mdash; but knowing their finances, it should still be within reason."}
 ],b:[{k:"Next",to:"q_basic",c:"go"}]},
 
 q_basic:{s:"9",pf:"plan",t:"Basic",l:[
 {t:"say",x:"And at our basic level &mdash; ___(basic coverage) for ___(basic monthly) a month."},
-{t:"say",x:"Now this is going to cover your ___(burial/cremation), and the monthly on this may be a lot more comfortable for your budget. So this, at its core, is going to make sure ___(beneficiary) isn't going to have to come out of pocket for your final expenses &mdash; which I know you said earlier was really important to you."},
-{t:"do",x:"This is the honest floor, not the consolation prize. Say it without apology."},
+{t:"recmath",cov:"opt3_cov"},
+{t:"say",when:["_covfit3","over"],dflt:true,x:"Now this covers your ___(burial/cremation) with a little left over, and the monthly on this may be a lot more comfortable for your budget. So at its core, this makes sure ___(beneficiary) isn't coming out of pocket for your final expenses &mdash; which I know you said earlier was really important to you."},
+{t:"say",when:["_covfit3","exact"],iff:"it covers the arrangement almost exactly",x:"Now this covers your ___(burial/cremation) just about to the dollar, and the monthly may be a lot more comfortable for your budget. So at its core, this makes sure ___(beneficiary) isn't coming out of pocket for your final expenses &mdash; which I know you said earlier was really important to you."},
+{t:"say",when:["_covfit3","short"],iff:"it does not cover the arrangement",x:"Now, this one won't cover the whole ___(burial/cremation) &mdash; it's about ___(the basic shortfall) shy of it, and I'm not going to tell you otherwise."},
+{t:"say",when:["_covfit3","short"],iff:"it does not cover the arrangement",x:"But this is the one you'll never sweat. Today ___(beneficiary) is starting from ___(what they have today) &mdash; this puts ___(basic coverage) in their hands the day they need it. It's ___(how far behind basic), and it is a long way better than where you stand right now. And a policy you keep beats a bigger one you cancel in six months."},
+{t:"do",x:"This is the honest floor, not the consolation prize. Say it without apology &mdash; they are here because of the budget, and this is the number that survives a bad month."},
 {t:"train",x:"<b>Do the arithmetic before you speak.</b> Take the cost they gave you against this coverage amount and know the answer. If it pays the arrangement and nothing more, say so. If it falls short, say by how much. A client who took the cheap option because money is tight will find out either way &mdash; better from you now than from their family later. An honest floor they keep beats a better tier they cancel."},
 {t:"do",x:"When you construct this option, use the 5% rule below &mdash; but be extra mindful of their budget on this one. This is the number that has to survive a bad month."},
 {t:"note",x:"<b>Build your basic example on approximately 5% of their total monthly income.</b><br><br>If 5% doesn't reach the cost of their arrangement, do NOT push them up to reach it &mdash; name the gap instead: &ldquo;At ___ a month we're looking at about ___ in coverage. That's not the full ___, but it's most of the way there, and it's a payment you'll never sweat. I'd rather you have something that sticks than something that lapses in six months.&rdquo;"}
@@ -3476,7 +3481,7 @@ function render(){
     if(L.t==="alt"){ if(L.when && String(pVal(L.when[0])||"").toLowerCase()!==String(L.when[1]).toLowerCase()) return ""; pAgeHint(); return altHTML(L); }
     if(L.t==="pick") return pickHTML();
     if(L.t==="mmath") return !PROFILE_ON ? "" : mMathHTML();
-    if(L.t==="recmath") return !PROFILE_ON ? "" : recMathHTML();
+    if(L.t==="recmath") return !PROFILE_ON ? "" : recMathHTML(L);
     if(L.t==="bens") return !PROFILE_ON ? "" : '<div class="line" id="benscard">'+pBensHTML()+'</div>';
     if(L.t==="meds") return !PROFILE_ON ? "" : '<div class="line">'+pMedsHTML(true)+'<div id="medflagwrap">'+medFlagHTML()+'</div></div>';
     if(L.t==="pf"){
@@ -3718,10 +3723,19 @@ function pAgeHint(){
   return P.asset_prot_hint;
 }
 function pBlank(lab){
-  if(lab==="the remainder"||lab==="the shortfall"){
-    var c=num(P.opt2_cov), a=num(P.arrangement_cost); if(!c||!a) return "";
-    if(lab==="the remainder") return c>a ? money(c-a) : "";
-    return a>c ? money(a-c) : ""; }
+  if(/^the (basic )?(remainder|shortfall)$/.test(lab)){
+    var ck=/basic/.test(lab)?"opt3_cov":"opt2_cov";
+    var c=num(P[ck]), a=num(P.arrangement_cost); if(!c||!a) return "";
+    return /remainder/.test(lab) ? (c>a?money(c-a):"") : (a>c?money(a-c):""); }
+  if(/^how far behind( basic)?$/.test(lab)){
+    var bk=/basic/.test(lab)?"opt3_cov":"opt2_cov";
+    var bc=num(P[bk]), ba=num(P.arrangement_cost); if(!bc||!ba||bc>=ba) return "";
+    return (ba-bc)/ba < 0.25 ? "a little behind your best intentions"
+                             : "short of everything you'd want for them"; }
+  if(lab==="what they have today"){
+    if(P.inplace==="No") return "nothing";
+    if(P.inplace==="Yes"){ var ia=num(P.inplace_amt); return ia?money(ia):""; }
+    return ""; }
   var k=BLANKMAP[lab]; if(!k) return ""; if(k==="a_full") k="a_name"; return pVal(k); }
 
 var AGENT_SPEC=[
@@ -3730,15 +3744,17 @@ var AGENT_SPEC=[
 ];
 var PROFILE_ON=false;
 var PKEY="osn_profile_v1", AKEY="osn_agent_v1", P={}, A={}, PSAVE=null;
-function covFit(){
+function covFitKey(ck){
   if(!PROFILE_ON) return "";
-  var c=num(P.opt2_cov), a=num(P.arrangement_cost);
+  var c=num(P[ck]), a=num(P.arrangement_cost);
   if(!c||!a) return "";
   if(c-a >= a*0.05) return "over";
   if(a-c >= a*0.05) return "short";
   return "exact";
 }
-function pVal(k){ if(k==="_covfit") return covFit();
+function covFit(){ return covFitKey("opt2_cov"); }
+function pVal(k){ if(k==="_covfit")  return covFitKey("opt2_cov");
+                  if(k==="_covfit3") return covFitKey("opt3_cov");
                   return (k.indexOf("a_")===0 ? A[k] : P[k]) || ""; }
 
 function pLoad(){ try{ P=JSON.parse(localStorage.getItem(PKEY)||"{}") }catch(e){ P={} }
@@ -3805,18 +3821,19 @@ function mMathHTML(){
     '<em>What it would take to keep them in the house while they work out what to do.</em></div></div>';
 }
 
-function recMathHTML(){
-  var cov=num(pVal("opt2_cov")), cost=num(pVal("arrangement_cost"));
+function recMathHTML(L){
+  var ck=(L&&L.cov)||"opt2_cov", lab=ck==="opt3_cov"?"Basic":"Recommended";
+  var cov=num(pVal(ck)), cost=num(pVal("arrangement_cost"));
   if(!cov||!cost) return "";
-  var left=cov-cost, fit=covFit();
+  var left=cov-cost, fit=covFitKey(ck);
   return '<div class="line"><div class="mmath">'+
-    '<span><i>Recommended</i>'+money(cov)+'</span>'+
+    '<span><i>'+lab+'</i>'+money(cov)+'</span>'+
     '<span><i>Their arrangement</i>'+money(cost)+'</span>'+
     (fit==="exact" ? '<span><i>Covers it</i>to the dollar</span>'
       : '<span><i>'+(fit==="over"?"Left for the family":"Short by")+'</i>'+money(Math.abs(left))+'</span>')+
     '<em>'+(fit==="over" ? "Say the leftover out loud. That is the part they remember."
       : fit==="exact" ? "It covers the arrangement and no more. Do not imply there is money left over."
-      : "This option does not cover the arrangement. Name the gap now rather than letting them assume it is covered.")+
+      : "Name the gap once, then say what it does cover. A policy they keep beats a bigger one they cancel.")+
     '</em></div></div>';
 }
 
