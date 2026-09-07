@@ -405,6 +405,8 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   color:var(--blue);background:#fff;border:1.5px solid var(--navy);border-radius:4px;padding:1px 6px;line-height:1.5}
 .ichip:hover{background:var(--bluesoft)}
 .ichip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.igrow{display:block;width:100%;resize:none;overflow:hidden;line-height:1.45;margin:4px 0 2px;
+  font-family:var(--serif);font-size:inherit}
 .iblank{font-family:var(--serif);font-size:inherit;color:var(--navy);background:#fff;
   border:1.5px solid var(--navy);border-radius:5px;padding:1px 7px;margin:0 2px;
   vertical-align:baseline;min-width:9ch}
@@ -922,19 +924,21 @@ fw_ask:{s:"4",pf:"why",t:"Burial, cremation, or unsure",l:[
 fw_burial:{s:"4",pf:"why",t:"Burial cost",l:[
 {t:"ask",x:"Are you familiar with what the average cost is for a burial in ___(their state)?"},
 {t:"do",x:"Ask before you tell. If they lowball it you correct them and you're the expert. If they know, you're agreeing with them."},
-{t:"say",x:"So a burial averages about $15,000. The burial itself is only around $7,000 to $10,000 &mdash; but that doesn't include transportation, the casket, the plot, the gravestone, the viewing, the reception, flowers, inflation. It ends up costing more."}
+{t:"say",x:"So a burial averages approximately $15,000. ___(their number)"},
+{t:"say",x:"The burial itself is only around $7,000 to $10,000 &mdash; but that doesn't include transportation, the casket, the plot, the gravestone, the viewing, the reception, flowers, inflation. It ends up costing more."}
 ],b:[{k:"Continue",to:"fw_reiterate",c:"go"}]},
 
 fw_cremation:{s:"4",pf:"why",t:"Cremation cost",l:[
 {t:"ask",x:"Are you familiar with what the average cost is for a cremation in ___(their state)?"},
 {t:"do",x:"Ask before you tell. If they lowball it you correct them and you're the expert. If they know, you're agreeing with them."},
-{t:"say",x:"So a cremation averages about $5,000. The cremation itself is only around $1,500 to $3,000 &mdash; but that doesn't include transportation, the urn, the viewing, the reception, flowers, inflation. It ends up costing more."}
+{t:"say",x:"So a cremation averages approximately $5,000. ___(their number)"},
+{t:"say",x:"The cremation itself is only around $1,500 to $3,000 &mdash; but that doesn't include transportation, the urn, the viewing, the reception, flowers, inflation. It ends up costing more."}
 ],b:[{k:"Continue",to:"fw_reiterate",c:"go"}]},
 
 fw_both:{s:"4",pf:"why",t:"Unsure &mdash; give both",l:[
 {t:"ask",x:"Are you familiar with what either one runs in ___(their state) these days?"},
 {t:"do",x:"Ask before you tell. Even unsure clients usually have a number in their head, and it is almost always too low."},
-{t:"say",x:"No problem. Just so you have the numbers &mdash; a cremation averages about $5,000, and a burial averages about $15,000."},
+{t:"say",x:"No problem. Just so you have the numbers &mdash; a cremation averages approximately $5,000, and a burial approximately $15,000. ___(their number)"},
 {t:"say",x:"And in both cases the service itself is only part of it. There's transportation, the urn or the casket, the viewing, the reception, flowers, inflation."}
 ],b:[{k:"Continue",to:"fw_reiterate",c:"go"}]},
 
@@ -1005,7 +1009,7 @@ h_meds_yes:{s:"6",pf:"health",t:"On medications",l:[
 {t:"do",x:"The med list is your lie detector. They'll say no heart problems while you're looking at Eliquis on your notepad."}
 ],b:[{k:"Move to conditions",to:"h_heart",c:"go"}]},
 
-h_meds_no:{s:"6",t:"No medications",l:[
+h_meds_no:{pf:"health",s:"6",t:"No medications",l:[
 {t:"ask",x:"Have you been prescribed anything in the past five years?"},
 {t:"note",x:"<b>If yes:</b> &ldquo;What were they for, if you remember?&rdquo;"}
 ],b:[{k:"Move to conditions",to:"h_heart",c:"go"}]},
@@ -1106,13 +1110,13 @@ ed_tax:{s:"8",t:"Tax-free",l:[
 {t:"say",x:"And when the time comes, ___(beneficiary) gets the money tax-free &mdash; usually within 7 to 10 business days of the claim going in. Nothing owed on it, and nobody's waiting months."}
 ],b:[{k:"Next",to:"ed_goals",c:"go"}]},
 
-ed_goals:{s:"8",t:"Hits your goals",l:[
+ed_goals:{pf:"why",s:"8",t:"Hits your goals",l:[
 {t:"say",x:"And most importantly &mdash; this does the thing you told me you wanted. ___(their goal, in their words)."},
 {t:"ask",x:"Make sense?"},
 {t:"note",x:"Say it back exactly as they said it. <b>This is the card that turns a features list into a recommendation.</b> Everything above is what it IS. This is what it DOES."}
 ],b:[{k:"Move to the quote",to:"q_pen",c:"go"}]},
 
-q_pen:{s:"9",t:"Soft hold, then pen and paper",l:[
+q_pen:{pf:"plan",s:"9",t:"Soft hold, then pen and paper",l:[
 {t:"say",x:"Okay ___(first name), I'm going to put you on a very brief soft hold while I talk to one of our senior underwriters and make sure we're getting you the best coverage at the best price. Like I mentioned earlier, we work with a lot of carriers, so I want to make sure we get you the best value with an A-rated carrier. I'll be right back."},
 {t:"do",x:"Place them on hold and ask the room. Dial from the dial room and stay off mute &mdash; hearing other agents do this all day is how you learn which carrier fits which client."},
 {t:"tip",x:"<b>Fill the three options in here</b> &mdash; they read themselves into the next three cards, and into the pick list at 9.5."},
@@ -1132,7 +1136,7 @@ q_rec:{s:"9",pf:"plan",t:"The recommendation",l:[
 {t:"say",x:"Here's what I would personally recommend. ___(recommended coverage) for ___(recommended monthly) a month &mdash; and that's a really good monthly for that amount of coverage."},
 {t:"train",x:"<b>Do the arithmetic before you speak.</b> You quoted them a ___(burial/cremation) cost earlier. Does this option cover all of it, or part of it? If it covers it with room left over, say so &mdash; that money goes to ___(beneficiary). If it covers most of it, name the gap honestly rather than letting them assume it is covered."},
 {t:"do",x:"Sound impressed. You're not apologizing for a price &mdash; you're showing them a good one. That's not bad, right?"},
-{t:"say",x:"Now the reason I'm recommending this is because earlier you told me you wanted ___(their stated wish), and you wanted to leave some money for ___(beneficiary). So this gives you enough for the ___(burial/cremation) &mdash; which like we said runs ___(the cost you quoted earlier) &mdash; and it would still leave about ___(the remainder) for ___(beneficiary). So it accomplishes exactly what you're looking to do, and for a really good price."},
+{t:"say",x:"Now the reason I'm recommending this is because earlier you told me you wanted ___(their stated wish) &mdash; which like we said runs approximately ___(their number) &mdash; and you wanted to leave some money for ___(beneficiary). So this gives you enough for the ___(burial/cremation) &mdash; which like we said runs ___(the cost you quoted earlier) &mdash; and it would still leave about ___(the remainder) for ___(beneficiary). So it accomplishes exactly what you're looking to do, and for a really good price."},
 {t:"note",x:"<b>Worked example &mdash; the highlighted parts are what you fill in:</b><br><br>&ldquo;Now the reason I'm recommending this is because earlier you told me you wanted <mark>to be cremated</mark>, and you wanted to leave some money for <mark>Melissa</mark>. So this gives you enough for the <mark>cremation</mark> &mdash; which like we said runs <mark>around $5,000</mark> &mdash; and it would still leave about <mark>$10,000</mark> for <mark>Melissa</mark>. So it accomplishes exactly what you're looking to do, and for a really good price.&rdquo;"},
 {t:"do",x:"In this tier you're constructing a plan to protect their family, and you're cashing in on the emotional currency they gave you earlier. This number should be logical &mdash; but knowing their finances, it should still be within reason."}
 ],b:[{k:"Next",to:"q_basic",c:"go"}]},
@@ -1159,25 +1163,25 @@ q_ask:{s:"9",pf:"plan",t:"The ask",l:[
 {k:"I need to talk to someone first",to:"q_obj_spouse",c:"alert"},
 {k:"That's too high",to:"q_obj_high",c:"alert"}]},
 
-q_obj_shop:{s:"9",t:"&ldquo;I want to shop around&rdquo;",l:[
+q_obj_shop:{pf:"plan",s:"9",t:"&ldquo;I want to shop around&rdquo;",l:[
 {t:"say",x:"That makes sense &mdash; and I was able to do that for you. Remember, all insurance is state regulated. Whether you go directly to the company or work with a broker, the price is the same. It's based on your health and your age, and I've already shopped the entire market for you."},
 {t:"ask",x:"Do you want me to go higher or lower, or is ___(amount) good for you?"},
 {t:"do",x:"End on the higher-or-lower question every time. It keeps them choosing an amount instead of choosing whether."}
 ],b:[{k:"They picked an amount",to:"app_intro",c:"go"}]},
 
-q_obj_seen:{s:"9",t:"&ldquo;I've seen it for less&rdquo;",l:[
+q_obj_seen:{pf:"plan",s:"9",t:"&ldquo;I've seen it for less&rdquo;",l:[
 {t:"say",x:"All insurance is based on your health and your age. This is the best rate we could find for you, if I can get you approved."},
 {t:"ask",x:"Do you want me to go higher or lower, or is ___(amount) good for you?"},
 {t:"note",x:"Don't ask what they saw or who they saw it with. You'll end up defending someone else's quote instead of closing yours."}
 ],b:[{k:"They picked an amount",to:"app_intro",c:"go"}]},
 
-q_obj_spouse:{s:"9",t:"&ldquo;I need to talk to someone first&rdquo;",l:[
+q_obj_spouse:{pf:"plan",s:"9",t:"&ldquo;I need to talk to someone first&rdquo;",l:[
 {t:"say",x:"That makes sense. But because we don't even know yet whether we can get you approved, start with what you know in your heart would always be affordable."},
 {t:"say",x:"If we get approved, then you talk it over with ___(name) and see whether you want to adjust it higher or lower. The hardest part is finding out whether they'll accept you at all."},
 {t:"ask",x:"Do you want me to go higher or lower, or is ___(amount) good for you?"}
 ],b:[{k:"They picked an amount",to:"app_intro",c:"go"}]},
 
-q_obj_high:{s:"9",t:"&ldquo;That's too high&rdquo;",l:[
+q_obj_high:{pf:"plan",s:"9",t:"&ldquo;That's too high&rdquo;",l:[
 {t:"say",x:"Yeah, ___(amount) is a lot of coverage."},
 {t:"ask",x:"I'm sure you'd agree any dollar amount going to ___(beneficiary) would help them out, correct?"},
 {t:"say",x:"And because we don't even know yet whether we can get you approved, start with what you know in your heart would always be affordable."},
@@ -1247,7 +1251,7 @@ app_routing:{s:"10",pf:"build",t:"Confirm the routing",l:[
 {t:"note",x:"<b>You are not asking them for their routing number. You are asking them to confirm it.</b> Back at 10.5, while they were answering the bank question, you searched their bank name plus their state &mdash; or wherever they most likely opened the account &mdash; plus the word &ldquo;routing.&rdquo; That gives you the most likely number. Read it out and have them confirm the last four.<br><br><b>Why this works.</b> To confirm those four digits they have to go look it up &mdash; on a check, in the app, on a statement. And what sits right next to the routing number in every one of those places is the account number. You have built trust by confirming something you already had, and now they hand you the part you never had access to."}
 ],b:[{k:"Got it",to:"app_esign",c:"go"},{k:"They're hesitating",to:"app_bank_obj",c:"alert"}]},
 
-app_bank_obj:{s:"10",t:"Banking objection",l:[
+app_bank_obj:{pf:"build",s:"10",t:"Banking objection",l:[
 {t:"say",x:"Using your checking is actually the safest way to pay for this, because it runs through your bank. Think about it &mdash; paper checks have that same information printed right on the front. Everybody who's ever cashed one has seen it, because it's that safe. Debit and credit cards are the things you never want to hand out."},
 {t:"do",x:"If they can't find it, that's all good. Walk them through their banking app, an old check, or a statement. You can even Google the bank name plus &ldquo;mobile app&rdquo; to pull up instructions on where the routing and account numbers live, so you can direct them step by step."},
 {t:"do",x:"If you truly believe they aren't stalling you and genuinely can't find it, book a callback &mdash; or offer to call the bank together with them on the line."}
@@ -1270,7 +1274,7 @@ uw_submitted:{pf:"wrap",s:"11",t:"Submitted",l:[
 {k:"Graded",to:"uw_graded",c:"alert"},
 {k:"Guaranteed issue only",to:"uw_gi",c:"alert"}]},
 
-uw_denied:{s:"11",t:"Denied",l:[
+uw_denied:{pf:"plan",s:"11",t:"Denied",l:[
 {t:"do",x:"Stay assumptive. Your tone here decides whether they stay on the phone."},
 {t:"say",x:"Okay &mdash; they found something on your record that wasn't quite a match. They don't tell me exactly what. Anything else you can think of that they might be seeing?"},
 {t:"say",x:"No problem at all. Let me pull up another option &mdash; I'll shop it around and send you another code. Let's see what they can do for you."},
@@ -1284,13 +1288,13 @@ uw_graded:{pf:"wrap",s:"11",t:"Graded",l:[
 {k:"Keep this carrier",to:"uw_graded_keep",c:"go"},
 {k:"Shop another carrier",to:"uw_graded_shop"}]},
 
-uw_graded_keep:{s:"11",t:"Graded &mdash; keep this carrier",l:[
+uw_graded_keep:{pf:"plan",s:"11",t:"Graded &mdash; keep this carrier",l:[
 {t:"say",x:"My recommendation is we keep this coverage, because it looks like what they found is ___(what you believe they flagged)."},
 {t:"say",x:"And based on my professional experience, with all of the A-rated carriers in ___(client's state), this is going to be our best rate &mdash; especially considering ___(health reasons, or what you believe is flagging this)."},
 {t:"do",x:"Be straight about why. If you don't think another carrier beats this, say so and say why. Hedging here reads as uncertainty and costs you the sale."}
 ],b:[{k:"They agree &mdash; and we get approved",to:"w_goodnews",c:"go"}]},
 
-uw_graded_shop:{s:"11",t:"Graded &mdash; shop another carrier",l:[
+uw_graded_shop:{pf:"plan",s:"11",t:"Graded &mdash; shop another carrier",l:[
 {t:"say",x:"Let me check with another carrier and see if we can do better. I'm going to copy your information over, we'll do another application, and go from there."},
 {t:"do",x:"Stay calm, pivot, keep moving. Don't narrate the problem &mdash; narrate the next step."},
 {t:"warn",x:"<b>You are going to live on this card for a while &mdash; that is normal.</b><br>Fill out the next carrier's application and run the same process again: the authorization, the code, all of it. You do NOT need to re-collect anything they already gave you. Repeat with as many carriers as it takes. When they come back approved, continue below."}
@@ -1319,7 +1323,7 @@ w_recap:{pf:"wrap",s:"12",t:"Policy recap",l:[
 {t:"note",x:"<b>Two quiet wins here.</b> The call-me-when-it-arrives loop gives them a legitimate reason to contact you and confirms delivery. The leave-the-money line stops them from spending what they think didn't get taken &mdash; a real cause of month-one lapses."}
 ],b:[{k:"Next",to:"w_ben",c:"go"}]},
 
-w_ben:{s:"12",t:"Reaching out to the beneficiary",l:[
+w_ben:{pf:"bendetail",s:"12",t:"Reaching out to the beneficiary",l:[
 {t:"say",x:"Now, I'm also going to send ___(beneficiary) a text later today &mdash; just to introduce myself, let them know you took care of this, and make sure they have my digital business card and phone number stored."},
 {t:"say",x:"That way, if that day ever comes, they already know who I am and exactly who to call. They won't be trying to figure it out on the hardest day of their life."},
 {t:"say",x:"I'm sure you'd agree &mdash; we don't want them in the dark about something this important. You wouldn't believe how many policies go unpaid every year because the beneficiary never knew their parent or their loved one had one in the first place."},
@@ -3056,6 +3060,9 @@ function fmt(x){
             var v=(typeof pBlank==="function")?pBlank(lab):"";
             if(k && k.indexOf("a_")!==0 && PROFILE_ON){
               var w=Math.max(9,Math.min(26,(v||lab).length+2));
+              if(MULTILINE[k])
+                return '<textarea class="iblank igrow" data-pk="'+k+'" data-inline="1" rows="1"'+
+                       ' placeholder="'+esc(lab)+'">'+esc(v)+'</textarea>';
               return '<input class="iblank"'+(k==="state"?' list="statelist"':k==="branch"?' list="branchlist"':'')+' data-pk="'+k+'" data-inline="1" title="'+esc(lab)+'"'+
                      ' placeholder="'+esc(lab)+'" style="width:'+w+'ch" value="'+esc(v).replace(/"/g,"&quot;")+'">';
             }
@@ -3237,6 +3244,9 @@ function medSuggest(q,limit){
 
 var PF_PLACEHOLDER={asset_where:"401k / IRA / Roth / etc"};
 
+var MULTILINE={goal:1,health_notes:1,inplace_notes:1,recent_what:1,app_notes:1,bank_notes:1};
+function pGrow(el){ el.style.height="auto"; el.style.height=(el.scrollHeight+2)+"px"; }
+
 function pFit(el){
   var len=(el.value||el.placeholder||"").length;
   var n=Math.max(9,Math.min(46,Math.ceil(len*1.25)+2));   /* serif letters are wider than a ch */
@@ -3339,7 +3349,7 @@ function render(){
     return '<div class="line"><div class="note">'+x+'</div></div>';
   }).join("");
 
-  [].forEach.call(document.querySelectorAll("#script .iblank"),function(el){ pFit(el); });
+  [].forEach.call(document.querySelectorAll("#script .iblank"),function(el){ if(el.tagName==="TEXTAREA") pGrow(el); else pFit(el); });
   $("branchhead").textContent = n.bh || (n.b.length===1 ? "Next" : "They say");
   $("branches").innerHTML=n.b.map(function(b,i){
     return '<button class="branch '+(b.c||"")+'" data-to="'+b.to+'"'+
@@ -3442,6 +3452,7 @@ var PF_SPEC=[
  {sec:"Why",id:"why"},
  {k:"goal",l:"Goal / why &mdash; in their words",type:"area",w:2},
  {k:"burial",l:"Burial, cremation or unsure",w:1,opt:["","Burial","Cremation","Unsure"]},
+ {k:"arrangement_cost",l:"Cost they expect",w:1,money:"plain"},
  {k:"ben",l:"Beneficiary",w:1},
 
  {sec:"Build &amp; habits",id:"build"},
@@ -3509,7 +3520,7 @@ var PRINT_ORDER=[
  ["Client",["first","last","dob","age","phone","email","married","spouse","branch","address","city","state","zip","app_notes"]],
  ["Build & habits",["height","weight","smoker","varating","bank","bank_kind","bank_notes"]],
  ["Health",["conds","meds","recent_stay","recent_what","covid","health_notes"]],
- ["Why",["goal","burial"]],
+ ["Why",["goal","burial","arrangement_cost"]],
  ["Coverage they already have",["inplace","inplace_carrier","inplace_src","inplace_amt","inplace_kind","inplace_prem","inplace_exp","inplace_notes"]],
  ["Mortgage",["has_mortgage","m_balance","m_payment","m_years","m_equity","m_co"]],
  ["Retirement & money",["inc_kind","i_income","i_left","money_style","has_assets","asset_where","asset_amt","asset_prot","i_contrib","i_401k","i_roth","i_liquid","i_debt","i_retire","i_prot"]],
@@ -3563,7 +3574,7 @@ var BLANKMAP={
  "spell it":"a_name","spell it out":"a_name","last name":"last","client's state":"state",
  "spouse":"spouse","beneficiary":"ben","beneficiary / spouse":"ben","branch of service":"branch",
  "carrier":"carrier","coverage":"coverage","amount":"coverage","premium":"premium",
- "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","policy number":"policy","draft date":"draft","monthly income":"i_income","anything else":"health_notes","their goal, in their words":"goal","monthly amount":"premium","left over":"i_left","Carrier?":"inplace_carrier","how much coverage":"inplace_amt","their goal, in their words":"goal",
+ "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","policy number":"policy","draft date":"draft","monthly income":"i_income","anything else":"health_notes","their goal, in their words":"goal","monthly amount":"premium","left over":"i_left","Carrier?":"inplace_carrier","how much coverage":"inplace_amt","their number":"arrangement_cost","their goal, in their words":"goal",
  "address":"address","balance":"m_balance","monthly payment":"m_payment","equity":"m_equity",
  
  "your name":"a_name","your full name":"a_full","agent name":"a_name","your NPN":"a_npn",
@@ -3925,8 +3936,8 @@ document.addEventListener("input",function(e){
     pSet(k,t.value,t.getAttribute("data-inline")==="1");
     [].forEach.call(document.querySelectorAll('[data-pk="'+k+'"]'),function(el){
       if(el!==t && el.value!==t.value) el.value=t.value;
-      if(el.classList && el.classList.contains("iblank")) pFit(el); });
-    if(t.classList && t.classList.contains("iblank")) pFit(t);
+      if(el.classList && el.classList.contains("iblank")){ if(el.tagName==="TEXTAREA") pGrow(el); else pFit(el); } });
+    if(t.classList && t.classList.contains("iblank")){ if(t.tagName==="TEXTAREA") pGrow(t); else pFit(t); }
     if(k==="dob"){
       var a=pAge(t.value);
       if(a){ var ae=document.getElementById("pf_age");
