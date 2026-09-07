@@ -3645,19 +3645,6 @@ var PF_SPEC=[
 ];
 
 /* print groups things logically instead of in call order */
-var PRINT_ORDER=[
- ["Client",["first","last","dob","age","phone","email","married","spouse","branch","address","city","state","zip","app_notes"]],
- ["Build & habits",["height","weight","smoker","varating","bank","bank_kind","bank_notes"]],
- ["Health",["conds","meds","recent_stay","recent_what","covid","health_notes"]],
- ["Why",["goal","burial","arrangement_cost"]],
- ["Coverage they already have",["inplace","inplace_carrier","inplace_src","inplace_amt","inplace_kind","inplace_prem","inplace_exp","inplace_notes"]],
- ["Mortgage",["has_mortgage","m_balance","m_value","m_payment","m_years","m_equity","m_co"]],
- ["Retirement & money",["inc_kind","i_income","i_left","money_style","has_assets","asset_where","asset_amt","asset_employer","asset_prot","asset_notes","i_contrib","i_401k","i_roth","i_liquid","i_debt","i_retire","i_prot"]],
- ["Beneficiary",["bens","crm"]],
- ["Referrals",["refs"]],
- ["The plan",["carrier","bank","opt1_cov","opt1_prem","opt2_cov","opt2_prem","opt3_cov","opt3_prem","chosen","coverage","premium","draft","policy"]]
-];
-var OPTIONAL_SECTIONS=["Mortgage","Retirement & money","Referrals"];
 function pSpecOf(k){ for(var i=0;i<PF_SPEC.length;i++){ if(PF_SPEC[i].k===k) return PF_SPEC[i]; } return null; }
 
 
@@ -4239,67 +4226,228 @@ $("proffile").onchange=function(){
   r.readAsText(f); this.value="";
 };
 
+function pName(){
+  var d=new Date(), pad=function(n){return (n<10?"0":"")+n};
+  var stamp=pad(d.getMonth()+1)+"."+pad(d.getDate())+"."+d.getFullYear();
+  var who=((P.first||"")+" "+(P.last||"")).replace(/\s+/g," ").trim() || "Client";
+  var code=SCRIPT_CODE[(typeof curScript!=="undefined"&&curScript)||"veteran"]||"VET";
+  return (who+" Profile - "+code+" - "+stamp).replace(/[\/\\:*?"<>|]/g,"");
+}
+function pToday(){ var d=new Date(), pad=function(n){return (n<10?"0":"")+n};
+  return pad(d.getMonth()+1)+" / "+pad(d.getDate())+" / "+d.getFullYear(); }
+
+var PRINT_CSS=
+"*{box-sizing:border-box;margin:0;padding:0}"+
+"body{font-family:Inter,-apple-system,'Segoe UI',Roboto,Helvetica,sans-serif;color:#1B1B1B;"+
+ "background:#8E9299;padding:22px 0;-webkit-print-color-adjust:exact;print-color-adjust:exact}"+
+".page{width:8.1in;margin:0 auto;background:#fff;padding:0 0 10px;box-shadow:0 10px 40px rgba(0,0,0,.28)}"+
+".band{background:#16203C;padding:11px 22px 12px;display:flex;align-items:flex-end;justify-content:space-between}"+
+".band .bl{line-height:1;display:flex;align-items:baseline;gap:11px}"+
+".ttl{color:#fff;font-size:17px;font-weight:700;font-family:Georgia,'Times New Roman',serif}"+
+".by{color:#C9A24E;font-size:7px;font-weight:800;letter-spacing:.19em;text-transform:uppercase}"+
+".band .br{text-align:right;color:#fff;font-size:8px;font-weight:700;letter-spacing:.13em;"+
+ "text-transform:uppercase;padding-bottom:2px}"+
+".strip{margin:8px 22px 0;background:#F4F6F8;border-radius:6px;padding:7px 12px 9px;"+
+ "display:grid;grid-template-columns:1.5fr 1.1fr 1fr 1fr 1fr;gap:0 12px}"+
+".wrap{padding:0 22px}"+
+".grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}"+
+".card{background:#F4F6F8;border-radius:6px;overflow:hidden}"+
+".card h2{background:#16203C;color:#fff;font-size:7px;font-weight:800;letter-spacing:.17em;"+
+ "text-transform:uppercase;padding:4px 12px}"+
+".bd{padding:7px 12px 8px}"+
+".row{display:grid;gap:0 12px;margin-bottom:5px}"+
+".row:last-child{margin-bottom:0}"+
+".f label{display:block;font-size:5.4px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;"+
+ "color:#656F7C;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}"+
+".f .v{border-bottom:1px solid #D4DCE3;min-height:12px;font-size:8.6px;line-height:1.3;"+
+ "padding-bottom:1px;color:#16203C;font-weight:600}"+
+".f.tall .v{min-height:23px;font-weight:400;color:#2A2A2A;font-size:8.2px;line-height:1.4}"+
+".f.note .v{border:1px solid #D4DCE3;border-radius:4px;background:#fff;min-height:28px;"+
+ "padding:4px 5px;font-weight:400;color:#2A2A2A;font-size:8px;line-height:1.4}"+
+".f.note.big .v{min-height:36px}"+
+".conds{display:flex;flex-wrap:wrap;font-size:6.2px;line-height:1.45;color:#5A6570}"+
+".conds span{white-space:nowrap;padding:0 5px 0 0;margin-right:3px}"+
+".conds span:before{content:'';display:inline-block;width:4.5px;height:4.5px;border:1px solid #A8B2BC;"+
+ "border-radius:1px;margin-right:2.5px;vertical-align:.5px;background:#fff}"+
+".conds span.on{background:#F0E4C8;color:#16203C;font-weight:800;border-radius:2px;padding:0 4px}"+
+".conds span.on:before{background:#16203C;border-color:#16203C}"+
+".opts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:5px}"+
+".opt{border:1px solid #D4DCE3;border-radius:5px;background:#fff;padding:5px 8px 6px}"+
+".opt.pick{border:1.5px solid #C9A24E;background:#FDFBF5}"+
+".opt h3{font-size:5.8px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#A8853A;"+
+ "margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}"+
+".opt h3 b{font-size:5.2px;letter-spacing:.1em;color:#C9A24E}"+
+".opt .pair{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}"+
+"table{width:100%;border-collapse:collapse}"+
+"th{font-size:5.4px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#656F7C;"+
+ "text-align:left;padding:0 5px 2px 0}"+
+"td{border-bottom:1px solid #D4DCE3;height:15px;font-size:8.2px;color:#16203C;font-weight:600;"+
+ "padding:0 5px 1px 0;vertical-align:bottom}"+
+"td.mut{color:#5A6570;font-weight:400}"+
+".foot{display:flex;justify-content:space-between;padding:7px 22px 0;margin-top:9px;"+
+ "border-top:1px solid #E3DFD4;font-size:5.8px;font-weight:700;letter-spacing:.1em;"+
+ "text-transform:uppercase;color:#8B939C}"+
+".foot .g{color:#A8853A}"+
+"@page{size:letter portrait;margin:.32in}"+
+"@media print{body{background:#fff;padding:0}.page{width:auto;box-shadow:none;margin:0}"+
+ ".card,.strip,.opts,table{break-inside:avoid}}";
+
 function pPrint(){
   var w=window.open("","_blank"); if(!w){alert("Allow pop-ups to print the profile.");return;}
-  var rows=[], cur=(typeof curScript!=="undefined"&&curScript)||"veteran";
-  PRINT_ORDER.forEach(function(g){
-    var any=g[1].some(function(k){
-      if(k==="conds") return (P.conds||[]).length>0;
-      if(k==="refs")  return (P.refs||[]).some(function(r){return r.n||r.p||r.r||r.s});
-      if(k==="bens")  return (P.bens||[]).some(function(b){return b.n||b.ph||b.rel});
-      return !!(P[k]&&String(P[k]).trim());
-    });
-    if(!any && OPTIONAL_SECTIONS.indexOf(g[0])>-1) return;
-    rows.push('<h2>'+g[0]+'</h2>');
-    g[1].forEach(function(k){
-      if(k==="bens"){
-        var bl=(P.bens||[]).filter(function(b){return b.n||b.ph||b.rel});
-        rows.push('<div class="cl">'+(bl.length? bl.map(function(b){
-          return (b.role||"Primary")+" &middot; "+(b.n||"")+(b.rel?" ("+b.rel+")":"")+
-                 (b.pct?" &middot; "+b.pct+"%":"")+(b.ph?" &middot; "+b.ph:"")+(b.dob?" &middot; "+b.dob:"");
-        }).join("<br>") : '<u>&nbsp;</u><br><u>&nbsp;</u>')+'</div>');
-        return; }
-      if(k==="refs"){
-        var rl=(P.refs||[]).filter(function(r){return r.n||r.p||r.r||r.s});
-        rows.push('<div class="cl">'+(rl.length? rl.map(function(r){
-          return (r.n||"&nbsp;")+" &middot; "+(r.p||"")+(r.r?" ("+r.r+")":"")+(r.s?" &middot; "+r.s:"");}).join("<br>")
-          : '<u>&nbsp;</u><br><u>&nbsp;</u><br><u>&nbsp;</u>')+'</div>');
-        return; }
-      if(k==="conds"){
-        rows.push('<div class="cl">'+PF_CONDS.map(function(c){
-          var on=(P.conds||[]).indexOf(c)>-1;
-          return '<span class="'+(on?"on":"")+'">'+c+'</span>';}).join(" &middot; ")+'</div>');
-        (P.conds||[]).forEach(function(c){
-          var fu=PF_FOLLOW[c]; if(!fu)return;
-          rows.push('<div class="fu"><b>'+c+'</b> &mdash; '+fu.map(function(x){
-            return x.l+': <u>'+(P[x.k]||"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")+'</u>';}).join(" &middot; ")+'</div>');
-        });
-        return; }
-      var f=pSpecOf(k); if(!f) return;
-      rows.push('<div class="r'+(f.type==="area"?" w":"")+'"><i>'+f.l+'</i><u>'+(P[k]||"")+'</u></div>');
-    });
+  var cur=(typeof curScript!=="undefined"&&curScript)||"veteran";
+  var title=(SCRIPTS.filter(function(a){return a.k===cur})[0]||{title:""}).title;
+  var o=[], a=function(s){o.push(s)};
+
+  function v(k){ return P[k]?esc(P[k]):""; }
+  function f(lab,val,cls){
+    return '<div class="f '+(cls||"")+'"><label>'+lab+'</label>'+
+           '<div class="v">'+(val||"&nbsp;")+'</div></div>'; }
+  function row(cols,inner){ return '<div class="row" style="grid-template-columns:'+cols+'">'+inner+'</div>'; }
+  function card(h,inner,style){ return '<div class="card"'+(style?' style="'+style+'"':'')+
+           '><h2>'+h+'</h2><div class="bd">'+inner+'</div></div>'; }
+  function join(list,sep){ return list.filter(Boolean).join(sep||" &middot; "); }
+  function any(){ for(var i=0;i<arguments.length;i++){ if(P[arguments[i]]) return true; } return false; }
+
+  // ---- composed blocks
+  var det=[];
+  (P.conds||[]).forEach(function(c){
+    var fu=PF_FOLLOW[c]; if(!fu) return;
+    var parts=fu.map(function(x){ return P[x.k] ? x.l+" "+esc(P[x.k]) : null; }).filter(Boolean);
+    if(parts.length) det.push("<b>"+esc(c)+"</b> &mdash; "+parts.join(", "));
   });
-  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Client profile</title><style>'+
-   "*{box-sizing:border-box}body{font-family:Inter,-apple-system,Segoe UI,Roboto,sans-serif;font-size:9.5px;"+
-   "color:#1B1B1B;margin:0;padding:12px 14px;line-height:1.35}"+
-   "h1{font-family:Georgia,serif;font-size:15px;margin:0 0 2px}"+
-   ".sub{color:#8B8A82;font-size:8.5px;margin:0 0 8px}"+
-   "h2{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#A8853A;margin:8px 0 3px;"+
-   "border-top:1px solid #E3DFD4;padding-top:4px}"+
-   ".r{display:inline-block;width:24%;vertical-align:top;padding:0 4px 4px 0}"+
-   ".r.w{width:49%}"+
-   ".r i{display:block;font-style:normal;color:#8B8A82;font-size:8px}"+
-   ".r u{display:block;border-bottom:1px solid #C9C4B6;min-height:12px;text-decoration:none}"+
-   ".cl{font-size:8.5px;line-height:1.7;color:#6E6E68}"+
-   ".cl .on{background:#F0E4C8;font-weight:700;color:#1B1B1B;padding:1px 3px;border-radius:3px}"+
-   ".fu{font-size:8.5px;margin:3px 0;padding-left:6px;border-left:2px solid #C9A24E}"+
-   ".fu u{text-decoration:none;border-bottom:1px solid #C9C4B6}"+
-   ".nt{border:1px solid #E3DFD4;border-radius:4px;min-height:66px;padding:5px;white-space:pre-wrap;font-size:9px}"+
-   "@page{size:letter portrait;margin:.35in}"+
-   '</style></head><body><h1>Client profile</h1><div class="sub">'+
-   (SCRIPTS.filter(function(a){return a.k===cur})[0]||{title:""}).title+
-   ' &middot; '+new Date().toLocaleDateString()+'</div>'+rows.join("")+
-   '<h2>Notes</h2><div class="nt">'+esc(P.notes||"")+'</div></body></html>');
+  if(P.recent_what)   det.push("<b>Surgery / stay</b> &mdash; "+esc(P.recent_what));
+  if(P.health_notes)  det.push(esc(P.health_notes));
+
+  var fin=[];
+  if(P.i_contrib) fin.push("Contributing "+esc(P.i_contrib)+" / mo");
+  if(P.i_401k)    fin.push("401k / TSP: "+esc(P.i_401k));
+  if(P.i_roth)    fin.push("Roth / IRA: "+esc(P.i_roth));
+  if(P.i_liquid)  fin.push("Liquid savings "+esc(P.i_liquid));
+  if(P.i_debt)    fin.push("Debt "+esc(P.i_debt));
+  if(P.i_retire)  fin.push("Retiring: "+esc(P.i_retire));
+  if(P.i_prot)    fin.push("Retirement protected: "+esc(P.i_prot));
+  if(P.asset_notes)   fin.push(esc(P.asset_notes));
+  if(P.inplace_notes) fin.push("Existing cover &mdash; "+esc(P.inplace_notes));
+  if(P.m_co)      fin.push("Co-borrower: "+esc(P.m_co));
+
+  var kind=join([v("inplace_kind"),P.inplace_src?"("+esc(P.inplace_src)+")":""]," ");
+  var bank=join([v("bank"),P.bank_kind?"("+esc(P.bank_kind)+")":""]," ");
+  var sel=join([v("chosen"),v("coverage"),v("premium")]," &middot; ");
+
+  var bl=(P.bens||[]).filter(function(b){return b.n||b.ph||b.rel});
+  var rl=(P.refs||[]).filter(function(r){return r.n||r.p||r.r||r.s});
+
+  // ---- header
+  a('<div class="page"><div class="band"><div class="bl"><span class="ttl">Client Profile</span>'+
+    '<span class="by">Brought to you by Optimum</span></div>'+
+    '<div class="br">'+esc(title)+'</div></div>');
+
+  a('<div class="strip">'+
+    f("Client",join([v("first"),v("last")]," "))+
+    f("DOB / insurance age",join([v("dob"),P.age?"age "+esc(P.age):""],"&nbsp; &middot; &nbsp;"))+
+    f("Branch of service",v("branch"))+
+    f("State",v("state"))+
+    f("Profile date",pToday())+'</div>');
+
+  a('<div class="wrap">');
+
+  // ---- conversation + contact
+  a('<div class="grid2">');
+  a(card("Conversation snapshot",
+    row("1fr",f("In their words &mdash; why they answered",v("goal"),"tall"))+
+    row("1fr 1fr 1.3fr",f("Burial / cremation",v("burial"))+f("Cost they expect",v("arrangement_cost"))+
+        f("Beneficiary",v("ben")))+
+    row("1fr",f("Notes from the call",v("notes"),"note"))));
+
+  a(card("Contact &amp; household",
+    row("1fr 1.4fr",f("Phone",v("phone"))+f("Email",v("email")))+
+    row(".8fr 1.1fr .9fr",f("Marital status",v("married"))+f("Spouse",v("spouse"))+
+        f("Spouse wants cover",v("spouse_wants")))+
+    row("1fr",f("Address",v("address")))+
+    row("1.4fr 1fr .8fr",f("City",v("city"))+f("State",v("state"))+f("ZIP",v("zip")))+
+    row("1fr",f("Employer / licence / other context",v("app_notes"),"note"))));
+  a('</div>');
+
+  // ---- underwriting + financial
+  a('<div class="grid2">');
+  a(card("Underwriting snapshot",
+    row("1fr 1fr 1fr 1fr",f("Height",v("height"))+f("Weight",v("weight"))+
+        f("Tobacco",v("smoker"))+f("VA rating",P.varating?esc(String(P.varating).replace(/^(\d+)$/,"$1%")):""))+
+    row("1fr",'<div class="f"><label>Conditions disclosed</label><div class="conds">'+
+        PF_CONDS.map(function(c){ return '<span class="'+((P.conds||[]).indexOf(c)>-1?"on":"")+'">'+
+          esc(c)+'</span>'; }).join("")+'</div></div>')+
+    row("1fr",f("Medications &mdash; name, dose, what for",v("meds"),"tall"))+
+    row("1.3fr 1fr",f("Surgery / overnight stay (5 yrs)",v("recent_stay"))+f("COVID (2 yrs)",v("covid")))+
+    row("1fr",f("Condition detail / dates / pending follow-up",det.join("<br>"),"note"))));
+
+  var finrows=
+    row("1fr 1fr 1.2fr 1fr",f("Monthly income",v("i_income"))+f("Left over",v("i_left"))+
+        f("Source",v("inc_kind"))+f("Spender / saver",v("money_style")));
+  if(P.inplace==="Yes"||any("inplace_amt","inplace_carrier","inplace_prem"))
+    finrows+=row("1fr 1.2fr 1.1fr 1fr 1fr",f("Existing cover",v("inplace_amt"))+
+        f("Carrier",v("inplace_carrier"))+f("Type / source",kind)+
+        f("Premium",v("inplace_prem"))+f("Term expires",v("inplace_exp")));
+  if(any("m_balance","m_payment","m_years","m_value","m_equity"))
+    finrows+=row("1fr 1fr .7fr 1fr 1fr",f("Mortgage balance",v("m_balance"))+f("Payment",v("m_payment"))+
+        f("Yrs left",v("m_years"))+f("House worth",v("m_value"))+f("Equity",v("m_equity")));
+  if(any("asset_amt","asset_where","asset_employer","asset_prot"))
+    finrows+=row("1fr 1fr 1.3fr 1fr",f("Retirement assets",v("asset_amt"))+f("Account",v("asset_where"))+
+        f("Held where",v("asset_employer"))+f("Protectable",v("asset_prot")));
+  finrows+=row("1fr",f("Debt / savings / contributions / retirement timeline",fin.join(" &middot; "),"note"));
+  a(card("Financial &amp; coverage snapshot",finrows));
+  a('</div>');
+
+  // ---- quote
+  var opts='<div class="opts">'+
+    [["1","Maximum","opt1_cov","opt1_prem","Max"],
+     ["2","Recommended","opt2_cov","opt2_prem","Recommended"],
+     ["3","Basic","opt3_cov","opt3_prem","Basic"]].map(function(x){
+      var pick=(P.chosen===x[4]);
+      return '<div class="opt'+(pick?" pick":"")+'"><h3><span>'+x[0]+' &middot; '+x[1]+'</span>'+
+        (pick?"<b>TAKEN</b>":"")+'</h3><div class="pair">'+
+        f("Coverage",v(x[2]))+f("Monthly",v(x[3]))+'</div></div>';
+    }).join("")+'</div>';
+  a(card("Quote history &amp; recommendation",
+    opts+
+    row("1.2fr 1.6fr 1fr 1fr",f("Carrier",v("carrier"))+f("Bank / account type",bank)+
+        f("Draft date",v("draft"))+f("Policy #",v("policy")))+
+    row("1.5fr 1fr",f("Selected solution",sel)+f("Bank notes",v("bank_notes"))),
+    "margin-top:8px"));
+
+  // ---- beneficiaries + referrals
+  var bens='<table><tr><th style="width:15%">Role</th><th style="width:26%">Name</th>'+
+    '<th style="width:17%">Relationship</th><th style="width:8%">%</th>'+
+    '<th style="width:19%">Phone</th><th style="width:15%">DOB</th></tr>'+
+    (bl.length?bl:[{role:"Primary"},{role:"Contingent"}]).map(function(b){
+      return '<tr><td class="mut">'+esc(b.role||"Primary")+'</td><td>'+esc(b.n||"")+'</td><td>'+
+        esc(b.rel||"")+'</td><td>'+(b.pct?esc(b.pct):"")+'</td><td>'+esc(b.ph||"")+'</td><td>'+
+        esc(b.dob||"")+'</td></tr>'; }).join("")+'</table>'+
+    row("1fr 1fr",f("Saved to GOAT / CRM",v("crm"))+f("Next review date",""));
+
+  if(rl.length){
+    a('<div class="grid2" style="grid-template-columns:1.35fr 1fr">');
+    a(card("Beneficiaries",bens));
+    a(card("Referrals",'<table><tr><th style="width:32%">Name</th><th style="width:26%">Phone</th>'+
+      '<th style="width:24%">Relationship</th><th style="width:18%">State</th></tr>'+
+      rl.map(function(r){ return '<tr><td>'+esc(r.n||"")+'</td><td>'+esc(r.p||"")+'</td><td>'+
+        esc(r.r||"")+'</td><td>'+esc(r.s||"")+'</td></tr>'; }).join("")+'</table>'));
+    a('</div>');
+  } else {
+    a(card("Beneficiaries",bens,"margin-top:8px"));
+  }
+
+  // ---- follow-up
+  a(card("Follow-up &amp; handoff",
+    row("1fr",f("Commitments made &middot; anything added after the call","","note big")),
+    "margin-top:8px"));
+
+  a('</div>');
+  a('<div class="foot"><span class="g">Confidential &mdash; for authorized agency use only</span>'+
+    '<span>'+join([esc(pVal("a_name")),pVal("a_npn")?"NPN "+esc(pVal("a_npn")):""],"&nbsp; &middot; &nbsp;")+
+    '</span></div></div>');
+
+  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>'+esc(pName())+
+    '</title><style>'+PRINT_CSS+'</style></head><body>'+o.join("")+'</body></html>');
   w.document.close(); setTimeout(function(){w.focus();w.print();},350);
 }
 
