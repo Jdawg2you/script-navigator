@@ -1112,6 +1112,8 @@ app_page1:{s:"10",pf:"app",t:"Application, page one",l:[
 {t:"say",x:"Okay, let's get this started. I've got the spelling of your first name as ___(first name)."},
 {t:"say",x:"And your last name, and the spelling of your last name &mdash; I've got ___(last name)."},
 {t:"dobig",x:"On the first main page of the application, fill in everything you already have. Ask only for what you don't."},
+{t:"pf",ks:["address","city","state","zip"]},
+{t:"pf",ks:["phone","email"]},
 {t:"ask",x:"And for the beneficiary &mdash; I've got ___(beneficiary). What's their full legal name, and what's the best phone number for them?"},
 {t:"note",x:"<b>Get the beneficiary's phone number every single time.</b> They are your first referral off this call. You will need to reach them once the policy is issued to introduce yourself, and to text them so they know who you are long before they ever have to call you."},
 {t:"warn",x:"<b>Complete the entire page before you ask for the social.</b><br>If the SSN field sits in the middle of the page, skip past it, finish everything below it, then come back up to it."}
@@ -1123,13 +1125,13 @@ app_ssn:{s:"10",pf:"app",t:"The social",l:[
 {t:"note",x:"<b>Three words on purpose.</b> It isn't a question, it's the next field on the form &mdash; you're continuing a list you were already filling in. The moment it becomes a full sentence, it becomes a request, and a request can be declined."}
 ],b:[{k:"Got it",to:"app_auth1",c:"go"},{k:"They're pushing back",to:"app_ssn_obj",c:"alert"}]},
 
-app_ssn_obj:{s:"10",t:"SSN objection",l:[
+app_ssn_obj:{s:"10",pf:"app",t:"SSN objection",l:[
 {t:"say",x:"The insurance company is only going to approve you if everything we talked about checks out. To verify it, they pull your medical and prescription history &mdash; and they do that with your social, through the MIB, the Medical Information Bureau."},
 {t:"say",x:"We know it's sensitive. That's exactly why I gave you my name, my direct number and my license information at the start of this call, and texted you my card. If you want, I'm happy to show you how to look me up on the Department of Insurance website."},
 {t:"do",x:"Only offer the lookup if you can actually walk them through it."}
 ],b:[{k:"Got the social",to:"app_auth1",c:"go"}]},
 
-app_auth1:{s:"10",t:"First authorization &mdash; the MIB pull",l:[
+app_auth1:{s:"10",pf:"app",t:"First authorization &mdash; the MIB pull",l:[
 {t:"warn",x:"<b>Most carriers run TWO text authorizations.</b> This is the first &mdash; it authorizes the medical records pull now that you have their social. The second one signs the final application at 10.7. Set that expectation here so the second text isn't a surprise."},
 {t:"say",x:"Alright, they're going to send you a text message in just a second. It'll come from a number you don't recognize &mdash; that's normal, that's the insurance company."},
 {t:"say",x:"There's going to be a six-digit code in there. Don't tap anything, don't click anything &mdash; just read me those six digits."},
@@ -3162,9 +3164,9 @@ var PF_SPEC=[
  {k:"inplace",l:"Anything in place?",w:2,opt:["","No","Yes"]},
  {k:"inplace_carrier",l:"Their current carrier",w:1,showIf:["inplace","Yes"]},
  {k:"inplace_src",l:"Through work or private?",w:1,opt:["","Work","Private","Both"],showIf:["inplace","Yes"]},
- {k:"inplace_amt",l:"How much coverage",w:1,showIf:["inplace","Yes"]},
+ {k:"inplace_amt",l:"How much coverage",money:"cov",w:1,showIf:["inplace","Yes"]},
  {k:"inplace_kind",l:"Term or whole life?",w:1,opt:["","Term","Whole life","Not sure"],showIf:["inplace","Yes"]},
- {k:"inplace_prem",l:"What they pay",w:1,showIf:["inplace","Yes"]},
+ {k:"inplace_prem",l:"What they pay",money:"prem",w:1,showIf:["inplace","Yes"]},
  {k:"inplace_exp",l:"When does the term expire?",w:2,showIf:["inplace_kind","Term"]},
  {k:"inplace_notes",l:"Notes on their existing coverage",type:"area",w:2,showIf:["inplace","Yes"]},
 
@@ -3177,6 +3179,7 @@ var PF_SPEC=[
  {k:"height",l:"Height",w:1},{k:"weight",l:"Weight",w:1},
  {k:"smoker",l:"Tobacco",w:1,opt:["","No","Yes"]},{k:"varating",l:"VA rating %",w:1},
  {k:"bank",l:"Bank name",w:1},{k:"bank_kind",l:"Type",w:1,opt:["","Credit union","National bank","Direct Express","Online only"]},
+ {k:"bank_notes",l:"Notes",w:2},
 
  {sec:"Health",id:"health"},
  {k:"conds",l:"Conditions",type:"conds"},
@@ -3184,27 +3187,27 @@ var PF_SPEC=[
 
  {sec:"Income",id:"income"},
  {k:"inc_kind",l:"Source",w:2,multi:true,opt:["","Working","Retired","Social Security","Disability","Pension"]},
- {k:"i_income",l:"Monthly income",w:1},{k:"i_left",l:"Left over each month",w:1},
+ {k:"i_income",l:"Monthly income",money:"prem",w:1},{k:"i_left",l:"Left over each month",money:"prem",w:1},
  {k:"money_style",l:"Spender or saver",w:1,opt:["","Spender","Saver","Bit of both"]},
  {k:"i_prot",l:"Retirement protected?",w:1,opt:["","No","Yes"]},
 
  {sec:"Mortgage &mdash; ask if it comes up",id:"mortgage"},
- {k:"m_balance",l:"Balance left",w:1},{k:"m_payment",l:"Monthly payment",w:1},
- {k:"m_years",l:"Years left",w:1},{k:"m_equity",l:"Equity",w:1},
+ {k:"m_balance",l:"Balance left",money:"cov",w:1},{k:"m_payment",l:"Monthly payment",money:"prem",w:1},
+ {k:"m_years",l:"Years left",w:1},{k:"m_equity",l:"Equity",money:"cov",w:1},
  {k:"m_co",l:"Co-borrower",w:2},
 
  {sec:"Retirement &amp; money &mdash; ask if it comes up",id:"retirement"},
- {k:"i_contrib",l:"Monthly contribution",w:1},{k:"i_401k",l:"401k / TSP",w:1},
- {k:"i_roth",l:"Roth / IRA",w:1},{k:"i_liquid",l:"Liquid savings",w:1},
- {k:"i_debt",l:"Debt",w:1},{k:"i_retire",l:"Retire timeline",w:1},
+ {k:"i_contrib",l:"Monthly contribution",money:"prem",w:1},{k:"i_401k",l:"401k / TSP",w:1},
+ {k:"i_roth",l:"Roth / IRA",w:1},{k:"i_liquid",l:"Liquid savings",money:"cov",w:1},
+ {k:"i_debt",l:"Debt",money:"cov",w:1},{k:"i_retire",l:"Retire timeline",w:1},
 
  {sec:"The plan",id:"plan"},
  {k:"carrier",l:"Carrier",w:2},
- {k:"opt1_cov",l:"1 &middot; Max &mdash; coverage",w:1},{k:"opt1_prem",l:"Max &mdash; monthly",w:1},
- {k:"opt2_cov",l:"2 &middot; Recommended &mdash; coverage",w:1},{k:"opt2_prem",l:"Recommended &mdash; monthly",w:1},
- {k:"opt3_cov",l:"3 &middot; Basic &mdash; coverage",w:1},{k:"opt3_prem",l:"Basic &mdash; monthly",w:1},
+ {k:"opt1_cov",l:"1 &middot; Max &mdash; coverage",money:"cov",w:1},{k:"opt1_prem",l:"Max &mdash; monthly",money:"prem",w:1},
+ {k:"opt2_cov",l:"2 &middot; Recommended &mdash; coverage",money:"cov",w:1},{k:"opt2_prem",l:"Recommended &mdash; monthly",money:"prem",w:1},
+ {k:"opt3_cov",l:"3 &middot; Basic &mdash; coverage",money:"cov",w:1},{k:"opt3_prem",l:"Basic &mdash; monthly",money:"prem",w:1},
  {k:"chosen",l:"Which did they take?",w:2,opt:["","Max","Recommended","Basic","Other"]},
- {k:"coverage",l:"Coverage chosen",w:1},{k:"premium",l:"Monthly premium",w:1},
+ {k:"coverage",l:"Coverage chosen",money:"cov",w:1},{k:"premium",l:"Monthly premium",money:"prem",w:1},
 
  {sec:"Application",id:"app"},
  {k:"phone",l:"Phone",w:1},{k:"email",l:"Email",w:1},
@@ -3230,7 +3233,7 @@ var PF_SPEC=[
 /* print groups things logically instead of in call order */
 var PRINT_ORDER=[
  ["Client",["first","last","dob","age","phone","email","spouse","branch","address","city","state","zip","app_notes"]],
- ["Build & habits",["height","weight","smoker","varating","bank","bank_kind"]],
+ ["Build & habits",["height","weight","smoker","varating","bank","bank_kind","bank_notes"]],
  ["Health",["conds","meds"]],
  ["Why",["goal","burial"]],
  ["Coverage they already have",["inplace","inplace_carrier","inplace_src","inplace_amt","inplace_kind","inplace_prem","inplace_exp","inplace_notes"]],
@@ -3364,6 +3367,19 @@ ND:"North Dakota",OH:"Ohio",OK:"Oklahoma",OR:"Oregon",PA:"Pennsylvania",RI:"Rhod
 SC:"South Carolina",SD:"South Dakota",TN:"Tennessee",TX:"Texas",UT:"Utah",VT:"Vermont",VA:"Virginia",
 WA:"Washington",WV:"West Virginia",WI:"Wisconsin",WY:"Wyoming"};
 
+function pMoneyCov(v){                       /* 35 -> $35,000 ; 35000 -> $35,000 */
+  var t=String(v||"").replace(/[$,\s]/g,""); if(!t||!/^\d+(\.\d+)?$/.test(t)) return null;
+  var n=parseFloat(t);
+  if(t.indexOf(".")<0 && t.length<=3) n=n*1000;
+  return "$"+Math.round(n).toLocaleString("en-US");
+}
+function pMoneyPrem(v){                      /* 7847 -> $78.47 ; 68 -> $68.00 ; 68.50 -> $68.50 */
+  var t=String(v||"").replace(/[$,\s]/g,""); if(!t) return null;
+  if(/^\d+\.\d{1,2}$/.test(t)) return "$"+parseFloat(t).toFixed(2);
+  if(!/^\d+$/.test(t)) return null;
+  var n = t.length<=2 ? parseFloat(t) : parseInt(t,10)/100;
+  return "$"+n.toFixed(2);
+}
 function pState(v){
   var t=String(v||"").trim(); if(!t) return null;
   var up=t.toUpperCase();
@@ -3428,6 +3444,14 @@ document.addEventListener("input",function(e){
 document.addEventListener("change",function(e){
   var t=e.target;
   if(t.getAttribute&&t.getAttribute("data-pk")==="dob"){ var a=pAge(t.value); if(a){ t.value=a.pretty; pSet("dob",a.pretty); } }
+  if(t.getAttribute&&t.getAttribute("data-pk")){
+    var mk=t.getAttribute("data-pk"), mf=pSpecOf(mk);
+    if(mf&&mf.money){
+      var mv=(mf.money==="cov")?pMoneyCov(t.value):pMoneyPrem(t.value);
+      if(mv){ pSet(mk,mv);
+        [].forEach.call(document.querySelectorAll('[data-pk="'+mk+'"]'),function(el){ el.value=mv; }); }
+    }
+  }
   if(t.getAttribute&&t.getAttribute("data-pk")==="state"){ var st=pState(t.value); if(st){ pSet("state",st);
       [].forEach.call(document.querySelectorAll('[data-pk="state"]'),function(el){ el.value=st; }); } }
   if(t.getAttribute&&t.getAttribute("data-pk")==="height"){ var h=pHeight(t.value); if(h){ t.value=h; pSet("height",h);
