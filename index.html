@@ -412,6 +412,7 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   vertical-align:baseline;min-width:9ch}
 .iblank::placeholder{color:#B9B6AC;font-family:var(--sans);font-size:12px;font-style:italic}
 .iblank:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+.iblank.bad{border-color:var(--rust);background:#FCF3F1}
 .line.do .iblank,.note .iblank{font-family:var(--sans);font-size:12.5px}
 .pfline{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:9px 12px;margin:0 0 12px;
   background:var(--fill);border:1px dashed var(--goldline);border-radius:8px}
@@ -1353,7 +1354,7 @@ app_auth1:{s:"10",pf:"app",t:"First authorization &mdash; the MIB pull",l:[
 ],b:[{k:"Got the code",to:"app_draft",c:"go"}]},
 
 app_draft:{s:"10",pf:"wrap",t:"Draft date",l:[
-{t:"say",x:"Once you're approved they'll issue the coverage right away so you're protected immediately. The first premium drafts in about one to two business days, and then it's the ___(draft date) of every month after that."},
+{t:"say",x:"Once you're approved they'll issue the coverage right away so you're protected immediately. The first premium drafts in about one to two business days &mdash; ___(draft date) &mdash; and then that same date every month after that."},
 {t:"ask",x:"Make sense?"},
 {t:"do",x:"If they're on Social Security, you can line their draft up with their deposit date. Same money, less friction &mdash; and it meaningfully increases persistency."},
 {t:"do",x:"With some carriers you can run the initial draft right away so they're protected now, then set the monthly to a different day going forward. Only offer this if you sense hesitation, or if you think it genuinely helps this particular client."},
@@ -4050,16 +4051,41 @@ function pState(v){
 
 function pDraft(v){
   var t=String(v||"").trim(); if(!t) return null;
-  var ord=function(n){ var sfx=["th","st","nd","rd"], m=n%100;
-    return n+(sfx[(m-20)%10]||sfx[m]||sfx[0]); };
-  var m;
-  if((m=t.match(/^\s*(\d{1,2})\s*(?:st|nd|rd|th)?\s*$/i))){
-    var d=+m[1]; if(d<1||d>31) return null; return ord(d)+" of the month";
+  var pad=function(n){ return (n<10?"0":"")+n; };
+  var dim=function(m,y){ return [31,(y%4===0&&y%100!==0)||y%400===0?29:28,31,30,31,30,31,31,30,31,30,31][m-1]; };
+  var out=function(m,d,y){
+    m=+m; d=+d; y=+y;
+    if(y<100) y+=2000;
+    if(m<1||m>12||d<1||y<2000||y>2099) return null;
+    if(d>dim(m,y)) return null;
+    return pad(m)+"/"+pad(d)+"/"+String(y).slice(2);
+  };
+  var g;
+  /* already formatted - still checked, so an impossible day cannot slip back in */
+  if((g=t.match(/^(\d{2})\/(\d{2})\/(\d{2})$/))) return out(g[1],g[2],g[3]);
+  /* typed with separators: 6/25/26, 06-25-2026, 6.25.26 */
+  if((g=t.match(/^\s*(\d{1,2})\s*[\/\-. ]\s*(\d{1,2})\s*[\/\-. ]\s*(\d{2}|\d{4})\s*$/)))
+    return out(g[1],g[2],g[3]);
+  /* no year given: 6/25 - assume this year, or next if it has already gone */
+  if((g=t.match(/^\s*(\d{1,2})\s*[\/\-. ]\s*(\d{1,2})\s*$/))){
+    var now=new Date(), r=out(g[1],g[2],now.getFullYear());
+    if(r && new Date(now.getFullYear(),+g[1]-1,+g[2]) < new Date(now.getFullYear(),now.getMonth(),now.getDate()))
+      r=out(g[1],g[2],now.getFullYear()+1);
+    return r;
   }
-  if(/^(1st|first)$/i.test(t)) return "1st of the month";
-  if(/^(15|15th|mid)$/i.test(t)) return "15th of the month";
-  if(/^(eom|end|last)$/i.test(t)) return "last day of the month";
-  if(/^(ss|social|social security)$/i.test(t)) return "with their Social Security deposit";
+  /* run together: 6526, 62526, 062526, 6252026, 06252026 - try each way of splitting it */
+  if(/^\d{4,8}$/.test(t)){
+    var n=t.length, tries=
+      n===4?[[1,1,2]]:
+      n===5?[[1,2,2],[2,1,2]]:
+      n===6?[[2,2,2]]:
+      n===7?[[1,2,4],[2,1,4]]:
+             [[2,2,4]];
+    for(var i=0;i<tries.length;i++){
+      var a=tries[i], r2=out(t.slice(0,a[0]), t.slice(a[0],a[0]+a[1]), t.slice(a[0]+a[1]));
+      if(r2) return r2;
+    }
+  }
   return null;
 }
 function pHeight(v){
@@ -4135,8 +4161,14 @@ document.addEventListener("change",function(e){
       [].forEach.call(document.querySelectorAll('[data-pk="branch"]'),function(el){ el.value=br; if(el.classList.contains("iblank")) pFit(el); }); } }
   if(t.getAttribute&&t.getAttribute("data-pk")==="state"){ var st=pState(t.value); if(st){ pSet("state",st,inCard);
       [].forEach.call(document.querySelectorAll('[data-pk="state"]'),function(el){ el.value=st; if(el.classList.contains("iblank")) pFit(el); }); } }
-  if(t.getAttribute&&t.getAttribute("data-pk")==="draft"){ var dv=pDraft(t.value); if(dv){ pSet("draft",dv,inCard);
-      [].forEach.call(document.querySelectorAll('[data-pk="draft"]'),function(el){ el.value=dv; if(el.classList.contains("iblank")) pFit(el); }); } }
+  if(t.getAttribute&&t.getAttribute("data-pk")==="draft"){ var dv=pDraft(t.value);
+      if(dv){ pSet("draft",dv,inCard);
+        [].forEach.call(document.querySelectorAll('[data-pk="draft"]'),function(el){
+          el.value=dv; el.classList.remove("bad"); el.removeAttribute("title");
+          if(el.classList.contains("iblank")) pFit(el); }); }
+      else if(t.value.trim()){ t.classList.add("bad");
+        t.title="That is not a date I can read. Try 6/25/26, or just 62526."; }
+      else { t.classList.remove("bad"); t.removeAttribute("title"); } }
   if(t.getAttribute&&t.getAttribute("data-pk")==="height"){ var h=pHeight(t.value); if(h){ t.value=h; pSet("height",h,inCard);
       [].forEach.call(document.querySelectorAll('[data-pk="height"]'),function(el){ el.value=h; if(el.classList.contains("iblank")) pFit(el); }); } }
   if(t.getAttribute&&t.getAttribute("data-cond")){
