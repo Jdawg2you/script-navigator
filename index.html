@@ -543,6 +543,7 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 <div class="scrim" id="scrim"></div>
 
 <datalist id="statelist"></datalist>
+<datalist id="branchlist"></datalist>
 <input type="file" id="proffile" accept="application/json" style="display:none">
 <aside class="drawer" id="drawer">
   <div class="drawerhead"><h2 id="drawertitle"></h2><button class="closex" id="closedrawer">&times;</button></div>
@@ -2969,7 +2970,7 @@ function fmt(x){
             var v=(typeof pBlank==="function")?pBlank(lab):"";
             if(k && k.indexOf("a_")!==0){
               var w=Math.max(9,Math.min(26,(v||lab).length+2));
-              return '<input class="iblank"'+(k==="state"?' list="statelist"':'')+' data-pk="'+k+'" data-inline="1" title="'+esc(lab)+'"'+
+              return '<input class="iblank"'+(k==="state"?' list="statelist"':k==="branch"?' list="branchlist"':'')+' data-pk="'+k+'" data-inline="1" title="'+esc(lab)+'"'+
                      ' placeholder="'+esc(lab)+'" style="width:'+w+'ch" value="'+esc(v).replace(/"/g,"&quot;")+'">';
             }
             return v ? '<span class="filled">'+esc(v)+'</span>'
@@ -3332,7 +3333,7 @@ function pField(f){
   var input = f.opt ? '<select id="'+id+'" data-pk="'+f.k+'">'+f.opt.map(function(o){
         return '<option'+(o===v?' selected':'')+'>'+o+'</option>'}).join("")+'</select>'
     : f.type==="area" ? '<textarea id="'+id+'" data-pk="'+f.k+'">'+esc(v)+'</textarea>'
-    : '<input'+(f.k==="state"?' list="statelist"':'')+' id="'+id+'" data-pk="'+f.k+'" value="'+esc(v).replace(/"/g,"&quot;")+'">';
+    : '<input'+(f.k==="state"?' list="statelist"':f.k==="branch"?' list="branchlist"':'')+' id="'+id+'" data-pk="'+f.k+'" value="'+esc(v).replace(/"/g,"&quot;")+'">';
   return '<div class="pf'+(f.w===2?' w100':'')+'" data-pff="'+f.k+'"><label for="'+id+'">'+f.l+'</label>'+input+'</div>';
 }
 
@@ -3422,6 +3423,21 @@ function pMoneyPrem(v){                      /* 7847 -> $78.47 ; 68 -> $68.00 ; 
   var n = t.length<=2 ? parseFloat(t) : parseInt(t,10)/100;
   return "$"+n.toFixed(2);
 }
+var BRANCHES=["Army","Navy","Air Force","Marine Corps","Coast Guard","Space Force","National Guard","Reserves"];
+var BRANCH_ABBR={USA:"Army",ARMY:"Army",USN:"Navy",NAVY:"Navy",AF:"Air Force",USAF:"Air Force",
+  USMC:"Marine Corps",MC:"Marine Corps",MARINE:"Marine Corps",MARINES:"Marine Corps",
+  CG:"Coast Guard",USCG:"Coast Guard",SF:"Space Force",USSF:"Space Force",
+  NG:"National Guard",ARNG:"National Guard",ANG:"National Guard"};
+function pBranch(v){
+  var t=String(v||"").trim(); if(!t) return null;
+  var up=t.toUpperCase().replace(/\./g,"");
+  if(BRANCH_ABBR[up]) return BRANCH_ABBR[up];
+  var exact=BRANCHES.filter(function(n){return n.toLowerCase()===t.toLowerCase()});
+  if(exact.length) return exact[0];
+  var hits=BRANCHES.filter(function(n){return n.toLowerCase().indexOf(t.toLowerCase())===0});
+  return hits.length===1 ? hits[0] : null;
+}
+
 function pState(v){
   var t=String(v||"").trim(); if(!t) return null;
   var up=t.toUpperCase();
@@ -3494,6 +3510,8 @@ document.addEventListener("change",function(e){
         [].forEach.call(document.querySelectorAll('[data-pk="'+mk+'"]'),function(el){ el.value=mv; }); }
     }
   }
+  if(t.getAttribute&&t.getAttribute("data-pk")==="branch"){ var br=pBranch(t.value); if(br){ pSet("branch",br);
+      [].forEach.call(document.querySelectorAll('[data-pk="branch"]'),function(el){ el.value=br; }); } }
   if(t.getAttribute&&t.getAttribute("data-pk")==="state"){ var st=pState(t.value); if(st){ pSet("state",st);
       [].forEach.call(document.querySelectorAll('[data-pk="state"]'),function(el){ el.value=st; }); } }
   if(t.getAttribute&&t.getAttribute("data-pk")==="height"){ var h=pHeight(t.value); if(h){ t.value=h; pSet("height",h);
@@ -4078,7 +4096,9 @@ window.addEventListener("resize", postHeight);
 pLoad();
 (function(){ var dl=document.getElementById("statelist"); if(!dl) return;
   var out=""; for(var k in US_STATES) out+='<option value="'+US_STATES[k]+'">'+k+'</option>';
-  dl.innerHTML=out; })();
+  dl.innerHTML=out;
+  var bl=document.getElementById("branchlist");
+  if(bl) bl.innerHTML=BRANCHES.map(function(b){return '<option value="'+b+'">'}).join(""); })();
 var want = QS.get("script") || (location.hash || "").replace("#","");
 if(want && LIB[want]){
   openScript(want);
