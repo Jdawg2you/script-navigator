@@ -763,7 +763,7 @@ fresh:{s:"1",pf:"who",t:"Fresh opener",l:[
 
 aged:{s:"1",pf:"who",t:"Aged opener",l:[
 {t:"do",x:"Deliberately lowers your status. You're asking them for help, not selling them."},
-{t:"say",x:"Hey ___(their first name), this is ___(your name). I'm a veteran consultant, licensed here in ___(your state) &mdash; I'm trying to get our file updated on my end, and I'm hoping you can help me out real quick."},
+{t:"say",x:"Hey ___(their first name), this is ___(your name). I'm a veteran consultant, licensed here in ___(client's state) &mdash; I'm trying to get our file updated on my end, and I'm hoping you can help me out real quick."},
 {t:"ask",x:"I've got you down as ___(branch of service) &mdash; is that right?"},
 {t:"note",x:"<b>Validate ONE thing. Purpose is trust, not data.</b> This is what proves you're a real person with their actual file in front of you. Branch of service first. If it isn't on the lead: <b>&ldquo;You listed ___ as your beneficiary &mdash; is that right?&rdquo;</b> then date of birth, then email."},
 {t:"ask",x:"You put in a request a while back about the life insurance programs for veterans. Did you ever end up getting something in place, or what ended up happening with that?"},
@@ -861,10 +861,11 @@ sit_stakes:{s:"3",pf:"why",t:"The stakes question",l:[
 
 sit_why:{s:"3",pf:"why",t:"Why it matters",l:[
 {t:"ask",x:"Why is protecting ___(the name) important to you? ___(their goal, in their words)"},
+{t:"do",x:"They probably gave you part of this back at 3.3 when you asked what got them looking. Don't settle for the repeat &mdash; this is the one that has to get past the first answer."},
 {t:"ask",x:"What would ___(beneficiary)'s situation look like if you didn't have anything in place?"},
 {t:"ask",x:"Would ___(beneficiary) have the funds to cover it when that time comes?"},
 {t:"ask",x:"Is ___(beneficiary) there in ___(client's state) too?"},
-{t:"do",x:"That last one matters &mdash; if they'd have to travel, that's a real cost to add."},
+{t:"do",x:"<b>Only worth asking if the beneficiary isn't the spouse.</b> If they live somewhere else, getting there is a real cost on top of the arrangement &mdash; flights, a hotel, time off work. If it's the spouse in the same house, skip it."},
 {t:"note",x:"<b>Logical path, emotional destination.</b> Walk them through the facts and let them start understanding the math. Get the answers from them &mdash; no drama, no pressure. Stay flat."}
 ],b:[{k:"Next",to:"creds",c:"go"}]},
 
@@ -969,7 +970,7 @@ h_hipaa:{s:"6",pf:"health",t:"HIPAA and transition",l:[
 ],b:[{k:"Next",to:"h_knockout",c:"go"}]},
 
 h_knockout:{s:"6",pf:"health",t:"Knockouts",l:[
-{t:"ask",x:"Do you currently have any cancer or HIV{{c:AIDS / HIV / ARC}}? Are you confined to a wheelchair{{c:Wheelchair / electric scooter}} or on prescribed oxygen{{c:Oxygen / ventilator}}? Are you on dialysis{{c:Dialysis}}?"},
+{t:"ask",x:"Do you currently have any active cancer{{c:Active cancer}} or HIV{{c:AIDS / HIV / ARC}}? Are you confined to a wheelchair{{c:Wheelchair / electric scooter}} or on prescribed oxygen{{c:Oxygen / ventilator}}? Are you on dialysis{{c:Dialysis}}?"},
 {t:"do",x:"Ask the deal-killers first, not at question nine."}
 ,
 {t:"cfollow"}
@@ -1074,6 +1075,9 @@ ed_types:{s:"8",t:"The three types",l:[
 ],b:[{k:"Next",to:"ed_whole",c:"go"}]},
 
 ed_whole:{s:"8",t:"Whole life",l:[
+{t:"say",x:"Two things come with it. The first is a permanent death benefit &mdash; whatever we settle on today is what ___(beneficiary) receives, tax free, whenever that day comes. It doesn't shrink and it doesn't run out."},
+{t:"say",x:"The second is living benefits. If you're diagnosed with something terminal, chronic or critical &mdash; a heart attack, a stroke, cancer, something that stops you looking after yourself &mdash; you can draw on the policy while you're still here, for whatever you need it for."},
+{t:"do",x:"Living benefits are the part people have never heard of. Slow down here."},
 {t:"say",x:"Whole life stays with you for the rest of your life. It's permanent, it doesn't expire no matter how old you get, and your payment stays locked in. Your premium never goes up and your coverage never goes down. Both are guaranteed."}
 ],b:[{k:"Next",to:"ed_cash",c:"go"}]},
 
@@ -1101,13 +1105,14 @@ q_pen:{s:"9",t:"Soft hold, then pen and paper",l:[
 ],b:[{k:"Next",to:"q_max",c:"go"}]},
 
 q_max:{s:"9",pf:"plan",t:"The max",l:[
-{t:"say",x:"First one &mdash; I'm required to show you this. The most you could get at your age is ___(max coverage) for ___(max monthly) a month, and I'm not necessarily recommending this. I just have to put it in front of you so you know what's available. And that runs ___(monthly premium) a month."},
+{t:"say",x:"First one &mdash; I'm required to show you this. The most you could get at your age is ___(max coverage), and I'm not necessarily recommending this. I just have to put it in front of you so you know what's available. And that runs ___(max monthly) a month. And that runs ___(monthly premium) a month."},
 {t:"do",x:"Beat &mdash; one second, not a long pause. Then keep moving."},
 {t:"note",x:"<b>Accuracy:</b> &ldquo;the most you could get,&rdquo; never &ldquo;you're approved for.&rdquo; Nothing has been run yet."}
 ],b:[{k:"Next",to:"q_rec",c:"go"}]},
 
 q_rec:{s:"9",pf:"plan",t:"The recommendation",l:[
-{t:"say",x:"Here's what I would personally recommend. ___(recommended coverage) for ___(recommended monthly) a month."},
+{t:"say",x:"Here's what I would personally recommend. ___(recommended coverage) for ___(recommended monthly) a month &mdash; and that's a really good monthly for that amount of coverage."},
+{t:"train",x:"<b>Do the arithmetic before you speak.</b> You quoted them a ___(burial/cremation) cost earlier. Does this option cover all of it, or part of it? If it covers it with room left over, say so &mdash; that money goes to ___(beneficiary). If it covers most of it, name the gap honestly rather than letting them assume it is covered."},
 {t:"do",x:"Sound impressed. You're not apologizing for a price &mdash; you're showing them a good one. That's not bad, right?"},
 {t:"say",x:"Now the reason I'm recommending this is because earlier you told me you wanted ___(their stated wish), and you wanted to leave some money for ___(beneficiary). So this gives you enough for the ___(burial/cremation) &mdash; which like we said runs ___(the cost you quoted earlier) &mdash; and it would still leave about ___(the remainder) for ___(beneficiary). So it accomplishes exactly what you're looking to do, and for a really good price."},
 {t:"note",x:"<b>Worked example &mdash; the highlighted parts are what you fill in:</b><br><br>&ldquo;Now the reason I'm recommending this is because earlier you told me you wanted <mark>to be cremated</mark>, and you wanted to leave some money for <mark>Melissa</mark>. So this gives you enough for the <mark>cremation</mark> &mdash; which like we said runs <mark>around $5,000</mark> &mdash; and it would still leave about <mark>$10,000</mark> for <mark>Melissa</mark>. So it accomplishes exactly what you're looking to do, and for a really good price.&rdquo;"},
@@ -1118,6 +1123,7 @@ q_basic:{s:"9",pf:"plan",t:"Basic",l:[
 {t:"say",x:"And at our basic level &mdash; ___(basic coverage) for ___(basic monthly) a month."},
 {t:"say",x:"Now this is going to cover your ___(burial/cremation), and the monthly on this may be a lot more comfortable for your budget. So this, at its core, is going to make sure ___(beneficiary) isn't going to have to come out of pocket for your final expenses &mdash; which I know you said earlier was really important to you."},
 {t:"do",x:"This is the honest floor, not the consolation prize. Say it without apology."},
+{t:"train",x:"<b>Say out loud what this one actually covers.</b> Basic usually pays for the arrangement and not much else. Tell them that plainly &mdash; &ldquo;this covers the ___(burial/cremation) and that's about it&rdquo; &mdash; so nobody is surprised later. An honest floor they keep beats a better tier they cancel."},
 {t:"do",x:"When you construct this option, use the 5% rule below &mdash; but be extra mindful of their budget on this one. This is the number that has to survive a bad month."},
 {t:"note",x:"<b>Build your basic example on approximately 5% of their total monthly income.</b><br><br>If 5% doesn't reach the cost of their arrangement, do NOT push them up to reach it &mdash; name the gap instead: &ldquo;At ___ a month we're looking at about ___ in coverage. That's not the full ___, but it's most of the way there, and it's a payment you'll never sweat. I'd rather you have something that sticks than something that lapses in six months.&rdquo;"}
 ],b:[{k:"Next",to:"q_ask",c:"go"}]},
@@ -3146,7 +3152,8 @@ var MED_FOR={
 function medFlags(){
   var on=(P.conds||[]), out=[];
   (P.meds_list||[]).forEach(function(m){
-    (MED_FOR[m]||[]).forEach(function(c){
+    var base=m.replace(/\s*\(.*\)$/,"");
+    (MED_FOR[base]||[]).forEach(function(c){
       if(on.indexOf(c)<0 && (P.med_skip||[]).indexOf(m+"|"+c)<0 && !out.some(function(x){return x.m===m&&x.c===c})) out.push({m:m,c:c});
     });
   });
@@ -3457,13 +3464,7 @@ var PF_SPEC=[
  {k:"app_notes",l:"Notes &mdash; licence, employer, anything else",type:"area",w:2},
 
  {sec:"Beneficiary detail",id:"bendetail"},
- {k:"benphone",l:"Beneficiary phone",w:1},{k:"benrel",l:"Relationship",w:1},
- {k:"bendob",l:"Their DOB",w:1},{k:"bencont",l:"Contingent",w:1},
- {k:"ben2on",l:"Another beneficiary?",w:2,opt:["","No","Yes"]},
- {k:"ben2",l:"Second beneficiary",w:1,showIf:["ben2on","Yes"]},
- {k:"ben2phone",l:"Their phone",w:1,showIf:["ben2on","Yes"]},
- {k:"ben2rel",l:"Relationship",w:1,showIf:["ben2on","Yes"]},
- {k:"ben2split",l:"Split %",w:1,showIf:["ben2on","Yes"]},
+ {k:"bens",type:"bens"},
  {k:"crm",l:"Saved to GOAT / CRM?",w:2,opt:["","Not yet","Added to CRM"]},
 
  {sec:"Referrals",id:"refs"},
@@ -3482,7 +3483,7 @@ var PRINT_ORDER=[
  ["Coverage they already have",["inplace","inplace_carrier","inplace_src","inplace_amt","inplace_kind","inplace_prem","inplace_exp","inplace_notes"]],
  ["Mortgage",["has_mortgage","m_balance","m_payment","m_years","m_equity","m_co"]],
  ["Retirement & money",["inc_kind","i_income","i_left","money_style","has_assets","asset_where","asset_amt","asset_prot","i_contrib","i_401k","i_roth","i_liquid","i_debt","i_retire","i_prot"]],
- ["Beneficiary",["ben","benphone","benrel","bendob","bencont","ben2","ben2phone","ben2rel","ben2split","crm"]],
+ ["Beneficiary",["bens","crm"]],
  ["Referrals",["refs"]],
  ["The plan",["carrier","bank","opt1_cov","opt1_prem","opt2_cov","opt2_prem","opt3_cov","opt3_prem","chosen","coverage","premium","draft","policy"]]
 ];
@@ -3537,13 +3538,12 @@ var BLANKMAP={
  
  "your name":"a_name","your full name":"a_full","agent name":"a_name","your NPN":"a_npn",
  "your phone":"a_phone","your phone number":"a_phone","agent phone":"a_phone",
- "agent email":"a_email","your state":"a_state"
-};
+ "agent email":"a_email",};
 function pBlank(lab){ var k=BLANKMAP[lab]; if(!k) return ""; if(k==="a_full") k="a_name"; return pVal(k); }
 
 var AGENT_SPEC=[
  {k:"a_name",l:"Your full name",w:1},{k:"a_npn",l:"Your NPN",w:1},
- {k:"a_phone",l:"Your direct number",w:2}
+ {k:"a_phone",l:"Your direct number",w:1},{k:"a_email",l:"Your email",w:1}
 ];
 var PROFILE_ON=false;
 var PKEY="osn_profile_v1", AKEY="osn_agent_v1", P={}, A={}, PSAVE=null;
@@ -3579,6 +3579,7 @@ function pRender(){
       if(skip) return;
       o.push('<div class="profsec" id="ps_'+(f.id||'')+'">'+f.sec+'</div>'); return; }
     if(skip) return;
+    if(f.type==="bens"){ flush(); o.push(pBensHTML()); return; }
     if(f.type==="refs"){ flush(); o.push(pRefsHTML()); return; }
     if(f.type==="meds"){ flush(); o.push(pMedsHTML()); return; }
     if(f.type==="conds"){ flush();
@@ -3633,8 +3634,15 @@ function pMedsRefresh(){
   }).join(""); });
   var fw=document.getElementById("medflagwrap"); if(fw) fw.innerHTML=medFlagHTML();
 }
-function medAdd(name,from){
+function medAdd(name,from,typed){
   if(!name) return;
+  if(typed){
+    var t=String(typed).trim();
+    if(t && t.toLowerCase()!==name.toLowerCase()){
+      var hit=MED_INDEX.filter(function(m){return m.label===name && m.n.toLowerCase().indexOf(t.toLowerCase())===0})[0];
+      if(hit && hit.n.toLowerCase()!==name.toLowerCase()) name = name+" ("+hit.n+")";
+    }
+  }
   var a=(P.meds_list||[]).slice();
   if(a.indexOf(name)<0) a.push(name);
   P.meds_list=a; P.meds=a.join(", "); pStore(); pMedsRefresh(); pFlash();
@@ -3653,15 +3661,56 @@ document.addEventListener("keydown",function(e){
   if(!e.target.classList || !e.target.classList.contains("medinput")) return;
   if(e.key==="Enter"){ e.preventDefault();
     var sg=e.target.parentNode.querySelector(".medsug"), first=sg&&sg.querySelector("[data-medadd]");
-    medAdd(first? first.getAttribute("data-medadd") : e.target.value.trim(), e.target);
+    medAdd(first? first.getAttribute("data-medadd") : e.target.value.trim(), e.target, e.target.value);
   }
 });
 document.addEventListener("click",function(e){
   var a=e.target.closest && e.target.closest("[data-medadd]");
-  if(a){ var box=a.closest(".medbox"); medAdd(a.getAttribute("data-medadd"), box&&box.querySelector(".medinput")); return; }
+  if(a){ var box=a.closest(".medbox"), inp=box&&box.querySelector(".medinput");
+         medAdd(a.getAttribute("data-medadd"), inp, inp&&inp.value); return; }
   var d=e.target.closest && e.target.closest("[data-meddel]");
   if(d){ var i=+d.getAttribute("data-meddel"); var arr=(P.meds_list||[]).slice(); arr.splice(i,1);
          P.meds_list=arr; P.meds=arr.join(", "); pStore(); pMedsRefresh(); pFlash(); }
+});
+
+var BEN_COLS=[["role","Primary / contingent"],["n","Name"],["rel","Relationship"],
+               ["pct","%"],["ph","Phone"],["dob","DOB"]];
+function pBensHTML(){
+  var list=P.bens||[];
+  if(!list.length) list=[{role:"Primary"}];
+  return '<div id="benswrap">'+list.map(function(b,i){
+    return '<div class="prow refrow">'+BEN_COLS.map(function(c){
+      if(c[0]==="role"){
+        return '<div class="pf"><label>'+c[1]+'</label><select data-ben="'+i+':role">'+
+          ["Primary","Contingent"].map(function(r){
+            return '<option'+((b.role||"Primary")===r?' selected':'')+'>'+r+'</option>';}).join("")+'</select></div>';
+      }
+      return '<div class="pf"><label>'+c[1]+'</label><input data-ben="'+i+':'+c[0]+'" value="'+
+             esc(b[c[0]]||"").replace(/"/g,"&quot;")+'"></div>';
+    }).join("")+(i>0?'<button type="button" class="refx" data-bendel="'+i+'" title="Remove">&times;</button>':'')+'</div>';
+  }).join("")+'<button type="button" class="refadd" id="benadd">+ Add another beneficiary</button></div>';
+}
+document.addEventListener("click",function(e){
+  var add=e.target.closest && e.target.closest("#benadd");
+  if(add){ P.bens=(P.bens||[{role:"Primary"}]).concat([{role:"Contingent"}]); pStore(); pRender(); return; }
+  var del=e.target.closest && e.target.closest("[data-bendel]");
+  if(del){ var i=+del.getAttribute("data-bendel"); var a=(P.bens||[]).slice(); a.splice(i,1);
+           P.bens=a.length?a:[{role:"Primary"}]; pStore(); pRender(); pFlash(); }
+});
+function benSet(rk,val){
+  var parts=rk.split(":"), i=+parts[0], f=parts[1];
+  var a=(P.bens||[]).slice(); while(a.length<=i) a.push({});
+  a[i][f]=val; P.bens=a;
+  if(i===0 && f==="n"){ P.ben=val; }        /* the first one is the beneficiary the script names */
+  pStore(); pFlash();
+}
+document.addEventListener("input",function(e){
+  var rk=e.target.getAttribute && e.target.getAttribute("data-ben");
+  if(rk) benSet(rk,e.target.value);
+});
+document.addEventListener("change",function(e){
+  var rk=e.target.getAttribute && e.target.getAttribute("data-ben");
+  if(rk) benSet(rk,e.target.value);
 });
 
 function pRefsHTML(){
@@ -3924,11 +3973,19 @@ function pPrint(){
     var any=g[1].some(function(k){
       if(k==="conds") return (P.conds||[]).length>0;
       if(k==="refs")  return (P.refs||[]).some(function(r){return r.n||r.p||r.r||r.s});
+      if(k==="bens")  return (P.bens||[]).some(function(b){return b.n||b.ph||b.rel});
       return !!(P[k]&&String(P[k]).trim());
     });
     if(!any && OPTIONAL_SECTIONS.indexOf(g[0])>-1) return;
     rows.push('<h2>'+g[0]+'</h2>');
     g[1].forEach(function(k){
+      if(k==="bens"){
+        var bl=(P.bens||[]).filter(function(b){return b.n||b.ph||b.rel});
+        rows.push('<div class="cl">'+(bl.length? bl.map(function(b){
+          return (b.role||"Primary")+" &middot; "+(b.n||"")+(b.rel?" ("+b.rel+")":"")+
+                 (b.pct?" &middot; "+b.pct+"%":"")+(b.ph?" &middot; "+b.ph:"")+(b.dob?" &middot; "+b.dob:"");
+        }).join("<br>") : '<u>&nbsp;</u><br><u>&nbsp;</u>')+'</div>');
+        return; }
       if(k==="refs"){
         var rl=(P.refs||[]).filter(function(r){return r.n||r.p||r.r||r.s});
         rows.push('<div class="cl">'+(rl.length? rl.map(function(r){
