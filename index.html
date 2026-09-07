@@ -727,6 +727,7 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
         Forty-plus carriers, real leads, vested from day one. We'll reach out &mdash; no pitch if it isn't a fit.</span>
       </label>
       <div class="fbneed" id="fbneed" hidden>Pop your name and email above so we know who to get back to.</div>
+      <div class="fbneed" id="fbfail" hidden>That did not send. <a id="fbmail" href="#">Send it by email instead &rarr;</a></div>
       <button type="submit" class="gcta fbsend" id="fbsend">Send it</button>
       <p class="fbfine">Goes to the team at Optimum. Nothing about your clients is attached &mdash; only what you type here.</p>
     </form>
@@ -3641,6 +3642,8 @@ var PF_SPEC=[
  {k:"refs",type:"refs"},
 
  {sec:"Wrap",id:"wrap"},
+ {k:"disposition",l:"How the call ended",w:2,opt:["","Sold \u2014 app submitted","Callback booked",
+   "Thinking about it","Not interested","Never got there"]},
  {k:"draft",l:"Draft date",w:1},{k:"policy",l:"Policy #",w:1}
 ];
 
@@ -4355,8 +4358,8 @@ function pPrint(){
   a('<div class="grid2">');
   a(card("Conversation snapshot",
     row("1fr",f("In their words &mdash; why they answered",v("goal"),"tall"))+
-    row("1fr 1fr 1.3fr",f("Burial / cremation",v("burial"))+f("Cost they expect",v("arrangement_cost"))+
-        f("Beneficiary",v("ben")))+
+    row("1.8fr .95fr .95fr 1.2fr",f("How the call ended",v("disposition"))+f("Burial / cremation",v("burial"))+
+        f("Cost they expect",v("arrangement_cost"))+f("Beneficiary",v("ben")))+
     row("1fr",f("Notes from the call",v("notes"),"note"))));
 
   a(card("Contact &amp; household",
@@ -5020,15 +5023,46 @@ var SUITE_CURRENT = 'navigator';
   document.getElementById("fb_name").oninput=reqCheck;
   document.getElementById("fb_email").oninput=reqCheck;
 
+  /* Formspree form for Script Navigator feedback. Empty string = fall back to email,
+     which is honest, rather than swallowing what the agent typed. */
+  var FB_ENDPOINT="";
+  var FB_MAIL="wealthbuildersgroupllc@gmail.com";
+  var fail=document.getElementById("fbfail"), btn=document.getElementById("fbsend");
+
+  function fbDone(){
+    form.hidden=true;
+    document.getElementById("fbdone").hidden=false;
+    if(join.checked) document.getElementById("fbdonesub").textContent=
+      "Someone from Optimum will reach out about joining. No pitch if it isn't a fit.";
+  }
+  function fbFail(b){
+    document.getElementById("fbmail").href="mailto:"+FB_MAIL+
+      "?subject="+encodeURIComponent(b._subject)+
+      "&body="+encodeURIComponent(
+        b.message+"\n\n--\nScript: "+(b.script||"not specified")+
+        "\nName: "+(b.name||"")+"\nEmail: "+(b.email||"")+
+        (b.interested_in_optimum==="yes"?"\nInterested in Optimum: yes":""));
+    fail.hidden=false;
+  }
+
   form.onsubmit=function(e){
     e.preventDefault();
     reqCheck();
     if(!need.hidden){ (nm.value.trim()?em:nm).focus(); return; }
-    /* MOCK: no endpoint wired yet. This is where the POST goes. */
-    form.hidden=true;
-    var done=document.getElementById("fbdone"); done.hidden=false;
-    if(join.checked) document.getElementById("fbdonesub").textContent=
-      "Someone from Optimum will reach out about joining. No pitch if it isn't a fit.";
+    fail.hidden=true;
+    var b={ message:document.getElementById("fb_what").value.trim(),
+            script:document.getElementById("fb_script").value,
+            name:nm.value.trim(), email:em.value.trim(),
+            interested_in_optimum:join.checked?"yes":"no",
+            tool:"Script Navigator",
+            _subject:"Script Navigator feedback"+(join.checked?" \u2014 wants to hear about Optimum":"") };
+    if(!FB_ENDPOINT){ fbFail(b); return; }
+    btn.disabled=true; btn.textContent="Sending\u2026";
+    fetch(FB_ENDPOINT,{method:"POST",
+      headers:{"Content-Type":"application/json","Accept":"application/json"},
+      body:JSON.stringify(b)})
+     .then(function(r){ if(!r.ok) throw new Error("bad status"); fbDone(); })
+     .catch(function(){ btn.disabled=false; btn.textContent="Send it"; fbFail(b); });
   };
 })();
 </script>
