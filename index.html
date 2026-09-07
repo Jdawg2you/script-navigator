@@ -1259,7 +1259,10 @@ q_rec:{s:"9",pf:"plan",t:"The recommendation",l:[
 {t:"do",x:"Sound impressed. You're not apologizing for a price &mdash; you're showing them a good one. That's not bad, right?"},
 {t:"say",x:"Now, the reason I'm recommending this one is that it came from you. Your words earlier were &mdash; ___(their stated wish)"},
 {t:"recmath"},
-{t:"say",x:"So this covers the ___(burial/cremation) at the ___(their number) we talked about, and it still leaves about ___(the remainder) for ___(beneficiary). That's exactly what you told me you wanted &mdash; and at a price that works."},
+{t:"say",when:["_covfit","over"],dflt:true,x:"So this covers the ___(burial/cremation) at the ___(their number) we talked about, and it still leaves about ___(the remainder) for ___(beneficiary). That's exactly what you told me you wanted &mdash; and at a price that works."},
+{t:"say",when:["_covfit","exact"],iff:"it covers the arrangement almost exactly",x:"So this covers the ___(burial/cremation) at the ___(their number) we talked about &mdash; just about to the dollar. That's exactly what you told me you wanted, and at a price that works."},
+{t:"say",when:["_covfit","short"],iff:"it does not cover the arrangement",x:"Now &mdash; I want to be straight with you here. This is ___(recommended coverage) against the ___(their number) you gave me, so it's about ___(the shortfall) short of the whole thing. It gets you most of the way there, and I'd rather you hear that from me now than have ___(beneficiary) find it out later."},
+{t:"do",when:["_covfit","short"],iff:"it does not cover the arrangement",x:"Do not skate past this. Say the gap, then stop talking. If they want to close it, the option above does &mdash; if this is where the budget is, this is still far better than nothing, and you can say that too."},
 {t:"note",x:"<b>Worked example &mdash; the highlighted parts are what you fill in:</b><br><br>&ldquo;Now, the reason I'm recommending this one is that it came from you. Your words earlier were &mdash; <mark>I don't want my kids stuck with a bill like I was when my mom passed</mark>. So this covers the <mark>cremation</mark> at the <mark>$5,000</mark> we talked about, and it still leaves about <mark>$10,000</mark> for <mark>Melissa</mark>. That's exactly what you told me you wanted &mdash; and at a price that works.&rdquo;"},
 {t:"do",x:"In this tier you're constructing a plan to protect their family, and you're cashing in on the emotional currency they gave you earlier. This number should be logical &mdash; but knowing their finances, it should still be within reason."}
 ],b:[{k:"Next",to:"q_basic",c:"go"}]},
@@ -3452,6 +3455,12 @@ function render(){
   $("script").innerHTML=n.l.map(function(L){
     if(L.t==="cfollow") return cfollowHTML(cardConds);
     var x=fmt(L.x||"");
+    if(L.when && L.t!=="askif" && L.t!=="alt" && L.t!=="pf"){
+      var got=String(pVal(L.when[0])||"").toLowerCase();
+      /* nothing to go on - fall back to the variant marked dflt */
+      if(!got){ if(!L.dflt) return ""; }
+      else if(got!==String(L.when[1]).toLowerCase()) return "";
+    }
     if(L.t==="say")  return '<div class="line say"><div class="txt">'+x+'</div></div>';
     if(L.t==="ask")  return '<div class="line ask"><span class="badge">ASK</span><div class="txt">'+x+'</div></div>';
     if(L.t==="do")   return '<div class="line do"><div class="txt">'+x+'</div></div>';
@@ -3709,8 +3718,10 @@ function pAgeHint(){
   return P.asset_prot_hint;
 }
 function pBlank(lab){
-  if(lab==="the remainder"){ var c=num(pVal("opt2_cov")), a=num(pVal("arrangement_cost"));
-    return (c&&a&&c>a) ? money(c-a) : ""; }
+  if(lab==="the remainder"||lab==="the shortfall"){
+    var c=num(P.opt2_cov), a=num(P.arrangement_cost); if(!c||!a) return "";
+    if(lab==="the remainder") return c>a ? money(c-a) : "";
+    return a>c ? money(a-c) : ""; }
   var k=BLANKMAP[lab]; if(!k) return ""; if(k==="a_full") k="a_name"; return pVal(k); }
 
 var AGENT_SPEC=[
@@ -3719,7 +3730,16 @@ var AGENT_SPEC=[
 ];
 var PROFILE_ON=false;
 var PKEY="osn_profile_v1", AKEY="osn_agent_v1", P={}, A={}, PSAVE=null;
-function pVal(k){ return (k.indexOf("a_")===0 ? A[k] : P[k]) || ""; }
+function covFit(){
+  if(!PROFILE_ON) return "";
+  var c=num(P.opt2_cov), a=num(P.arrangement_cost);
+  if(!c||!a) return "";
+  if(c-a >= a*0.05) return "over";
+  if(a-c >= a*0.05) return "short";
+  return "exact";
+}
+function pVal(k){ if(k==="_covfit") return covFit();
+                  return (k.indexOf("a_")===0 ? A[k] : P[k]) || ""; }
 
 function pLoad(){ try{ P=JSON.parse(localStorage.getItem(PKEY)||"{}") }catch(e){ P={} }
                   try{ A=JSON.parse(localStorage.getItem(AKEY)||"{}") }catch(e){ A={} } }
@@ -3788,13 +3808,14 @@ function mMathHTML(){
 function recMathHTML(){
   var cov=num(pVal("opt2_cov")), cost=num(pVal("arrangement_cost"));
   if(!cov||!cost) return "";
-  var left=cov-cost;
+  var left=cov-cost, fit=covFit();
   return '<div class="line"><div class="mmath">'+
     '<span><i>Recommended</i>'+money(cov)+'</span>'+
     '<span><i>Their arrangement</i>'+money(cost)+'</span>'+
-    '<span><i>'+(left>=0?"Left for the family":"Short by")+'</i>'+money(Math.abs(left))+'</span>'+
-    '<em>'+(left>=0
-      ? "Say the leftover out loud. That is the part they remember."
+    (fit==="exact" ? '<span><i>Covers it</i>to the dollar</span>'
+      : '<span><i>'+(fit==="over"?"Left for the family":"Short by")+'</i>'+money(Math.abs(left))+'</span>')+
+    '<em>'+(fit==="over" ? "Say the leftover out loud. That is the part they remember."
+      : fit==="exact" ? "It covers the arrangement and no more. Do not imply there is money left over."
       : "This option does not cover the arrangement. Name the gap now rather than letting them assume it is covered.")+
     '</em></div></div>';
 }
@@ -4655,12 +4676,18 @@ function readableHTML(key){
   function body(n,mode){
     var o=[];
     for(var j=0;j<n.l.length;j++){
-      var line=n.l[j], x=esc(txt(line.x));
-      if(line.t==="say")      o.push('<p class="say">'+x.replace(/\n/g,"<br>")+'</p>');
-      else if(line.t==="ask") o.push('<p class="ask">'+x.replace(/\n/g,"<br>")+'</p>');
+      var line=n.l[j], x=esc(txt(line.x)), pre="";
+      /* a conditional variant: the plain script carries only the default,
+         the training copy carries them all, each introduced by its condition */
+      if(line.when && !line.dflt){
+        if(mode!=="training") continue;
+        pre='<b>If '+esc(line.iff||"it applies")+' &mdash; </b>';
+      }
+      if(line.t==="say")      o.push('<p class="say">'+pre+x.replace(/\n/g,"<br>")+'</p>');
+      else if(line.t==="ask") o.push('<p class="ask">'+pre+x.replace(/\n/g,"<br>")+'</p>');
       else if(line.t==="copy")o.push('<pre>'+x+'</pre>');
       else if(line.t==="do"||line.t==="dobig"){
-        if(mode==="training") o.push('<p class="do">'+x.replace(/\n/g," ")+'</p>');
+        if(mode==="training") o.push('<p class="do">'+pre+x.replace(/\n/g," ")+'</p>');
       }
       else if(line.t==="train"){
         if(mode==="training") o.push('<div class="note">'+x+'</div>');
