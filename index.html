@@ -1121,7 +1121,7 @@ disc_tobacco:{s:"5",pf:"build",t:"Tobacco",l:[
 
 disc_build:{s:"5",pf:"build",t:"Build",l:[
 {t:"ask",x:"What's your height and weight on your best day?"},
-{t:"pf",ks:["height","weight"]}
+{t:"pf",ks:["height","weight","sex"]}
 ],b:[{k:"Next",to:"disc_va",c:"go"}]},
 
 disc_va:{s:"5",pf:"build",t:"VA rating",l:[
@@ -1879,16 +1879,18 @@ i_why_wealth:{s:"4",pf:"why",t:"Wealth building focused",l:[
 {t:"do",x:"Don't critique what they have. You're taking inventory, not competing with it yet."}
 ],b:[{k:"Continue",to:"i_table",c:"go"}]},
 
-i_why_both:{s:"4",t:"Both",l:[
+i_why_both:{s:"4",pf:"why",t:"Both",l:[
 {t:"do",x:"Most people land here. Run the protection side first, then the building side &mdash; the order matters, because the gap you find in the first half is what makes the second half land."},
-{t:"ask",x:"Let's say you didn't wake up yesterday. Who was the first person getting a call this morning?"},
+{t:"ask",x:"Let's say you didn't wake up yesterday. Who was the first person getting a call this morning? ___(beneficiary)"},
 {t:"do",x:"Past tense on purpose. A hypothetical gets a hypothetical answer. You are not done until you have a name &mdash; if they say &ldquo;my family,&rdquo; push once: &ldquo;Which one of them, specifically?&rdquo;"},
-{t:"ask",x:"Would they have the money to cover everything &mdash; the final expenses, the bills? And would you feel like you're leaving them a legacy with what you've got saved so far?"},
+{t:"ask",x:"Would ___(beneficiary) have the money to cover everything &mdash; the final expenses, the bills? And would you feel like you're leaving them a legacy with what you've got saved so far?"},
 {t:"dobig",x:"Listen closely to that second half. If they want to leave a legacy and know they haven't built one yet, that gap is the emotional currency for this whole call. Write down exactly how they say it."},
 {t:"say",x:"And on the building side &mdash; let's take a quick inventory of what you've got working for you right now."},
-{t:"ask",x:"What are you doing right now that's helping you get there?"},
-{t:"ask",x:"Do you have a 401(k), a 403(b), an IRA, a Roth &mdash; anything like that? And roughly what's built up in it?"},
-{t:"ask",x:"And what about straight savings &mdash; what's sitting there right now?"},
+{t:"ask",x:"What are you doing right now that's helping you get there? ___(what they are doing now)"},
+{t:"ask",x:"Do you have a 401(k), a 403(b), an IRA, a Roth &mdash; anything like that? And roughly what's built up in it? {{has_assets}}"},
+{t:"pf",ks:["i_401k","i_roth"],when:["has_assets","Yes"]},
+{t:"pf",ks:["asset_amt","asset_where"],when:["has_assets","Yes"]},
+{t:"ask",x:"And what about straight savings &mdash; what's sitting there right now? ___(liquid savings)"},
 {t:"do",x:"Do not critique any of it. You're taking inventory, not competing. What you're measuring is the distance between what they have and what they just told you they want to leave behind."},
 {t:"note",x:"<b>Landing here gives you two levers at the close instead of one</b> &mdash; the protection gap and the accumulation gap. Use whichever one they got more emotional about."}
 ],b:[{k:"Continue",to:"i_table",c:"go"}]},
@@ -1918,7 +1920,7 @@ i_profile:{s:"7",pf:"who",t:"Client profile",l:[
 {t:"ask",x:"I've got your date of birth as ___(DOB) &mdash; is that right? And how old does that make you? ___(age)"},
 {t:"do",x:"Let them do the math. Small thing, but people engage differently when they say the number themselves instead of hearing you say it."},
 {t:"ask",x:"Are you married or single? {{married}}"},
-{t:"pf",ks:["spouse"],when:["married","Yes"]},
+{t:"pf",ks:["spouse"],when:["married",["Married","Partnered"]]},
 {t:"note",x:"<b>If married:</b> &ldquo;Wonderful &mdash; can I grab your spouse's name, just so I'm not being rude?&rdquo;"},
 {t:"ask",x:"Any children? {{kids}} How old are they? ___(children)"},
 {t:"do",x:"If they have kids, take a second on the ages. It's the easiest genuine interest you'll ever show, and those kids are the reason behind most of this."},
@@ -1943,10 +1945,11 @@ i_profile_dm:{s:"7",pf:"who",t:"Someone else is part of the decision",l:[
 i_profile_fin:{s:"7",pf:"income",t:"Financial snapshot",l:[
 {t:"ask",x:"What do you do for work, and roughly what's your monthly income after taxes?"},
 {t:"pf",ks:["occupation","i_income"]},
-{t:"ask",x:"And ___(spouse)'s occupation and household income, if that applies?"},
-{t:"pf",ks:["sp_income"],when:["married","Yes"]},
+{t:"ask",when:["married",["Married","Partnered"]],dflt:true,iff:"they have a spouse or partner",x:"And ___(spouse)'s occupation and household income, if that applies?"},
+{t:"pf",ks:["sp_income"],when:["married",["Married","Partnered"]]},
 {t:"ask",x:"Do you own or rent? {{own_rent}} &hellip; What's the mortgage balance and the monthly payment?"},
 {t:"pf",ks:["m_balance","m_payment"],when:["own_rent","Own"]},
+{t:"pf",ks:["rent"],when:["own_rent","Rent"]},
 {t:"ask",x:"After the bills are paid, about how much are you able to save or set aside each month? ___(left over)"},
 {t:"ask",x:"And how much have you built up in savings right now? ___(liquid savings)"},
 {t:"dobig",x:"Write down the monthly savings number and the savings balance. Both of them come back at the contribution amount, and the whole thing falls apart if you're guessing."}
@@ -2020,7 +2023,8 @@ i_h_rest:{s:"8",pf:"health",t:"Autoimmune and mobility",l:[
 i_h_meds:{s:"8",pf:"health",t:"Medications",l:[
 {t:"ask",x:"What medications are you currently taking, and what's each one for?"},
 {t:"meds"},
-{t:"ask",x:"Anything you've been prescribed in the last one to five years that you're not on now?"},
+{t:"ask",x:"Anything you've been prescribed in the last one to five years that you're not on now? {{past_meds}}"},
+{t:"pf",ks:["past_meds_what"],when:["past_meds","Yes"]},
 {t:"do",x:"The med list is your lie detector. If they name a condition you didn't hear about, go back and ask about it."}
 ],b:[{k:"Next",to:"i_h_heart",c:"go"}]},
 
@@ -3554,7 +3558,7 @@ function render(){
       var got=String(pVal(L.when[0])||"").toLowerCase();
       /* nothing to go on - fall back to the variant marked dflt */
       if(!got){ if(!L.dflt) return ""; }
-      else if(got!==String(L.when[1]).toLowerCase()) return "";
+      else if(!condHit(got, L.when[1])) return "";
     }
     if(L.t==="say")  return '<div class="line say"><div class="txt">'+x+'</div></div>';
     if(L.t==="ask")  return '<div class="line ask"><span class="badge">ASK</span><div class="txt">'+x+'</div></div>';
@@ -3564,11 +3568,11 @@ function render(){
     if(L.t==="paper") return PROFILE_ON ? "" : '<div class="line"><div class="note">'+x+'</div></div>';
     if(L.t==="askif"){
       if(!PROFILE_ON) return "";
-      if(L.when && String(pVal(L.when[0])||"").toLowerCase()!==String(L.when[1]).toLowerCase()) return "";
+      if(L.when && !condHit(pVal(L.when[0]), L.when[1])) return "";
       return '<div class="line ask"><span class="badge">ASK</span><div class="txt">'+fmt(L.x)+'</div></div>';
     }
     if(L.t==="tip")  return '<div class="line"><div class="note tipnote">'+x+'</div></div>';
-    if(L.t==="alt"){ if(L.when && String(pVal(L.when[0])||"").toLowerCase()!==String(L.when[1]).toLowerCase()) return ""; pAgeHint(); return altHTML(L); }
+    if(L.t==="alt"){ if(L.when && !condHit(pVal(L.when[0]), L.when[1])) return ""; pAgeHint(); return altHTML(L); }
     if(L.t==="pick") return pickHTML();
     if(L.t==="mmath") return !PROFILE_ON ? "" : mMathHTML();
     if(L.t==="recmath") return !PROFILE_ON ? "" : recMathHTML(L);
@@ -3579,7 +3583,7 @@ function render(){
     if(L.t==="meds") return !PROFILE_ON ? "" : '<div class="line">'+pMedsHTML(true)+'<div id="medflagwrap">'+medFlagHTML()+'</div></div>';
     if(L.t==="pf"){
       if(!PROFILE_ON) return "";
-      if(L.when && String(pVal(L.when[0])||"").toLowerCase()!==String(L.when[1]).toLowerCase()) return "";
+      if(L.when && !condHit(pVal(L.when[0]), L.when[1])) return "";
       return '<div class="line"><div class="pfline">'+pfInline(L.ks)+'</div></div>';
     }
     if(L.t==="warn") return '<div class="line"><div class="note star"><span class="starbadge">&#9733;</span><div>'+x+'</div></div></div>';
@@ -3674,12 +3678,12 @@ var PF_SPEC=[
  {k:"first",l:"First name",w:1},{k:"last",l:"Last name",w:1},
  {k:"dob",l:"DOB",w:1},{k:"age",l:"Age (closest)",w:1},
  {k:"state",l:"State",w:1},{k:"branch",l:"Branch of service",w:1},
- {k:"married",l:"Married?",w:1,opt:["","Yes","No","Widowed"]},{k:"spouse",l:"Spouse",w:1,showIf:["married","Yes"]},
+ {k:"married",l:"Married?",w:1,opt:["","Married","Partnered","Single","Widowed"]},{k:"spouse",l:"Spouse",w:1,showIf:["married",["Married","Partnered"]]},
  {k:"kids",l:"Children",w:1,opt:["","0","1","2","3","4+"]},
  {k:"kids_names",l:"Children &mdash; names and ages",w:2},
  {k:"dm",drives:true,l:"Who makes financial decisions",w:1,opt:["","They do","With their spouse","Someone else helps"]},
  {k:"dm_who",l:"Who else is in on it",w:1,showIf:["dm","Someone else helps"]},
- {k:"spouse_wants",l:"Spouse wants coverage too?",w:2,opt:["","No","Yes"],showIf:["married","Yes"]},
+ {k:"spouse_wants",l:"Spouse wants coverage too?",w:2,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
 
  {sec:"What they have now",id:"have"},
  {k:"inplace",l:"Anything in place?",w:2,opt:["","No","Yes"]},
@@ -3707,13 +3711,15 @@ var PF_SPEC=[
  {sec:"Health",id:"health"},
  {k:"conds",l:"Conditions",type:"conds"},
  {k:"meds",l:"Medications",type:"meds"},
+ {k:"past_meds",drives:true,l:"Prescribed in the last 1&ndash;5 yrs, not on now",w:1,opt:["","No","Yes"]},
+ {k:"past_meds_what",l:"What, and when",type:"area",w:2,showIf:["past_meds","Yes"]},
  {k:"recent_stay",drives:true,l:"Surgery or overnight stay, last 5 yrs",l_iul:"Surgery or hospital stay, last 10 yrs",w:1,opt:["","No","Yes"]},
  {k:"recent_what",l:"What, and when",w:2,showIf:["recent_stay","Yes"]},
  {k:"covid",l:"COVID in last 2 yrs",w:1,opt:["","No","Not hospitalised","Hospitalised"]},
  {k:"health_notes",l:"Anything else",w:2},
 
  {sec:"Income",id:"income"},
- {k:"occupation",l:"Occupation",w:1},{k:"sp_income",l:"Spouse / household income",w:1,money:"plain",showIf:["married","Yes"]},
+ {k:"occupation",l:"Occupation",w:1},{k:"sp_income",l:"Spouse / household income",w:1,money:"plain",showIf:["married",["Married","Partnered"]]},
  {k:"inc_kind",l:"Source",w:2,multi:true,opt:["","Working","Retired","Social Security","Disability","Pension"]},
  {k:"i_income",l:"Monthly income",money:"plain",w:1},{k:"i_left",l:"Left over each month",l_iul:"Able to save each month",money:"plain",w:1},
  {k:"money_style",l:"Spender or saver",w:1,opt:["","Spender","Saver","Bit of both"]},
@@ -3727,7 +3733,8 @@ var PF_SPEC=[
  {k:"i_prot",l:"Retirement protected?",w:1,opt:["","No","Yes"]},
 
  {sec:"Mortgage &mdash; ask if it comes up",id:"mortgage"},
- {k:"own_rent",l:"Own or rent",w:2,opt:["","Own","Rent"]},
+ {k:"own_rent",drives:true,l:"Own or rent",w:1,opt:["","Own","Rent"]},
+ {k:"rent",l:"Monthly rent",w:1,money:"plain",showIf:["own_rent","Rent"]},
  {k:"has_mortgage",drives:true,l:"Mortgage?",w:2,opt:["","No","Yes"]},
  {k:"m_balance",l:"Balance left",money:"cov",w:1},{k:"m_payment",l:"Monthly payment",money:"plain",w:1},
  {k:"m_years",l:"Years left",w:1},
@@ -3768,6 +3775,12 @@ var PF_SPEC=[
 ];
 
 /* print groups things logically instead of in call order */
+function condHit(got,want){
+  got=String(got||"").toLowerCase();
+  if(Object.prototype.toString.call(want)==="[object Array]")
+    return want.some(function(w){ return String(w).toLowerCase()===got; });
+  return String(want).toLowerCase()===got;
+}
 function pLabel(f){
   var k=(typeof curScript!=="undefined"&&curScript)||"veteran";
   return (f && f["l_"+k]) || (f && f.l) || "";
@@ -3817,7 +3830,7 @@ var BLANKMAP={
  "spell it":"a_name","spell it out":"a_name","last name":"last","client's state":"state",
  "spouse":"spouse","beneficiary":"ben","beneficiary / spouse":"ben","branch of service":"branch",
  "carrier":"carrier","coverage":"coverage","amount":"coverage","premium":"premium",
- "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","policy number":"policy","draft date":"draft","monthly income":"i_income","age":"age","their savings number":"i_left","what they are doing now":"doing_now","monthly contribution":"i_contrib","children":"kids_names","liquid savings":"i_liquid","occupation":"occupation","anything else":"health_notes","their goal, in their words":"goal","monthly amount":"premium","left over":"i_left","Carrier?":"inplace_carrier","how much coverage":"inplace_amt","their number":"arrangement_cost","their goal, in their words":"goal",
+ "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","policy number":"policy","draft date":"draft","monthly income":"i_income","age":"age","their savings number":"i_left","monthly rent":"rent","what they are doing now":"doing_now","monthly contribution":"i_contrib","children":"kids_names","liquid savings":"i_liquid","occupation":"occupation","anything else":"health_notes","their goal, in their words":"goal","monthly amount":"premium","left over":"i_left","Carrier?":"inplace_carrier","how much coverage":"inplace_amt","their number":"arrangement_cost","their goal, in their words":"goal",
  "address":"address","balance":"m_balance","monthly payment":"m_payment","equity":"m_equity",
  
  "your name":"a_name","your full name":"a_full","agent name":"a_name","your NPN":"a_npn",
@@ -3864,6 +3877,9 @@ function pVal(k){ if(k==="_covfit")  return covFitKey("opt2_cov");
                   return (k.indexOf("a_")===0 ? A[k] : P[k]) || ""; }
 
 function pLoad(){ try{ P=JSON.parse(localStorage.getItem(PKEY)||"{}") }catch(e){ P={} }
+                  /* marital status used to be Yes/No, which is not an answer to "married or single?" - carry old saves and old files across */
+                  if(P.married==="Yes") P.married="Married";
+                  else if(P.married==="No") P.married="Single";
                   try{ A=JSON.parse(localStorage.getItem(AKEY)||"{}") }catch(e){ A={} } }
 function pStore(){ if(typeof wizPush==="function") wizPush();
                   try{ localStorage.setItem(PKEY,JSON.stringify(P));
@@ -3902,7 +3918,7 @@ function pRender(){
         var on=(P.conds||[]).indexOf(c)>-1;
         return '<label class="'+(on?"on":"")+'"><input type="checkbox" data-cond="'+esc(c).replace(/"/g,"&quot;")+'"'+(on?" checked":"")+'>'+c+'</label>';
       }).join("")+'</div><div id="pfollow"></div>'); return; }
-    if(f.showIf && (P[f.showIf[0]]||"")!==f.showIf[1]) return;
+    if(f.showIf && !condHit(P[f.showIf[0]], f.showIf[1])) return;
     row.push(pField(f)); if(f.w===2) flush();
   });
   flush();
@@ -4468,7 +4484,10 @@ function pSaveFile(){
 $("proffile").onchange=function(){
   var f=this.files&&this.files[0]; if(!f)return;
   var r=new FileReader();
-  r.onload=function(){ try{ P=JSON.parse(r.result)||{}; pStore(); pOpen(); if(typeof render==="function") render(); }
+  r.onload=function(){ try{ P=JSON.parse(r.result)||{};
+                       if(P.married==="Yes") P.married="Married";
+                       else if(P.married==="No") P.married="Single";
+                       pStore(); pOpen(); if(typeof render==="function") render(); }
                        catch(e){ alert("That file could not be read as a profile."); } };
   r.readAsText(f); this.value="";
 };
