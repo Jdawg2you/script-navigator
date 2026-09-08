@@ -4598,7 +4598,9 @@ function pPrint(){
   var det=[];
   (P.conds||[]).forEach(function(c){
     var fu=condFollow(c);
-    var parts=fu.map(function(x){ return P[x.k] ? x.l+" "+esc(P[x.k]) : null; }).filter(Boolean);
+    /* "When? (month and year)" is a prompt for the agent, not part of the record */
+    var parts=fu.map(function(x){ return P[x.k]
+      ? String(x.l).replace(/\s*\([^)]*\)\s*$/,"")+" "+esc(P[x.k]) : null; }).filter(Boolean);
     if(parts.length) det.push("<b>"+esc(c)+"</b> &mdash; "+parts.join(", "));
   });
   if(P.recent_what)   det.push("<b>Surgery / stay</b> &mdash; "+esc(P.recent_what));
@@ -4859,7 +4861,8 @@ function wizCardHTML(){
   var miss=(P.conds||[]).filter(function(c){ return WIZ_UNKNOWN.indexOf(c)>-1; });
   if(has && miss.length) state+='<span class="wizmiss">'+esc(miss.join(", "))+
     (miss.length>1?" are not underwriting rows":" is not an underwriting row")+
-    " in the Wizard, so "+(miss.length>1?"they":"it")+" will not affect the answer.</span>";
+    " in the Wizard, so "+(miss.length>1?"they":"it")+" will not narrow the carrier list. Still worth "+
+    "having &mdash; it comes up on the application, and it travels with the medications.</span>";
   return '<div class="line"><div class="wizcard">'+
     '<b>Room is empty, or you\'re dialing off hours?</b>'+
     '<p>'+body+'</p>'+
