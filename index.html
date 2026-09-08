@@ -428,6 +428,20 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .wizok,.wizneed{display:block;font-size:11.5px;margin-top:9px;line-height:1.5}
 .wizok{color:var(--green)}
 .wizneed{color:var(--rust)}
+.mmath .csover{color:var(--rust)}
+.mmath .csover i{color:var(--rust);opacity:.8}
+.mmath .cscap{color:var(--green)}
+.mmath .cscap i{color:var(--green);opacity:.8}
+.wizhow{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:0;font-family:var(--sans)}
+.wizhow>summary{cursor:pointer;list-style:none;padding:10px 14px;font-size:12.5px;font-weight:700;color:var(--golddk)}
+.wizhow>summary::-webkit-details-marker{display:none}
+.wizhow>summary:before{content:"\25B8";display:inline-block;margin-right:7px;transition:transform .15s}
+.wizhow[open]>summary:before{transform:rotate(90deg)}
+.wizhow ol{margin:0;padding:0 16px 4px 34px}
+.wizhow li{font-size:12.5px;line-height:1.6;color:var(--slate);margin-bottom:7px}
+.wizhow li b{color:var(--navy)}
+.wizhow li i{font-style:normal;color:var(--muted)}
+.wizhowfoot{font-size:11.5px;color:var(--muted);line-height:1.55;margin:0;padding:0 16px 12px 34px}
 .wizmiss{display:block;font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.5}
 .wizfine{display:block;font-size:11px;color:var(--muted);margin-top:7px;line-height:1.5}
 .wizbtn.bad{border-color:var(--rust);color:var(--rust)}
@@ -2021,8 +2035,10 @@ i_h_record:{s:"8",pf:"health",t:"Driving and criminal record",l:[
 ],b:[{k:"Continue",to:"i_path",c:"go"}]},
 
 /* ---------- 9 BIFURCATION ---------- */
-i_path:{s:"9",t:"Can they qualify for an IUL?",l:[
+i_path:{s:"9",pf:"health",t:"Can they qualify for an IUL?",l:[
 {t:"dobig",x:"There are two gates in this call. This is the first one, and it's health only. Nothing about money yet."},
+{t:"wiz"},
+{t:"wizhow"},
 {t:"note",x:"<b>Healthy enough to be underwritten &rarr; IUL track.</b> Explain the IUL, then get the contribution number, and the number decides the rest."},
 {t:"note",x:"<b>Health-limited, or clearly not getting underwritten &rarr; whole life.</b> Same conversation, different product. They still get permanent coverage, living benefits and cash value."},
 {t:"warn",x:"<b>Never announce the whole life route as a downgrade.</b> It's a different product for a different situation. If it sounds like a consolation prize, you lose the sale."},
@@ -2083,9 +2099,10 @@ i_wl_how:{s:"10",t:"How whole life works",l:[
 ],b:[{k:"Continue",to:"i_contrib_b",c:"go"}]},
 
 /* ---------- 11 CONTRIBUTION ---------- */
-i_contrib_a:{s:"11",t:"Contribution amount",l:[
+i_contrib_a:{s:"11",pf:"plan",t:"Contribution amount",l:[
 {t:"say",x:"Most people put in about 5 to 10% of their monthly income. You mentioned you're saving roughly ___(their savings number) a month."},
-{t:"ask",x:"What number feels comfortable for you to contribute long-term &mdash; similar to how you'd pay a phone bill?"},
+{t:"csize"},
+{t:"ask",x:"What number feels comfortable for you to contribute long-term &mdash; similar to how you'd pay a phone bill? ___(monthly contribution)"},
 {t:"say",x:"We want to make sure it's something that fits comfortably so you can keep it long-term. Because some of something is always way better than all of nothing."},
 {t:"warn",x:"<b>The amount has to be genuinely comfortable.</b> Do the math for them. You can use the 10x-the-age conversation. But check it against what they actually said they're saving and what's actually in their savings account &mdash; if it isn't logical against those two numbers, it won't survive."},
 {t:"ask",x:"We want to make sure it's a good fit &mdash; does that number feel comfortable to you long-term?"},
@@ -2096,9 +2113,15 @@ i_contrib_a:{s:"11",t:"Contribution amount",l:[
 {k:"Path B (roughly 10x age or more)",to:"i_zoom",c:"gold"},
 {k:"Too small for an IUL (possibly whole life)",to:"i_wl_how",c:"alert"}]},
 
-i_contrib_b:{s:"11",t:"Contribution amount",l:[
-{t:"say",x:"Most people put in about 5 to 10% of their monthly income. You mentioned you're saving roughly ___(their savings number) a month."},
-{t:"ask",x:"What number feels comfortable for you to contribute long-term &mdash; similar to how you'd pay a phone bill?"},
+i_contrib_b:{s:"11",pf:"plan",t:"Contribution amount",l:[
+{t:"ask",x:"How do you want to size this one? {{wl_method}}"},
+{t:"tip",x:"<b>Whole life runs smaller than an IUL.</b> Three tiers works the way it does on a final expense call &mdash; a high, a middle and a floor, and they pick. A single contribution works when they have already told you what they can set aside."},
+{t:"pick",when:["wl_method","Three tiers"],dflt:true},
+{t:"say",when:["wl_method","Monthly contribution"],iff:"you are sizing it as a contribution",x:"Most people put in about 5 to 10% of their monthly income. You mentioned you're saving roughly ___(their savings number) a month."},
+{t:"csize",when:["wl_method","Monthly contribution"]},
+{t:"ask",when:["wl_method","Monthly contribution"],iff:"you are sizing it as a contribution",x:"What number feels comfortable for you to contribute long-term &mdash; similar to how you'd pay a phone bill? ___(monthly contribution)"},
+{t:"ask",when:["wl_method","Three tiers"],dflt:true,x:"Which of those three feels right to you?"},
+{t:"pf",ks:["chosen","coverage","premium"],when:["wl_method","Three tiers"]},
 {t:"say",x:"We want to make sure it's something that fits comfortably so you can keep it long-term. Because some of something is always way better than all of nothing."},
 {t:"warn",x:"<b>The amount has to be genuinely comfortable.</b> Do the math for them. You can use the 10x-the-age conversation. But check it against what they actually said they're saving and what's actually in their savings account &mdash; if it isn't logical against those two numbers, it won't survive."}
 ],b:[{k:"Number agreed",to:"i_present_b",c:"go"}]},
@@ -3542,6 +3565,8 @@ function render(){
     if(L.t==="mmath") return !PROFILE_ON ? "" : mMathHTML();
     if(L.t==="recmath") return !PROFILE_ON ? "" : recMathHTML(L);
     if(L.t==="wiz") return wizCardHTML();
+    if(L.t==="wizhow") return wizHowHTML();
+    if(L.t==="csize") return !PROFILE_ON ? "" : contribSizeHTML();
     if(L.t==="bens") return !PROFILE_ON ? "" : '<div class="line" id="benscard">'+pBensHTML()+'</div>';
     if(L.t==="meds") return !PROFILE_ON ? "" : '<div class="line">'+pMedsHTML(true)+'<div id="medflagwrap">'+medFlagHTML()+'</div></div>';
     if(L.t==="pf"){
@@ -3727,6 +3752,7 @@ var PF_SPEC=[
  {k:"refs",type:"refs"},
 
  {sec:"Wrap",id:"wrap"},
+ {k:"wl_method",drives:true,l:"How you sized it",w:2,opt:["","Three tiers","Monthly contribution"]},
  {k:"disposition",l:"How the call ended",w:2,opt:["","Sold \u2014 app submitted","Callback booked",
    "Thinking about it","Not interested","Never got there"]},
  {k:"draft",l:"Draft date",w:1},{k:"policy",l:"Policy #",w:1}
@@ -3782,7 +3808,7 @@ var BLANKMAP={
  "spell it":"a_name","spell it out":"a_name","last name":"last","client's state":"state",
  "spouse":"spouse","beneficiary":"ben","beneficiary / spouse":"ben","branch of service":"branch",
  "carrier":"carrier","coverage":"coverage","amount":"coverage","premium":"premium",
- "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","policy number":"policy","draft date":"draft","monthly income":"i_income","age":"age","children":"kids_names","liquid savings":"i_liquid","occupation":"occupation","anything else":"health_notes","their goal, in their words":"goal","monthly amount":"premium","left over":"i_left","Carrier?":"inplace_carrier","how much coverage":"inplace_amt","their number":"arrangement_cost","their goal, in their words":"goal",
+ "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","policy number":"policy","draft date":"draft","monthly income":"i_income","age":"age","their savings number":"i_left","monthly contribution":"i_contrib","children":"kids_names","liquid savings":"i_liquid","occupation":"occupation","anything else":"health_notes","their goal, in their words":"goal","monthly amount":"premium","left over":"i_left","Carrier?":"inplace_carrier","how much coverage":"inplace_amt","their number":"arrangement_cost","their goal, in their words":"goal",
  "address":"address","balance":"m_balance","monthly payment":"m_payment","equity":"m_equity",
  
  "your name":"a_name","your full name":"a_full","agent name":"a_name","your NPN":"a_npn",
@@ -4656,6 +4682,40 @@ function wizReady(){
   if(!P.height||!P.weight) need.push("height and weight");
   if(!(P.conds||[]).length) need.push("their health answers");
   return need;
+}
+function contribSizeHTML(){
+  var age=num(pVal("age")), inc=num(pVal("i_income")), cap=num(pVal("i_left"));
+  if(!age && !inc && !cap) return "";
+  var bits=[], over=function(v){ return cap && v>cap; };
+  function cell(label,v){
+    return '<span'+(over(v)?' class="csover"':'')+'><i>'+label+'</i>'+money(v)+'</span>';
+  }
+  if(age) bits.push(cell("10 &times; age", age*10));
+  if(inc) bits.push(cell("5% of income", inc*0.05), cell("10% of income", inc*0.10));
+  if(cap) bits.push('<span class="cscap"><i>They can save</i>'+money(cap)+'</span>');
+  var note = !cap
+    ? "Ask what they can actually set aside each month before you land on a number."
+    : (bits.join("").indexOf("csover")>-1
+        ? "Anything in rust is more than they told you they can set aside. An IUL is an addition to their future, not a bill they have to survive &mdash; it has to fit."
+        : "All of these sit inside what they said they can set aside.");
+  return '<div class="line"><div class="mmath">'+bits.join("")+'<em>'+note+'</em></div></div>';
+}
+function wizHowHTML(){
+  return '<div class="line"><details class="wizhow"><summary>How to tell from the Wizard whether an IUL is likely</summary>'+
+   '<ol>'+
+   '<li><b>Send them over.</b> Use the button above once the health questions are done &mdash; age, build and every condition go with them.</li>'+
+   '<li><b>Look at the IUL lane first.</b> It is the top group. Green means <i>allowed, best tier available</i>. '+
+     'A band of green carriers there and you are on the underwritten track.</li>'+
+   '<li><b>Amber still counts.</b> <i>Takes it, but lower tier, rating or time window applies</i> &mdash; that is a yes with a condition, '+
+     'not a no. Read what the cell says before you move off the IUL.</li>'+
+   '<li><b>No green and no amber in the IUL lane</b> is your answer. If the only colour is in Whole Life, and the '+
+     '<b>Likely best fit</b> call-out names a whole life product, the underwritten route is not there for this client.</li>'+
+   '<li><b>Grey is not a no.</b> <i>Not addressed &mdash; check meds / call underwriting</i> means that carrier\'s guide is silent. '+
+     'Worth a call before you rule anything out.</li>'+
+   '</ol>'+
+   '<p class="wizhowfoot">The Wizard hides declines from the results and shows them in the grids, so an empty IUL lane '+
+   'means nobody took it &mdash; not that nobody was checked.</p>'+
+   '</details></div>';
 }
 function wizCardHTML(){
   var has=wizHas(), need=wizReady(), n=(P.conds||[]).length;
