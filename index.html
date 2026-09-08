@@ -1835,15 +1835,19 @@ i_why:{s:"4",t:"Build the why",l:[
 {k:"Wealth building focused",to:"i_why_wealth"},
 {k:"A little of both",to:"i_why_both"}]},
 
-i_why_db:{s:"4",t:"Legacy focused",l:[
-{t:"ask",x:"Let's say you didn't wake up yesterday. Who was the first person getting a call this morning?"},
+i_why_db:{s:"4",pf:"why",t:"Legacy focused",l:[
+{t:"ask",x:"Let's say you didn't wake up yesterday. Who was the first person getting a call this morning? ___(beneficiary)"},
 {t:"do",x:"Past tense on purpose. A hypothetical gets a hypothetical answer &mdash; something that already happened this morning cannot be held at arm's length."},
 {t:"do",x:"You are not done until you have a name. If they say &ldquo;my family&rdquo; or &ldquo;the kids,&rdquo; push once: &ldquo;Which one of them, specifically?&rdquo;"},
-{t:"ask",x:"Would they have the money to cover everything &mdash; the final expenses, the bills? And would you feel like you're leaving them a legacy with what you've got saved so far?"},
+{t:"ask",x:"Would ___(beneficiary) have the money to cover everything &mdash; the final expenses, the bills? And would you feel like you're leaving them a legacy with what you've got saved so far?"},
 {t:"dobig",x:"Listen closely to that second half. If they want to leave a legacy and they know they haven't built one yet, that gap is the emotional currency for this entire call. Write down exactly how they say it."},
 {t:"say",x:"So let's take a quick inventory of what you've got working for you right now."},
-{t:"ask",x:"Do you have a 401(k), a 403(b), an IRA, a Roth &mdash; anything like that? And roughly what's built up in it?"},
-{t:"ask",x:"And what about straight savings &mdash; what's sitting there right now?"},
+{t:"ask",x:"Do you have a 401(k), a 403(b), an IRA, a Roth &mdash; anything like that? And roughly what's built up in it? {{has_assets}}"},
+{t:"pf",ks:["i_401k","i_roth"],when:["has_assets","Yes"]},
+{t:"pf",ks:["asset_amt","asset_where"],when:["has_assets","Yes"]},
+{t:"ask",x:"And do you have a mortgage? {{has_mortgage}}"},
+{t:"pf",ks:["m_balance","m_payment"],when:["has_mortgage","Yes"]},
+{t:"ask",x:"And what about straight savings &mdash; what's sitting there right now? ___(liquid savings)"},
 {t:"do",x:"Do not critique any of it. You're taking inventory, not competing. What you're finding out is the distance between what they have and what they just told you they want to leave behind."},
 {t:"note",x:"<b>That distance is the whole sale.</b> If they said legacy and the inventory is thin, you don't have to argue for anything &mdash; you just have to say the two numbers back to them later."}
 ],b:[{k:"Continue",to:"i_table",c:"go"}]},
@@ -1895,7 +1899,7 @@ i_profile:{s:"7",pf:"who",t:"Client profile",l:[
 {t:"ask",x:"Are you married or single? {{married}}"},
 {t:"pf",ks:["spouse"],when:["married","Yes"]},
 {t:"note",x:"<b>If married:</b> &ldquo;Wonderful &mdash; can I grab your spouse's name, just so I'm not being rude?&rdquo;"},
-{t:"ask",x:"Any children? How old are they? ___(children)"},
+{t:"ask",x:"Any children? {{kids}} How old are they? ___(children)"},
 {t:"do",x:"If they have kids, take a second on the ages. It's the easiest genuine interest you'll ever show, and those kids are the reason behind most of this."},
 {t:"ask",x:"And when it comes to financial decisions like this &mdash; is that something you handle yourself, or do you have somebody who helps you make those decisions? {{dm}}"},
 {t:"pf",ks:["dm_who"],when:["dm","Someone else helps"]},
@@ -1932,16 +1936,29 @@ i_golden:{s:"7",pf:"retirement",t:"The golden question",l:[
 {t:"ask",x:"Do you currently have anything that would transfer directly to your family if something happened to you &mdash; like a 401(k), an IRA, a Roth, or an investment account? {{has_assets}}"},
 {t:"pf",ks:["i_401k","i_roth"],when:["has_assets","Yes"]},
 {t:"pf",ks:["asset_amt","asset_where"],when:["has_assets","Yes"]},
+{t:"pf",ks:["asset_prot","asset_notes"],when:["has_assets","Yes"]},
+{t:"ask",x:"And are you more of a spender or a saver? {{money_style}}"},
 {t:"do",x:"Listen carefully and don't rush past the answer. This tells you what they already believe is handled."},
 {t:"note",x:"On a final expense call this answer is a flag for later. Here it's live &mdash; it tells you whether you're adding to a plan or building one from scratch, and it sets up the tax conversation."}
-],b:[{k:"Continue to health",to:"i_h_build",c:"go"}]},
+],b:[{k:"Continue to health",to:"i_h_hipaa",c:"go"}]},
 
 /* ---------- 8 HEALTH ---------- */
+i_h_hipaa:{s:"8",pf:"health",t:"HIPAA and transition",l:[
+{t:"say",x:"Now we're going to spend a few minutes on your health so I can see what you can actually qualify for. Everything you tell me is protected under HIPAA privacy laws, same as at your doctor's office. Make sense?"},
+{t:"warn",x:"<b>You are required to read this.</b> Not optional, not a formality &mdash; you are about to ask for medical history and pull records."}
+],b:[{k:"Next",to:"i_h_knock",c:"go"}]},
+
+i_h_knock:{s:"8",pf:"health",t:"Knockouts",l:[
+{t:"ask",x:"Do you currently have any active cancer{{c:Cancer}} or HIV{{c:AIDS / HIV / ARC}}? Are you confined to a wheelchair{{c:Wheelchair / electric scooter}} or on prescribed oxygen{{c:Oxygen / ventilator}}? Any dialysis{{c:Dialysis}}?"},
+{t:"cfollow"},
+{t:"dobig",x:"Ask these first. Any one of them changes which carriers are even in play &mdash; and on an IUL call it can end the underwritten route before you have spent an hour building toward it."}
+],b:[{k:"Next",to:"i_h_build",c:"go"}]},
+
 i_h_build:{s:"8",pf:"build",t:"Build",l:[
 {t:"say",x:"Now let's go through a few quick health items so I can see what you'll qualify for."},
 {t:"ask",x:"What's your height and weight?"},
 {t:"pf",ks:["height","weight","sex"]}
-],b:[{k:"Next",to:"i_h_heart",c:"go"}]},
+],b:[{k:"Next",to:"i_h_meds",c:"go"}]},
 
 i_h_heart:{s:"8",pf:"health",t:"Heart",l:[
 {t:"ask",x:"Any history of heart attack{{c:Heart attack}}, stents{{c:Stent}}, pacemaker{{c:Defibrillator / pacemaker}}, or any kind of heart surgery{{c:Heart surgery}}?"},
@@ -1977,14 +1994,14 @@ i_h_mental:{s:"8",pf:"health",t:"Mental health",l:[
 i_h_rest:{s:"8",pf:"health",t:"Autoimmune and mobility",l:[
 {t:"ask",x:"Lupus{{c:Lupus}}, rheumatoid arthritis{{c:Rheumatoid arthritis}}, anything autoimmune{{c:Autoimmune disorder}}? Any mobility issues{{c:Wheelchair / electric scooter}}, or anyone helping you at home?"},
 {t:"cfollow"}
-],b:[{k:"Next",to:"i_h_meds",c:"go"}]},
+],b:[{k:"Next",to:"i_h_tobacco",c:"go"}]},
 
 i_h_meds:{s:"8",pf:"health",t:"Medications",l:[
 {t:"ask",x:"What medications are you currently taking, and what's each one for?"},
 {t:"meds"},
 {t:"ask",x:"Anything you've been prescribed in the last one to five years that you're not on now?"},
 {t:"do",x:"The med list is your lie detector. If they name a condition you didn't hear about, go back and ask about it."}
-],b:[{k:"Next",to:"i_h_tobacco",c:"go"}]},
+],b:[{k:"Next",to:"i_h_heart",c:"go"}]},
 
 i_h_tobacco:{s:"8",pf:"build",t:"Tobacco",l:[
 {t:"ask",x:"Any tobacco or vape use? {{smoker}}"},
@@ -3625,7 +3642,8 @@ var PF_SPEC=[
  {k:"dob",l:"DOB",w:1},{k:"age",l:"Age (closest)",w:1},
  {k:"state",l:"State",w:1},{k:"branch",l:"Branch of service",w:1},
  {k:"married",l:"Married?",w:1,opt:["","Yes","No","Widowed"]},{k:"spouse",l:"Spouse",w:1,showIf:["married","Yes"]},
- {k:"kids",l:"Children &amp; ages",w:2},
+ {k:"kids",l:"Children",w:1,opt:["","0","1","2","3","4+"]},
+ {k:"kids_names",l:"Children &mdash; names and ages",w:2},
  {k:"dm",drives:true,l:"Who makes financial decisions",w:1,opt:["","They do","With their spouse","Someone else helps"]},
  {k:"dm_who",l:"Who else is in on it",w:1,showIf:["dm","Someone else helps"]},
  {k:"spouse_wants",l:"Spouse wants coverage too?",w:2,opt:["","No","Yes"],showIf:["married","Yes"]},
@@ -3764,7 +3782,7 @@ var BLANKMAP={
  "spell it":"a_name","spell it out":"a_name","last name":"last","client's state":"state",
  "spouse":"spouse","beneficiary":"ben","beneficiary / spouse":"ben","branch of service":"branch",
  "carrier":"carrier","coverage":"coverage","amount":"coverage","premium":"premium",
- "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","policy number":"policy","draft date":"draft","monthly income":"i_income","age":"age","children":"kids","liquid savings":"i_liquid","occupation":"occupation","anything else":"health_notes","their goal, in their words":"goal","monthly amount":"premium","left over":"i_left","Carrier?":"inplace_carrier","how much coverage":"inplace_amt","their number":"arrangement_cost","their goal, in their words":"goal",
+ "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","policy number":"policy","draft date":"draft","monthly income":"i_income","age":"age","children":"kids_names","liquid savings":"i_liquid","occupation":"occupation","anything else":"health_notes","their goal, in their words":"goal","monthly amount":"premium","left over":"i_left","Carrier?":"inplace_carrier","how much coverage":"inplace_amt","their number":"arrangement_cost","their goal, in their words":"goal",
  "address":"address","balance":"m_balance","monthly payment":"m_payment","equity":"m_equity",
  
  "your name":"a_name","your full name":"a_full","agent name":"a_name","your NPN":"a_npn",
