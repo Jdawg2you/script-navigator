@@ -3319,8 +3319,8 @@ function condKey(c){ return "dx_"+String(c).toLowerCase().replace(/[^a-z0-9]+/g,
    conditions had a date to give it, so the rest left those clauses unresolved. Now they all do. */
 function condFollow(c){
   var fu=(PF_FOLLOW[c]||[]).slice();
-  var hasWhen=fu.some(function(f){ return /^(when|diagnosed|last)/i.test(f.l||""); });
-  if(!hasWhen) fu.unshift({k:condKey(c), l:"When?"});
+  var hasWhen=fu.some(function(f){ return /^(when|diagnosed)/i.test(f.l||""); });
+  if(!hasWhen) fu.unshift({k:condKey(c), l:"When? (month and year)"});
   return fu;
 }
 function cfollowHTML(names){
@@ -4738,17 +4738,43 @@ function pPrint(){
 }
 
 function wizYears(cond){
+  /* The wizard resolves "within 6 mo" as 0.5 years, so a whole number here throws away the
+     precision that decides it. A heart attack four months ago and one eleven months ago are
+     both "0 years" and land on opposite sides of every six-month cliff the carriers use. */
   var fu=condFollow(cond);
   for(var i=0;i<fu.length;i++){
     if(!/^(when|diagnosed)/i.test(fu[i].l||"")) continue;
     var v=String(P[fu[i].k]||"").trim(); if(!v) continue;
-    var yr=v.match(/(19|20)\d{2}/);
-    if(yr){ var d=new Date().getFullYear()-parseInt(yr[0],10); return d>=0?d:null; }
-    var n=v.match(/^\s*(\d{1,2})\s*(yr|yrs|year|years)?\s*(ago)?\s*$/i);
-    if(n) return parseInt(n[1],10);
+    var y=whenYears(v); if(y!=null) return y;
   }
   return null;
 }
+/* Turns what an agent actually types into years-since, keeping months where they were given. */
+function whenYears(v){
+  var t=String(v||"").trim().toLowerCase(); if(!t) return null;
+  var now=new Date(), m;
+  var round=function(n){ return n<0 ? null : Math.round(n*100)/100; };
+  /* "6 months ago", "18 mo", "3 weeks" */
+  if((m=t.match(/^(\d+(?:\.\d+)?)\s*(?:mo|mos|month|months)\b/))) return round(+m[1]/12);
+  if((m=t.match(/^(\d+(?:\.\d+)?)\s*(?:wk|wks|week|weeks)\b/)))   return round(+m[1]/52);
+  if((m=t.match(/^(\d+(?:\.\d+)?)\s*(?:yr|yrs|year|years)\b/)))   return round(+m[1]);
+  /* month and year: 3/2024, 03-2024 */
+  if((m=t.match(/^(\d{1,2})\s*[\/\-. ]\s*((?:19|20)\d{2})$/))){
+    var mo=+m[1]; if(mo<1||mo>12) return null;
+    var months=(now.getFullYear()-(+m[2]))*12 + (now.getMonth()+1-mo);
+    return round(months/12);
+  }
+  /* a full date */
+  var d=pAge(t);
+  if(d){ var b=new Date(d.pretty.slice(6), +d.pretty.slice(0,2)-1, +d.pretty.slice(3,5));
+         return round((now-b)/(1000*60*60*24*365.25)); }
+  /* a bare year */
+  if((m=t.match(/^((?:19|20)\d{2})$/))) return round(now.getFullYear()-(+m[1]));
+  /* a bare small number is years */
+  if((m=t.match(/^(\d{1,2})$/))) return round(+m[1]);
+  return null;
+}
+
 function wizClient(){
   var c={}, a=parseInt(P.age,10);
   if(a) c.age=a;
