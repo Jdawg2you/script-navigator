@@ -3686,7 +3686,8 @@ $("restart").onclick=restart;
 var PF_SPEC=[
  {sec:"Who you're calling",id:"who"},
  {k:"first",l:"First name",w:1},{k:"last",l:"Last name",w:1},
- {k:"dob",l:"DOB",w:1},{k:"age",l:"Age (closest)",w:1},
+ {k:"dob",l:"DOB",w:1},{k:"age",l:"Age",w:1},
+ {k:"age_nearest",l:"Age nearest birthday &mdash; one carrier, one product",w:2,showIf:["age_nearest","*"]},
  {k:"state",l:"State",w:1},{k:"branch",l:"Branch of service",w:1},
  {k:"married",l:"Married?",w:1,opt:["","Married","Partnered","Single","Widowed"]},{k:"spouse",l:"Spouse",w:1,showIf:["married",["Married","Partnered"]]},
  {k:"kids",l:"Children",w:1,opt:["","0","1","2","3","4+"]},
@@ -3849,7 +3850,7 @@ var BLANKMAP={
  "agent email":"a_email",};
 function pAgeHint(){
   var a=parseFloat(String(pVal("age")||"").replace(/[^0-9.]/g,""));
-  P.asset_prot_hint = (a && a>=60) ? "age" : "";      /* age nearest 60 means they are past 59 and a half */
+  P.asset_prot_hint = (a && a>=60) ? "age" : "";      /* 60 or over is past 59 and a half */
   return P.asset_prot_hint;
 }
 function pBlank(lab){
@@ -3929,7 +3930,7 @@ function pRender(){
         var on=(P.conds||[]).indexOf(c)>-1;
         return '<label class="'+(on?"on":"")+'"><input type="checkbox" data-cond="'+esc(c).replace(/"/g,"&quot;")+'"'+(on?" checked":"")+'>'+c+'</label>';
       }).join("")+'</div><div id="pfollow"></div>'); return; }
-    if(f.showIf && !condHit(P[f.showIf[0]], f.showIf[1])) return;
+    if(f.showIf && !(f.showIf[1]==="*" ? !!P[f.showIf[0]] : condHit(P[f.showIf[0]], f.showIf[1]))) return;
     row.push(pField(f)); if(f.w===2) flush();
   });
   flush();
@@ -4358,9 +4359,13 @@ document.addEventListener("input",function(e){
       /* Store the age without a re-render. Rebuilding the card mid-keystroke detaches this
          very input, and the change event then lands on a node nobody can see any more -
          which is why a typed date of birth never reformatted itself. */
-      if(a){ pSet("age",String(a.nearest),true);
+      if(a){ pSet("age",String(a.exact),true);
+             /* Carriers rate on real age. One carrier on one product uses age nearest
+                birthday, so that number is kept beside it - but only when it differs,
+                and never as the number the rest of the tool works from. */
+             pSet("age_nearest", a.nearest!==a.exact ? String(a.nearest) : "", true);
              [].forEach.call(document.querySelectorAll('[data-pk="age"],#pf_age'),function(el){
-               el.value=a.nearest; if(el.classList && el.classList.contains("iblank")) pFit(el); }); }
+               el.value=a.exact; if(el.classList && el.classList.contains("iblank")) pFit(el); }); }
     }
     return;
   }
@@ -4391,6 +4396,10 @@ document.addEventListener("change",function(e){
     else if(t.value.trim()){ t.classList.add("bad");
       t.title="That is not a date of birth I can read. Try 4/12/1958, or just 04121958."; }
     else { t.classList.remove("bad"); t.removeAttribute("title"); }
+  }
+  if(t.getAttribute&&t.getAttribute("data-pk")==="age" && P.age_nearest){
+    var da=pAge(P.dob);
+    if(!da || String(da.exact)!==String(t.value).trim()) pSet("age_nearest","",true);
   }
   var nk=t.getAttribute&&t.getAttribute("data-pk");
   if(nk && NAME_KEYS.indexOf(nk)>-1){
@@ -4743,6 +4752,10 @@ function wizYears(cond){
 function wizClient(){
   var c={}, a=parseInt(P.age,10);
   if(a) c.age=a;
+  /* The wizard's box is <input type="date">, which only accepts ISO. Handing it
+     MM/DD/YYYY silently leaves the box empty, which is how it looked before. */
+  var db=String(P.dob||"").match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if(db) c.dob=db[3]+"-"+db[1]+"-"+db[2];
   var h=String(P.height||"").match(/(\d+)\s*'\s*(\d+)?/);
   if(h) c.hin=(+h[1])*12+(+(h[2]||0));
   var w=parseInt(String(P.weight||"").replace(/[^0-9]/g,""),10);
