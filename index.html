@@ -3313,11 +3313,21 @@ function altHTML(L){
     }).join("")+'</div></div>';
 }
 
+function condKey(c){ return "dx_"+String(c).toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,""); }
+/* The wizard resolves clauses like "within 2 yrs - Select; over 2 yrs - Premier" against years
+   since diagnosis, and nearly every row it carries has language like that. Only seven of our
+   conditions had a date to give it, so the rest left those clauses unresolved. Now they all do. */
+function condFollow(c){
+  var fu=(PF_FOLLOW[c]||[]).slice();
+  var hasWhen=fu.some(function(f){ return /^(when|diagnosed|last)/i.test(f.l||""); });
+  if(!hasWhen) fu.unshift({k:condKey(c), l:"When?"});
+  return fu;
+}
 function cfollowHTML(names){
   var on=(P.conds||[]), out=[];
   names.forEach(function(c){
     if(on.indexOf(c)<0) return;
-    var fu=PF_FOLLOW[c]; if(!fu) return;
+    var fu=condFollow(c);
     out.push('<div class="cfollow"><div class="cfh">They said yes to <b>'+esc(c)+'</b> &mdash; ask:</div>'+
       fu.map(function(f){
         var v=pVal(f.k);
@@ -3803,6 +3813,7 @@ var PF_CONDS=[
 
 /* follow-ups the script already works through for the big ones */
 var PF_FOLLOW={
+ "High blood pressure":[{k:"bp_meds",l:"How many BP medications",opt:["","1","2","3","4 or more"]}],
  "Diabetes":[{k:"dx_dia",l:"Diagnosed when"},{k:"a1c",l:"Last A1C"},
              {k:"dia_tx",l:"Pills or insulin",opt:["","Pills","Insulin","Both"]},
              {k:"dia_neuro",l:"Neuropathy?",opt:["","No","Yes"]}],
@@ -4150,7 +4161,7 @@ document.addEventListener("input",function(e){
 function pFollow(){
   var on=P.conds||[], o=[];
   on.forEach(function(c){
-    var fu=PF_FOLLOW[c]; if(!fu) return;
+    var fu=condFollow(c);
     o.push('<div class="followup"><div class="fuh">'+c+'</div><div class="prow">'+
       fu.map(function(f){return pField(f)}).join("")+'</div></div>');
   });
@@ -4577,7 +4588,7 @@ function pPrint(){
   // ---- composed blocks
   var det=[];
   (P.conds||[]).forEach(function(c){
-    var fu=PF_FOLLOW[c]; if(!fu) return;
+    var fu=condFollow(c);
     var parts=fu.map(function(x){ return P[x.k] ? x.l+" "+esc(P[x.k]) : null; }).filter(Boolean);
     if(parts.length) det.push("<b>"+esc(c)+"</b> &mdash; "+parts.join(", "));
   });
@@ -4718,9 +4729,9 @@ function pPrint(){
 }
 
 function wizYears(cond){
-  var fu=PF_FOLLOW[cond]; if(!fu) return null;
+  var fu=condFollow(cond);
   for(var i=0;i<fu.length;i++){
-    if(!/^(when|diagnosed)/i.test(fu[i].l)) continue;
+    if(!/^(when|diagnosed)/i.test(fu[i].l||"")) continue;
     var v=String(P[fu[i].k]||"").trim(); if(!v) continue;
     var yr=v.match(/(19|20)\d{2}/);
     if(yr){ var d=new Date().getFullYear()-parseInt(yr[0],10); return d>=0?d:null; }
@@ -4740,7 +4751,7 @@ function wizClient(){
   c.lb="lb";
   c.conds=(P.conds||[]).map(function(n){
     var o={name:n};
-    if(n==="High blood pressure") o.m=null;
+    if(n==="High blood pressure"){ var bm=String(P.bp_meds||"").replace(/[^0-9]/g,""); o.m=bm||null; }
     else { var y=wizYears(n); if(y!=null) o.y=y; }
     return o;
   });
