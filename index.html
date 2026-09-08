@@ -918,7 +918,9 @@ start:{s:"1",t:"Which lead is this?",l:[
 fresh:{s:"1",pf:"who",t:"Fresh opener",l:[
 {t:"tip",x:"<b>Open the client profile before you dial.</b> Type what they tell you straight into it &mdash; name, beneficiary, coverage &mdash; and it fills into the script as you go. At the end you save it, print it, or pull it back up any time."},
 {t:"do",x:"No apology, no permission-asking. They did it days ago. Act like it."},
-{t:"say",x:"Hey ___(their first name), this is ___(your name) &mdash; veteran consultant assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance programs for veterans, so I'm getting right back to you on that."},
+{t:"say",x:"Hey ___(their first name)&hellip;"},
+{t:"do",x:"Pause. Get confirmation it's them before you keep going."},
+{t:"say",x:"This is ___(your name) &mdash; veteran consultant assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance programs for veterans, so I'm getting right back to you on that."},
 {t:"do",x:"Say the real timeframe. Five days, a week, ten days &mdash; whatever the lead actually says."},
 {t:"ask",x:"I've got you down as ___(branch of service) &mdash; is that right?"},
 {t:"do",x:"Let them talk. If they offer years or where they served, take it. Don't rush past it."},
@@ -933,7 +935,9 @@ fresh:{s:"1",pf:"who",t:"Fresh opener",l:[
 
 aged:{s:"1",pf:"who",t:"Aged opener",l:[
 {t:"do",x:"Deliberately lowers your status. You're asking them for help, not selling them."},
-{t:"say",x:"Hey ___(their first name), this is ___(your name). I'm a veteran consultant, licensed here in ___(client's state) &mdash; I'm trying to get our file updated on my end, and I'm hoping you can help me out real quick."},
+{t:"say",x:"Hey ___(their first name)&hellip;"},
+{t:"do",x:"Pause. Get confirmation it's them before you keep going."},
+{t:"say",x:"This is ___(your name). I'm a veteran consultant, licensed here in ___(client's state) &mdash; I'm trying to get our file updated on my end, and I'm hoping you can help me out real quick."},
 {t:"ask",x:"I've got you down as ___(branch of service) &mdash; is that right?"},
 {t:"note",x:"<b>Validate ONE thing. Purpose is trust, not data.</b> This is what proves you're a real person with their actual file in front of you. Branch of service first. If it isn't on the lead: <b>&ldquo;You listed ___ as your beneficiary &mdash; is that right?&rdquo;</b> then date of birth, then email."},
 {t:"ask",x:"You put in a request a while back about the life insurance programs for veterans. Did you ever end up getting something in place, or what ended up happening with that?"},
