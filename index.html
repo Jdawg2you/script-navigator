@@ -4205,6 +4205,16 @@ function pState(v){
   return hits.length===1 ? hits[0] : null;
 }
 
+/* An agent types fast and lowercase. The script says this name out loud, so it should
+   read like a name. Anything they capitalised themselves is left exactly as typed -
+   McDonald, DeAngelo and O'Brien are theirs to get right, not mine to mangle. */
+var NAME_KEYS=["first","last","spouse","ben","dm_who","kids_names"];
+function pNameCase(v){
+  var t=String(v||"");
+  if(!t.trim() || /[A-Z]/.test(t)) return null;
+  var out=t.replace(/([a-z])([a-z']*)/g,function(m,a,b){ return a.toUpperCase()+b; });
+  return out===t ? null : out;
+}
 function pDraft(v){
   var t=String(v||"").trim(); if(!t) return null;
   var pad=function(n){ return (n<10?"0":"")+n; };
@@ -4317,6 +4327,13 @@ document.addEventListener("change",function(e){
       [].forEach.call(document.querySelectorAll('[data-pk="branch"]'),function(el){ el.value=br; if(el.classList.contains("iblank")) pFit(el); }); } }
   if(t.getAttribute&&t.getAttribute("data-pk")==="state"){ var st=pState(t.value); if(st){ pSet("state",st,inCard);
       [].forEach.call(document.querySelectorAll('[data-pk="state"]'),function(el){ el.value=st; if(el.classList.contains("iblank")) pFit(el); }); } }
+  var nk=t.getAttribute&&t.getAttribute("data-pk");
+  if(nk && NAME_KEYS.indexOf(nk)>-1){
+    var nv=pNameCase(t.value);
+    if(nv){ pSet(nk,nv,inCard);
+      [].forEach.call(document.querySelectorAll('[data-pk="'+nk+'"]'),function(el){
+        el.value=nv; if(el.classList.contains("iblank")) pFit(el); }); }
+  }
   if(t.getAttribute&&t.getAttribute("data-pk")==="draft"){ var dv=pDraft(t.value);
       if(dv){ pSet("draft",dv,inCard);
         [].forEach.call(document.querySelectorAll('[data-pk="draft"]'),function(el){
