@@ -1860,10 +1860,11 @@ i_why_db:{s:"4",pf:"why",t:"Legacy focused",l:[
 {t:"ask",x:"Would ___(beneficiary) have the money to cover everything &mdash; the final expenses, the bills? And would you feel like you're leaving them a legacy with what you've got saved so far?"},
 {t:"dobig",x:"Listen closely to that second half. If they want to leave a legacy and they know they haven't built one yet, that gap is the emotional currency for this entire call. Write down exactly how they say it."},
 {t:"say",x:"So let's take a quick inventory of what you've got working for you right now."},
-{t:"ask",x:"Do you have a 401(k), a 403(b), an IRA, a Roth &mdash; anything like that? And roughly what's built up in it?"},
-{t:"ask",x:"And do you have a mortgage? {{has_mortgage}}"},
-{t:"tip",x:"<b>Take the answers, not the numbers.</b> The balances land at 7.2 and the mortgage detail at 7.1b &mdash; you are building the picture here, not filling in a form."},
-{t:"ask",x:"And what about straight savings &mdash; what's sitting there right now? ___(liquid savings)"},
+{t:"ask",x:"Do you have a 401(k), a 403(b), an IRA, a Roth &mdash; anything like that? {{has_assets}}"},
+{t:"ask",x:"And do you own or rent your home? {{own_rent}}"},
+{t:"ask",x:"Now &mdash; would you say you're more of a spender or a saver? {{money_style}}"},
+{t:"tip",x:"<b>Answers here, numbers later.</b> Yes or no, own or rent, spender or saver. Everything they said yes to opens itself back up at 7.1b and 7.2 &mdash; you are building the picture on this card, not filling in a form."},
+{t:"ask",x:"And what about straight savings &mdash; what's sitting there right now?"},
 {t:"do",x:"Do not critique any of it. You're taking inventory, not competing. What you're finding out is the distance between what they have and what they just told you they want to leave behind."},
 {t:"note",x:"<b>That distance is the whole sale.</b> If they said legacy and the inventory is thin, you don't have to argue for anything &mdash; you just have to say the two numbers back to them later."}
 ],b:[{k:"Continue",to:"i_table",c:"go"}]},
@@ -1945,8 +1946,11 @@ i_profile_fin:{s:"7",pf:"income",t:"Financial snapshot",l:[
 {t:"pf",ks:["occupation","i_income"]},
 {t:"ask",when:["married",["Married","Partnered"]],dflt:true,iff:"they have a spouse or partner",x:"And ___(spouse)'s occupation and household income, if that applies?"},
 {t:"pf",ks:["sp_income"],when:["married",["Married","Partnered"]]},
-{t:"ask",x:"Do you own or rent? {{own_rent}} &hellip; What's the mortgage balance and the monthly payment?"},
-{t:"pf",ks:["m_balance","m_payment"],when:[["own_rent","Own"],["has_mortgage","Yes"]]},
+{t:"ask",when:["own_rent","Own"],dflt:true,iff:"they own",x:"You said you own the home &mdash; what do you owe on it, and what's the monthly payment? What do you think it would sell for today? And how much longer have you got on it?"},
+{t:"pf",ks:["m_balance","m_payment"],when:["own_rent","Own"]},
+{t:"pf",ks:["m_value","m_years"],when:["own_rent","Own"]},
+{t:"mmath",when:["own_rent","Own"]},
+{t:"ask",when:["own_rent","Rent"],iff:"they rent",x:"You said you rent &mdash; what's the monthly rent?"},
 {t:"pf",ks:["rent"],when:["own_rent","Rent"]},
 {t:"ask",x:"After the bills are paid, about how much are you able to save or set aside each month? ___(left over)"},
 {t:"ask",x:"And how much have you built up in savings right now? ___(liquid savings)"},
@@ -1959,7 +1963,6 @@ i_golden:{s:"7",pf:"retirement",t:"The golden question",l:[
 {t:"pf",ks:["i_401k","i_roth"],when:["has_assets","Yes"]},
 {t:"pf",ks:["asset_amt","asset_where"],when:["has_assets","Yes"]},
 {t:"pf",ks:["asset_prot","asset_notes"],when:["has_assets","Yes"]},
-{t:"ask",x:"And are you more of a spender or a saver? {{money_style}}"},
 {t:"do",x:"Listen carefully and don't rush past the answer. This tells you what they already believe is handled."},
 {t:"note",x:"On a final expense call this answer is a flag for later. Here it's live &mdash; it tells you whether you're adding to a plan or building one from scratch, and it sets up the tax conversation."}
 ],b:[{k:"Continue to health",to:"i_h_hipaa",c:"go"}]},
@@ -3730,7 +3733,9 @@ var PF_SPEC=[
  {k:"health_notes",l:"Anything else",w:2},
 
  {sec:"Income",id:"income"},
- {k:"occupation",l:"Occupation",w:1},{k:"sp_income",l:"Spouse / household income",w:1,money:"plain",showIf:["married",["Married","Partnered"]]},
+ {k:"occupation",l:"Occupation",w:1},
+ {k:"sp_income",l:"Spouse income",w:1,money:"plain",showIf:["married",["Married","Partnered"]]},
+ {k:"hh_income",l:"Household income",w:1,money:"plain",showIf:["hh_income","*"]},
  {k:"inc_kind",l:"Source",w:2,multi:true,opt:["","Working","Retired","Social Security","Disability","Pension"]},
  {k:"i_income",l:"Monthly income",money:"plain",w:1},{k:"i_left",l:"Left over each month",l_iul:"Able to save each month",money:"plain",w:1},
  {k:"money_style",l:"Spender or saver",w:1,opt:["","Spender","Saver","Bit of both"]},
@@ -4406,6 +4411,15 @@ document.addEventListener("change",function(e){
   if(t.getAttribute&&t.getAttribute("data-pk")==="age" && P.age_nearest){
     var da=pAge(P.dob);
     if(!da || String(da.exact)!==String(t.value).trim()) pSet("age_nearest","",true);
+  }
+  if(t.getAttribute&&/^(m_value|m_balance|i_income|sp_income)$/.test(t.getAttribute("data-pk"))){
+    setTimeout(function(){
+      var val=num(pVal("m_value")), bal=num(pVal("m_balance"));
+      pSet("m_equity", (val&&bal&&val>bal) ? money(val-bal) : "", true);
+      var mi=num(pVal("i_income")), si=num(pVal("sp_income"));
+      pSet("hh_income", (mi&&si) ? money(mi+si) : "", true);
+      if(document.getElementById("profbody")) pRender();
+    },0);
   }
   var nk=t.getAttribute&&t.getAttribute("data-pk");
   if(nk && NAME_KEYS.indexOf(nk)>-1){
