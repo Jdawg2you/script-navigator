@@ -390,6 +390,13 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .alt.on{color:var(--ink);font-style:normal;background:var(--goldsoft);border-radius:6px;
   margin:2px -6px;padding:7px 6px}
 .alt.on i{color:var(--golddk)}
+.pfi.wide{flex-basis:100%}
+.pfi.wide textarea,.pfi.wide input{width:100%;min-width:340px}
+.pfi.wide textarea{font-family:var(--sans);font-size:12.5px;line-height:1.45;padding:6px 8px;
+  border:1px solid var(--rule);border-radius:6px;resize:vertical}
+.pfi.drv input,.pfi.drv select{border-color:var(--gold);background:#FFFDF6}
+.pfi.drv i:after{content:"\2022 carrier rule";color:var(--golddk);font-weight:700;margin-left:5px;
+  font-size:9px;letter-spacing:.04em}
 .cfollow{background:#fff;border:1px solid var(--goldline);border-left:3px solid var(--gold);
   border-radius:0 8px 8px 0;padding:10px 13px;margin:0 0 10px;display:flex;flex-wrap:wrap;align-items:center;gap:13px}
 .cfh{font-family:var(--sans);font-size:11.5px;font-weight:600;color:var(--golddk);flex-basis:100%;margin-bottom:2px}
@@ -1864,7 +1871,6 @@ i_why_db:{s:"4",pf:"why",t:"Legacy focused",l:[
 {t:"ask",x:"And do you own or rent your home? {{own_rent}}"},
 {t:"ask",x:"Now &mdash; would you say you're more of a spender or a saver? {{money_style}}"},
 {t:"tip",x:"<b>Answers here, numbers later.</b> Yes or no, own or rent, spender or saver. Everything they said yes to opens itself back up at 7.1b and 7.2 &mdash; you are building the picture on this card, not filling in a form."},
-{t:"ask",x:"And what about straight savings &mdash; what's sitting there right now?"},
 {t:"do",x:"Do not critique any of it. You're taking inventory, not competing. What you're finding out is the distance between what they have and what they just told you they want to leave behind."},
 {t:"note",x:"<b>That distance is the whole sale.</b> If they said legacy and the inventory is thin, you don't have to argue for anything &mdash; you just have to say the two numbers back to them later."}
 ],b:[{k:"Continue",to:"i_table",c:"go"}]},
@@ -1919,11 +1925,13 @@ i_profile:{s:"7",pf:"who",t:"Client profile",l:[
 {t:"ask",x:"I've got your date of birth as ___(DOB) &mdash; is that right? And how old does that make you? ___(age)"},
 {t:"do",x:"Let them do the math. Small thing, but people engage differently when they say the number themselves instead of hearing you say it."},
 {t:"ask",x:"Are you married or single? {{married}}"},
-{t:"pf",ks:["spouse"],when:["married",["Married","Partnered"]]},
+{t:"pf",ks:["spouse","spouse_wants"],when:["married",["Married","Partnered"]]},
 {t:"note",x:"<b>If married:</b> &ldquo;Wonderful &mdash; can I grab your spouse's name, just so I'm not being rude?&rdquo;"},
 {t:"ask",x:"Any children? {{kids}} How old are they? ___(children)"},
 {t:"do",x:"If they have kids, take a second on the ages. It's the easiest genuine interest you'll ever show, and those kids are the reason behind most of this."},
-{t:"ask",x:"And when it comes to financial decisions like this &mdash; is that something you handle yourself, or do you have somebody who helps you make those decisions? {{dm}}"},
+{t:"ask",when:["married",["Married","Partnered"]],iff:"they are married or partnered",x:"And when it comes to financial decisions like this &mdash; do you need to get any sort of permission from ___(spouse)? {{dm}}"},
+{t:"say",when:["married",["Married","Partnered"]],iff:"they are married or partnered",x:"The reason I'm asking is &mdash; do we need to have them here?"},
+{t:"ask",when:["married",["Single","Widowed"]],dflt:true,x:"And when it comes to financial decisions like this &mdash; is there anybody else you have to ask? {{dm}}"},
 {t:"pf",ks:["dm_who"],when:["dm","Someone else helps"]},
 {t:"dobig",x:"Ask this now, not at the close. If someone else is part of the decision, you want to know before you spend an hour &mdash; not after."}
 ],bh:"How do they decide?",b:[
@@ -1944,8 +1952,8 @@ i_profile_dm:{s:"7",pf:"who",t:"Someone else is part of the decision",l:[
 i_profile_fin:{s:"7",pf:"income",t:"Financial snapshot",l:[
 {t:"ask",x:"What do you do for work, and roughly what's your monthly income after taxes?"},
 {t:"pf",ks:["occupation","i_income"]},
-{t:"ask",when:["married",["Married","Partnered"]],dflt:true,iff:"they have a spouse or partner",x:"And ___(spouse)'s occupation and household income, if that applies?"},
-{t:"pf",ks:["sp_income"],when:["married",["Married","Partnered"]]},
+{t:"ask",when:["married",["Married","Partnered"]],dflt:true,iff:"they have a spouse or partner",x:"And for ___(spouse) &mdash; do they work? And if so, what are they bringing in monthly? {{sp_works}}"},
+{t:"pf",ks:["sp_income"],when:["sp_works","Yes"]},
 {t:"ask",when:["own_rent","Own"],dflt:true,iff:"they own",x:"You said you own the home &mdash; what do you owe on it, and what's the monthly payment? What do you think it would sell for today? And how much longer have you got on it?"},
 {t:"pf",ks:["m_balance","m_payment"],when:["own_rent","Own"]},
 {t:"pf",ks:["m_value","m_years"],when:["own_rent","Own"]},
@@ -3321,7 +3329,7 @@ function condKey(c){ return "dx_"+String(c).toLowerCase().replace(/[^a-z0-9]+/g,
 function condFollow(c){
   var fu=(PF_FOLLOW[c]||[]).slice();
   var hasWhen=fu.some(function(f){ return /^(when|diagnosed)/i.test(f.l||""); });
-  if(!hasWhen) fu.unshift({k:condKey(c), l:"When? (month and year)"});
+  if(!hasWhen) fu.unshift({k:condKey(c), l:"When? (month and year)", drv:true});
   return fu;
 }
 function cfollowHTML(names){
@@ -3331,10 +3339,10 @@ function cfollowHTML(names){
     var fu=condFollow(c);
     out.push('<div class="cfollow"><div class="cfh">They said yes to <b>'+esc(c)+'</b> &mdash; ask:</div>'+
       fu.map(function(f){
-        var v=pVal(f.k);
-        if(f.opt) return '<span class="pfi"><i>'+pLabel(f)+'</i>'+f.opt.filter(function(x){return x!==""}).map(function(oo){
+        var v=pVal(f.k), dv=f.drv?" drv":"";
+        if(f.opt) return '<span class="pfi'+dv+'"><i>'+pLabel(f)+'</i>'+f.opt.filter(function(x){return x!==""}).map(function(oo){
           return '<button type="button" class="chip'+(v===oo?" on":"")+'" data-pfset="'+f.k+'" data-pfval="'+oo+'">'+oo+'</button>';}).join("")+'</span>';
-        return '<span class="pfi"><i>'+pLabel(f)+'</i><input data-pk="'+f.k+'" data-inline="1" value="'+
+        return '<span class="pfi'+dv+'"><i>'+pLabel(f)+'</i><input data-pk="'+f.k+'" data-inline="1" value="'+
                esc(v).replace(/"/g,"&quot;")+'"></span>';
       }).join("")+'</div>');
   });
@@ -3501,7 +3509,10 @@ function pfInline(ks){
       }).join("")+'</span>';
     }
     var ph=PF_PLACEHOLDER[k]||"";
-    return '<span class="pfi"><i>'+pLabel(f)+'</i><input id="'+id+'" data-pk="'+k+'" data-inline="1"'+
+    if(f.type==="area")
+      return '<span class="pfi wide"><i>'+pLabel(f)+'</i><textarea id="'+id+'" data-pk="'+k+'" data-inline="1" rows="2"'+
+             (ph?' placeholder="'+ph+'"':'')+'>'+esc(v)+'</textarea></span>';
+    return '<span class="pfi'+(f.w===2?' wide':'')+'"><i>'+pLabel(f)+'</i><input id="'+id+'" data-pk="'+k+'" data-inline="1"'+
            (ph?' placeholder="'+ph+'"':'')+' value="'+esc(v).replace(/"/g,"&quot;")+'"></span>';
   }).join("");
 }
@@ -3695,7 +3706,7 @@ var PF_SPEC=[
  {k:"married",l:"Married?",w:1,opt:["","Married","Partnered","Single","Widowed"]},{k:"spouse",l:"Spouse",w:1,showIf:["married",["Married","Partnered"]]},
  {k:"kids",l:"Children",w:1,opt:["","0","1","2","3","4+"]},
  {k:"kids_names",l:"Children &mdash; names and ages",w:2},
- {k:"dm",drives:true,l:"Who makes financial decisions",w:1,opt:["","They do","With their spouse","Someone else helps"]},
+ {k:"dm",drives:true,l:"Who makes financial decisions",w:1,opt:["","Self","With spouse","Someone else helps"]},
  {k:"dm_who",l:"Who else is in on it",w:1,showIf:["dm","Someone else helps"]},
  {k:"spouse_wants",l:"Spouse wants coverage too?",w:2,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
 
@@ -3734,7 +3745,8 @@ var PF_SPEC=[
 
  {sec:"Income",id:"income"},
  {k:"occupation",l:"Occupation",w:1},
- {k:"sp_income",l:"Spouse income",w:1,money:"plain",showIf:["married",["Married","Partnered"]]},
+ {k:"sp_works",drives:true,l:"Do they work?",w:1,opt:["","Yes","No"],showIf:["married",["Married","Partnered"]]},
+ {k:"sp_income",l:"Their monthly income",w:1,money:"plain",showIf:["sp_works","Yes"]},
  {k:"hh_income",l:"Household income",w:1,money:"plain",showIf:["hh_income","*"]},
  {k:"inc_kind",l:"Source",w:2,multi:true,opt:["","Working","Retired","Social Security","Disability","Pension"]},
  {k:"i_income",l:"Monthly income",money:"plain",w:1},{k:"i_left",l:"Left over each month",l_iul:"Able to save each month",money:"plain",w:1},
@@ -3825,18 +3837,18 @@ var PF_CONDS=[
 
 /* follow-ups the script already works through for the big ones */
 var PF_FOLLOW={
- "High blood pressure":[{k:"bp_meds",l:"How many BP medications",opt:["","1","2","3","4 or more"]}],
- "Diabetes":[{k:"dx_dia",l:"Diagnosed when"},{k:"a1c",l:"Last A1C"},
+ "High blood pressure":[{k:"bp_meds",l:"How many BP medications",drv:true,opt:["","1","2","3","4 or more"]}],
+ "Diabetes":[{k:"dx_dia",l:"Diagnosed when",drv:true},{k:"a1c",l:"Last A1C"},
              {k:"dia_tx",l:"Pills or insulin",opt:["","Pills","Insulin","Both"]},
-             {k:"dia_neuro",l:"Neuropathy?",opt:["","No","Yes"]}],
- "Heart attack":[{k:"dx_ha",l:"When"},{k:"ha_since",l:"Anything since"}],
- "Stent":[{k:"dx_stent",l:"When"},{k:"stent_n",l:"How many"}],
- "Heart surgery":[{k:"dx_hs",l:"When"},{k:"hs_what",l:"What kind"}],
- "Stroke / TIA":[{k:"dx_str",l:"When"},{k:"str_deficit",l:"Any lasting effects"}],
- "Cancer":[{k:"dx_ca",l:"When"},{k:"ca_type",l:"Type"},
+             {k:"dia_neuro",l:"Neuropathy?",drv:true,opt:["","No","Yes"]}],
+ "Heart attack":[{k:"dx_ha",l:"When",drv:true},{k:"ha_since",l:"Anything since"}],
+ "Stent":[{k:"dx_stent",l:"When",drv:true},{k:"stent_n",l:"How many"}],
+ "Heart surgery":[{k:"dx_hs",l:"When",drv:true},{k:"hs_what",l:"What kind"}],
+ "Stroke / TIA":[{k:"dx_str",l:"When",drv:true},{k:"str_deficit",l:"Any lasting effects"}],
+ "Cancer":[{k:"dx_ca",l:"When",drv:true},{k:"ca_type",l:"Type"},
            {k:"ca_status",l:"Status",opt:["","In remission","In treatment","Active"]},
            {k:"ca_last",l:"Last treatment"}],
- "Defibrillator / pacemaker":[{k:"pace_what",l:"Which",opt:["","Pacemaker","Defibrillator","Both"]},{k:"dx_pace",l:"When"}],
+ "Defibrillator / pacemaker":[{k:"pace_what",l:"Which",opt:["","Pacemaker","Defibrillator","Both"]},{k:"dx_pace",l:"When",drv:true}],
  "COPD":[{k:"copd_ox",l:"On oxygen?",opt:["","No","Yes"]}],
  "Kidney disease / failure":[{k:"kid_stage",l:"Stage / dialysis?"}],
  "Liver disease":[{k:"liv_what",l:"What kind"}]
@@ -4350,7 +4362,17 @@ function pAge(dob){
 
 
 var PF_DRIVERS=["inplace","inplace_kind","married","has_assets","has_mortgage","recent_stay","asset_employer"];
-function pSet(k,v,fromCard){ if(k.indexOf("a_")===0){A[k]=v}else{P[k]=v} pStore(); pFlash();
+/* Neuropathy is a row in the wizard's own grids, so answering yes to it as a diabetes
+   follow-up has to tick it as a condition too - otherwise the agent answers the question
+   and the carriers never hear it. Only ever added, never removed: taking back something
+   the agent ticked deliberately would be worse than leaving it. */
+var COND_FROM_FOLLOW={dia_neuro:"Neuropathy"};
+function pSet(k,v,fromCard){
+  var lift=COND_FROM_FOLLOW[k];
+  if(lift && String(v).toLowerCase()==="yes"){
+    var cs=(P.conds||[]).slice();
+    if(cs.indexOf(lift)<0){ cs.push(lift); P.conds=cs; }
+  } if(k.indexOf("a_")===0){A[k]=v}else{P[k]=v} pStore(); pFlash();
   if(PF_DRIVERS.indexOf(k)>-1 && document.getElementById("profbody")) pRender();
   if(!fromCard && typeof render==="function"&&$("script")) render(); }
 function pFlash(){ var h=document.getElementById("psaved"); if(!h)return; h.textContent="saved"; clearTimeout(PSAVE); PSAVE=setTimeout(function(){h.textContent=""},1100); }
@@ -4759,6 +4781,15 @@ function pPrint(){
   w.document.close(); setTimeout(function(){w.focus();w.print();},350);
 }
 
+function wizWhen(cond){
+  var fu=condFollow(cond);
+  for(var i=0;i<fu.length;i++){
+    if(!/^(when|diagnosed)/i.test(fu[i].l||"")) continue;
+    var v=String(P[fu[i].k]||"").trim(); if(!v) continue;
+    var w=whenParts(v); if(w) return w;
+  }
+  return null;
+}
 function wizYears(cond){
   /* The wizard resolves "within 6 mo" as 0.5 years, so a whole number here throws away the
      precision that decides it. A heart attack four months ago and one eleven months ago are
@@ -4770,6 +4801,27 @@ function wizYears(cond){
     var y=whenYears(v); if(y!=null) return y;
   }
   return null;
+}
+/* The wizard holds a year and a month per condition and works out years-since itself, so
+   that is what it should be handed. Sending a computed number instead left its year box
+   empty and, worse, the number was thrown away the moment the agent touched that chip. */
+function whenParts(v){
+  var t=String(v||"").trim(); if(!t) return null;
+  var now=new Date(), m, yr=null, mo=null;
+  if((m=t.match(/^(\d{1,2})\s*[\/\-. ]\s*((?:19|20)\d{2})$/)) && +m[1]>=1 && +m[1]<=12){ mo=+m[1]; yr=+m[2]; }
+  else if((m=t.match(/^((?:19|20)\d{2})$/))) yr=+m[1];
+  else {
+    var d=pAge(t);
+    if(d){ mo=+d.pretty.slice(0,2); yr=+d.pretty.slice(6); }
+    else {
+      var ago=whenYears(t);
+      if(ago==null) return null;
+      var back=new Date(now.getFullYear(), now.getMonth()-Math.round(ago*12), 1);
+      yr=back.getFullYear(); mo=back.getMonth()+1;
+    }
+  }
+  if(!yr || yr<1900 || yr>now.getFullYear()) return null;
+  return {yr:yr, mo:mo};
 }
 /* Turns what an agent actually types into years-since, keeping months where they were given. */
 function whenYears(v){
@@ -4813,7 +4865,11 @@ function wizClient(){
   c.conds=(P.conds||[]).map(function(n){
     var o={name:n};
     if(n==="High blood pressure"){ var bm=String(P.bp_meds||"").replace(/[^0-9]/g,""); o.m=bm||null; }
-    else { var y=wizYears(n); if(y!=null) o.y=y; }
+    else {
+      var w=wizWhen(n);
+      if(w){ o.yr=w.yr; if(w.mo) o.mo=w.mo; }
+      var y=wizYears(n); if(y!=null) o.y=y;   /* kept so an older wizard still works */
+    }
     return o;
   });
   return c;
