@@ -394,9 +394,15 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .pfi.wide textarea,.pfi.wide input{width:100%;min-width:340px}
 .pfi.wide textarea{font-family:var(--sans);font-size:12.5px;line-height:1.45;padding:6px 8px;
   border:1px solid var(--rule);border-radius:6px;resize:vertical}
-.pfi.drv input,.pfi.drv select{border-color:var(--gold);background:#FFFDF6}
-.pfi.drv i:after{content:"\2022 carrier rule";color:var(--golddk);font-weight:700;margin-left:5px;
-  font-size:9px;letter-spacing:.04em}
+.pfi.drv input,.pfi.drv select{border:1.5px solid var(--gold);background:var(--goldsoft);
+  box-shadow:0 0 0 3px rgba(201,162,78,.28)}
+.pfi.drv input:focus{outline:none;border-color:var(--golddk);box-shadow:0 0 0 3px rgba(201,162,78,.45)}
+.pfi.drv .chip{border-color:var(--goldline);background:var(--goldsoft)}
+.pfi.drv .chip.on{border-color:var(--golddk)}
+.pfi.drv i{color:var(--golddk)}
+.pfi.drv i:after{content:"CARRIER RULE";background:var(--gold);color:var(--navy);font-weight:800;
+  margin-left:6px;font-size:8.5px;letter-spacing:.09em;padding:2px 5px;border-radius:4px;
+  vertical-align:1px}
 .cfollow{background:#fff;border:1px solid var(--goldline);border-left:3px solid var(--gold);
   border-radius:0 8px 8px 0;padding:10px 13px;margin:0 0 10px;display:flex;flex-wrap:wrap;align-items:center;gap:13px}
 .cfh{font-family:var(--sans);font-size:11.5px;font-weight:600;color:var(--golddk);flex-basis:100%;margin-bottom:2px}
@@ -1925,13 +1931,13 @@ i_profile:{s:"7",pf:"who",t:"Client profile",l:[
 {t:"ask",x:"I've got your date of birth as ___(DOB) &mdash; is that right? And how old does that make you? ___(age)"},
 {t:"do",x:"Let them do the math. Small thing, but people engage differently when they say the number themselves instead of hearing you say it."},
 {t:"ask",x:"Are you married or single? {{married}}"},
-{t:"pf",ks:["spouse","spouse_wants"],when:["married",["Married","Partnered"]]},
+{t:"pf",ks:["spouse","spouse_wants"],when:[["married","Married"],["married","Partnered"],["dm","With spouse / partner"]]},
 {t:"note",x:"<b>If married:</b> &ldquo;Wonderful &mdash; can I grab your spouse's name, just so I'm not being rude?&rdquo;"},
 {t:"ask",x:"Any children? {{kids}} How old are they? ___(children)"},
 {t:"do",x:"If they have kids, take a second on the ages. It's the easiest genuine interest you'll ever show, and those kids are the reason behind most of this."},
 {t:"ask",when:["married",["Married","Partnered"]],iff:"they are married or partnered",x:"And when it comes to financial decisions like this &mdash; do you need to get any sort of permission from ___(spouse)? {{dm}}"},
 {t:"say",when:["married",["Married","Partnered"]],iff:"they are married or partnered",x:"The reason I'm asking is &mdash; do we need to have them here?"},
-{t:"ask",when:["married",["Single","Widowed"]],dflt:true,x:"And when it comes to financial decisions like this &mdash; is there anybody else you have to ask? {{dm}}"},
+{t:"ask",when:["married",["Single","Widowed"]],dflt:true,x:"And when it comes to financial decisions like this &mdash; do you need to get any sort of permission? {{dm}}"},
 {t:"pf",ks:["dm_who"],when:["dm","Someone else helps"]},
 {t:"dobig",x:"Ask this now, not at the close. If someone else is part of the decision, you want to know before you spend an hour &mdash; not after."}
 ],bh:"How do they decide?",b:[
@@ -3711,10 +3717,10 @@ var PF_SPEC=[
  {k:"dob",l:"DOB",w:1},{k:"age",l:"Age",w:1},
  {k:"age_nearest",l:"Age nearest birthday &mdash; one carrier, one product",w:2,showIf:["age_nearest","*"]},
  {k:"state",l:"State",w:1},{k:"branch",l:"Branch of service",w:1},
- {k:"married",l:"Married?",w:1,opt:["","Married","Partnered","Single","Widowed"]},{k:"spouse",l:"Spouse",w:1,showIf:["married",["Married","Partnered"]]},
+ {k:"married",drives:true,l:"Married?",w:1,opt:["","Married","Partnered","Single","Widowed"]},{k:"spouse",l:"Spouse",w:1,showIf:[["married","Married"],["married","Partnered"],["dm","With spouse / partner"]]},
  {k:"kids",l:"Children",w:1,opt:["","0","1","2","3","4+"]},
  {k:"kids_names",l:"Children &mdash; names and ages",w:2},
- {k:"dm",drives:true,l:"Who makes financial decisions",w:1,opt:["","Self","With spouse","Someone else helps"]},
+ {k:"dm",drives:true,l:"Who makes financial decisions",w:1,opt:["","Self","With spouse / partner","Someone else helps"]},
  {k:"dm_who",l:"Who else is in on it",w:1,showIf:["dm","Someone else helps"]},
  {k:"spouse_wants",l:"Spouse wants coverage too?",w:2,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
 
@@ -3962,7 +3968,13 @@ function pRender(){
         var on=(P.conds||[]).indexOf(c)>-1;
         return '<label class="'+(on?"on":"")+'"><input type="checkbox" data-cond="'+esc(c).replace(/"/g,"&quot;")+'"'+(on?" checked":"")+'>'+c+'</label>';
       }).join("")+'</div><div id="pfollow"></div>'); return; }
-    if(f.showIf && !(f.showIf[1]==="*" ? !!P[f.showIf[0]] : condHit(P[f.showIf[0]], f.showIf[1]))) return;
+    if(f.showIf){
+    var w=f.showIf, ok;
+    if(Object.prototype.toString.call(w[0])==="[object Array]")
+      ok=w.some(function(pr){ return condHit(P[pr[0]], pr[1]); });
+    else ok = (w[1]==="*") ? !!P[w[0]] : condHit(P[w[0]], w[1]);
+    if(!ok) return;
+  }
     row.push(pField(f)); if(f.w===2) flush();
   });
   flush();
