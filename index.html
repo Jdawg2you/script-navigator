@@ -2341,7 +2341,7 @@ i_pivot_notnow:{s:"13",t:"Not right now",l:[
 ],b:[{k:"End the call",to:"i_start",c:"go"}]},
 
 /* ---------- 14 APPLICATION ---------- *//* ---------- 14 APPLICATION ---------- */
-i_app_intro:{s:"14",t:"What happens now",l:[
+i_app_intro:{s:"14",pf:"app",t:"What happens now",l:[
 {t:"say",x:"Perfect. So here's what happens now &mdash; I'm going to fill out the application with you. It takes about five minutes, and then it goes to the carrier for their decision."},
 {t:"say",x:"It's your basic information, then your beneficiary, then a couple of verification steps. We always go after a plan with no medical exam first &mdash; no blood draw, nobody coming to your house &mdash; so the way the carrier verifies your health instead is through your records, and they do that with your social."},
 {t:"say",x:"Before we get into it, there's a piece I'm required to read you, because what we're talking about now is your medical information."},
@@ -2350,9 +2350,12 @@ i_app_intro:{s:"14",t:"What happens now",l:[
 {t:"train",x:"Read this one slower and flatter than the rest of the call. It's meant to sound procedural &mdash; like something being read into a record. That formality is what settles the client down, because it signals a regulated process rather than a sales pitch. Don't warm it up."}
 ],b:[{k:"They understand",to:"i_app",c:"go"}]},
 
-i_app:{s:"14",t:"Application, page one",l:[
+i_app:{s:"14",pf:"app",t:"Application, page one",l:[
 {t:"say",x:"Alright, we're nearly there &mdash; just pulling up everything for the carrier to get your approval."},
 {t:"say",x:"I've got the spelling of your first name as ___(first name). And your last name, and the spelling of your last name &mdash; I've got ___(last name)."},
+{t:"dobig",x:"Fill in everything you already have from the profile. Ask only for what is still blank."},
+{t:"pf",ks:["address","city","state","zip"]},
+{t:"pf",ks:["phone","email"]},
 {t:"dobig",x:"On the first main page of the application, fill in everything you already have. Ask only for what you don't."},
 {t:"warn",x:"<b>Complete the entire page before you ask for the social.</b><br>If the SSN field sits in the middle of the page, skip past it, finish everything below it, then come back up to it."}
 ],b:[{k:"Ready for the social",to:"i_app_ssn",c:"go"}]},
@@ -2382,27 +2385,30 @@ i_app_auth1:{s:"14",t:"First authorization &mdash; the MIB pull",l:[
 {t:"do",x:"If you're on an iPhone, you can start a screen share mid-call and physically show them where to look. Practice it once before you need it on a live call."}
 ],b:[{k:"Got the code",to:"i_app_ben",c:"go"}]},
 
-i_app_ben:{s:"14",t:"Beneficiaries",l:[
+i_app_ben:{s:"14",pf:"bendetail",t:"Beneficiaries",l:[
 {t:"say",x:"For your beneficiary &mdash; this is the person or people who receive the money when that time comes. It can be changed later if you need to."},
 {t:"ask",x:"Can I get the correct spelling of their first and last name, their birthdate, and a phone number?"},
+{t:"bens"},
 {t:"note",x:"<b>If they don't know the birthdate, it's fine.</b> Only some carriers require it. But always get the phone number for any adult beneficiary &mdash; those are built-in referrals."},
 {t:"ask",x:"And would you like to add a contingent beneficiary as well &mdash; just in case something were to happen to your primary, or if you both passed at the same time?"},
 {t:"say",x:"Make sure you let ___(beneficiary) know they're listed."},
+{t:"pf",ks:["crm"]},
 {t:"dobig",x:"The beneficiary is your first referral. Get the phone number and write it down."},
 {t:"note",x:"<b>The introduction text to the beneficiary happens after approval, in the wrap.</b> Don't promise it here &mdash; just collect the number."}
 ],b:[{k:"Next",to:"i_app_draft",c:"go"}]},
 
-i_app_draft:{s:"14",t:"Draft date",l:[
+i_app_draft:{s:"14",pf:"wrap",t:"Draft date",l:[
 {t:"say",x:"Once you're approved they'll issue the coverage right away so you're protected immediately. Your first premium drafts in about one to two business days &mdash; that's what gets you covered."},
 {t:"say",x:"After that, your second contribution can either come one month later, or you can pick whatever day of the month works best for you going forward."},
-{t:"ask",x:"What would be best for you?"},
+{t:"ask",x:"What would be best for you? ___(draft date)"},
 {t:"do",x:"Line the recurring draft up just after a payday if you can. A date a few days before payday is the one that bounces."},
 {t:"do",x:"Be thoughtful about postdating the first draft. If the contribution is a stretch today, it's worth a gentle check on what changes by then. More often than not the number needs to come down a little rather than the date needing to move."}
 ],b:[{k:"Next",to:"i_app_bank",c:"go"}]},
 
-i_app_bank:{s:"14",t:"Banking",l:[
+i_app_bank:{s:"14",pf:"build",t:"Banking",l:[
 {t:"ask",x:"So checking or savings? ___(or confirm what they said earlier)"},
 {t:"ask",x:"And who do you bank with?"},
+{t:"pf",ks:["bank","bank_kind"]},
 {t:"do",x:"While they answer: search the bank name, their state, and &ldquo;routing.&rdquo; Have the number on your screen before the next question. Use the state they live in &mdash; you already have it."}
 ],b:[{k:"Next",to:"i_app_routing",c:"go"}]},
 
@@ -2485,10 +2491,10 @@ i_wrap:{s:"16",t:"Good news",l:[
 {t:"say",x:"Good news is you're approved. Even better news is I'm your agent for life. Congratulations &mdash; ___(beneficiary) is protected."}
 ],b:[{k:"Next",to:"i_wrap_recap",c:"go"}]},
 
-i_wrap_recap:{s:"16",t:"Policy recap",l:[
+i_wrap_recap:{s:"16",pf:"plan",t:"Policy recap",l:[
 {t:"say",x:"So I've got some information I want you to write down &mdash; but I'll be texting all of this to you as well."},
 {t:"say",x:"Your carrier is ___(carrier)."},
-{t:"say",x:"Policy number ___. Coverage amount ___. Your monthly contribution is ___."},
+{t:"say",x:"Policy number ___(policy number). Coverage amount ___(coverage). Your monthly contribution is ___(monthly contribution)."},
 {t:"say",x:"You'll get your policy packet in the mail 7 to 10 business days after your first payment goes through. When it shows up, give me a call so I can mark your file complete. And if I don't hear from you, I'll follow up in a few weeks to make sure it got there."},
 {t:"say",x:"One more thing &mdash; if your draft date passes and the money's still in your account, leave it there. Payments can take three to five business days to clear."},
 {t:"warn",x:"<b>Send the confirmation text now, while they're on the phone. Include all six:</b><br>company &middot; policy number &middot; coverage &middot; monthly draft &middot; effective date &middot; your contact info"},
@@ -2544,8 +2550,9 @@ i_wrap_legacy:{s:"16",t:"Legacy Safeguard",l:[
 {t:"note",x:"Full details and the enrollment link for Legacy Safeguard are linked at the bottom of this page."}
 ],b:[{k:"Next",to:"i_wrap_referral",c:"go"}]},
 
-i_wrap_referral:{s:"16",t:"Referral ask",l:[
+i_wrap_referral:{s:"16",pf:"refs",t:"Referral ask",l:[
 {t:"say",x:"Last thing &mdash; you're actually able to refer up to five people, and they'll get the same benefits that were available to you. So who do you know and care about that would benefit from getting some information on this?"},
+{t:"refs"},
 {t:"do",x:"Then stop talking. Let the silence do the work."},
 {t:"say",x:"And I do have a referral program for all my clients. Now, legally I can't send you big wads of cash for helping people get life insurance. But what I can tell you is I'm always very thankful, and I love to show that to my clients &mdash; especially the ones who help us build our family of clients."},
 {t:"warn",x:"<b>Capture all four: name, relationship, what state they live in, and a phone number.</b><br>Then tell your client you'll be reaching out to them."},
@@ -3604,6 +3611,7 @@ function render(){
     if(L.t==="wizhow") return wizHowHTML();
     if(L.t==="csize") return !PROFILE_ON ? "" : contribSizeHTML();
     if(L.t==="bens") return !PROFILE_ON ? "" : '<div class="line" id="benscard">'+pBensHTML()+'</div>';
+    if(L.t==="refs") return !PROFILE_ON ? "" : '<div class="line" id="refscard">'+pRefsHTML()+'</div>';
     if(L.t==="meds") return !PROFILE_ON ? "" : '<div class="line">'+pMedsHTML(true)+'<div id="medflagwrap">'+medFlagHTML()+'</div></div>';
     if(L.t==="pf"){
       if(!PROFILE_ON) return "";
@@ -4153,6 +4161,7 @@ document.addEventListener("change",function(e){
   if(rk) benSet(rk,e.target.value);
 });
 
+function refsCard(){ var el=document.getElementById("refscard"); if(el) el.innerHTML=pRefsHTML(); }
 function pRefsHTML(){
   var list=P.refs||[];
   if(!list.length) list=[{}];
@@ -4169,10 +4178,10 @@ function pRefsHTML(){
 
 document.addEventListener("click",function(e){
   var add=e.target.closest && e.target.closest("#refadd");
-  if(add){ P.refs=(P.refs||[{}]).concat([{}]); pStore(); pRender(); return; }
+  if(add){ P.refs=(P.refs||[{}]).concat([{}]); pStore(); pRender(); refsCard(); return; }
   var del=e.target.closest && e.target.closest("[data-refdel]");
   if(del){ var i=+del.getAttribute("data-refdel"); var a=(P.refs||[]).slice(); a.splice(i,1);
-           P.refs=a.length?a:[{}]; pStore(); pRender(); pFlash(); return; }
+           P.refs=a.length?a:[{}]; pStore(); pRender(); refsCard(); pFlash(); return; }
 });
 
 document.addEventListener("input",function(e){
