@@ -400,6 +400,7 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .pfi.drv .chip{border-color:var(--goldline);background:var(--goldsoft)}
 .pfi.drv .chip.on{border-color:var(--golddk)}
 .pfi.drv i{color:var(--golddk)}
+.pfi .autonote{font-style:normal;font-size:11px;color:var(--golddk);margin:0 6px}
 .pfi.drv i:after{content:"CARRIER RULE";background:var(--gold);color:var(--navy);font-weight:800;
   margin-left:6px;font-size:8.5px;letter-spacing:.09em;padding:2px 5px;border-radius:4px;
   vertical-align:1px}
@@ -3357,7 +3358,7 @@ function cfollowHTML(names){
     out.push('<div class="cfollow"><div class="cfh">They said yes to <b>'+esc(c)+'</b> &mdash; ask:</div>'+
       fu.map(function(f){
         var v=pVal(f.k), dv=f.drv?" drv":"";
-        if(f.opt) return '<span class="pfi'+dv+'"><i>'+pLabel(f)+'</i>'+f.opt.filter(function(x){return x!==""}).map(function(oo){
+        if(f.opt) return '<span class="pfi'+dv+'"><i>'+pLabel(f)+'</i>'+(f.k==="bp_meds"&&P.bp_meds_auto&&!P.bp_meds_set?'<em class="autonote">counted from the medication list</em>':'')+f.opt.filter(function(x){return x!==""}).map(function(oo){
           return '<button type="button" class="chip'+(v===oo?" on":"")+'" data-pfset="'+f.k+'" data-pfval="'+oo+'">'+oo+'</button>';}).join("")+'</span>';
         return '<span class="pfi'+dv+'"><i>'+pLabel(f)+'</i><input data-pk="'+f.k+'" data-inline="1" value="'+
                esc(v).replace(/"/g,"&quot;")+'"></span>';
@@ -3418,6 +3419,8 @@ var MED_FOR={
  "Atorvastatin":["High cholesterol"],"Simvastatin":["High cholesterol"],"Rosuvastatin":["High cholesterol"],
  "Lisinopril":["High blood pressure"],"Losartan":["High blood pressure"],"Amlodipine":["High blood pressure"],
  "Metoprolol":["High blood pressure","Arrhythmia / AFib"],"Carvedilol":["High blood pressure"],
+ "Hydrochlorothiazide":["High blood pressure"],"Valsartan":["High blood pressure"],"Atenolol":["High blood pressure"],"Bisoprolol":["High blood pressure"],
+ "Clonidine":["High blood pressure"],"Diltiazem":["High blood pressure","Arrhythmia / AFib"],"Spironolactone":["High blood pressure","Heart disease / disorder"],"Furosemide":["Heart disease / disorder","High blood pressure"],
  "Amiodarone":["Arrhythmia / AFib"],"Sotalol":["Arrhythmia / AFib"],"Flecainide":["Arrhythmia / AFib"],
  "Entresto":["Heart disease / disorder"],"Digoxin":["Arrhythmia / AFib"],"Ranexa":["Angina (chest pain)"],
  "Nitroglycerin":["Angina (chest pain)"],"Isosorbide":["Angina (chest pain)"],
@@ -3549,10 +3552,12 @@ document.addEventListener("click",function(e){
     if(pVal(k)===v) v="";                     /* click again to clear */
     P[k]=v;
   }
+  var lifted=pLift(k,v);
+  if(k==="bp_meds"){ P.bp_meds_set=v?"1":""; P.bp_meds_auto=""; if(!v) bpSync(); }
   pStore(); pFlash();
   pSyncChips(k);
   if(document.getElementById("profbody")) pRender();
-  if(f && f.drives && typeof render==="function") render();   /* a chip that opens follow-ups must redraw the card */
+  if(((f && f.drives) || lifted) && typeof render==="function") render();   /* a chip that opens follow-ups must redraw the card */
 });
 
 function pSyncChips(k){
@@ -3860,18 +3865,18 @@ var PF_FOLLOW={
  "Diabetes":[{k:"dx_dia",l:"Diagnosed when",drv:true},{k:"a1c",l:"Last A1C",drv:true},
              {k:"dia_tx",l:"Pills or insulin",drv:true,opt:["","Pills","Insulin","Both"]},
              {k:"dia_neuro",l:"Neuropathy?",drv:true,opt:["","No","Yes"]}],
- "Heart attack":[{k:"dx_ha",l:"When",drv:true},{k:"ha_since",l:"Anything since"}],
- "Stent":[{k:"dx_stent",l:"When",drv:true},{k:"stent_n",l:"How many"}],
- "Heart surgery":[{k:"dx_hs",l:"When",drv:true},{k:"hs_what",l:"What kind"}],
- "Stroke / TIA":[{k:"dx_str",l:"When",drv:true},{k:"str_deficit",l:"Any lasting effects"}],
+ "Heart attack":[{k:"dx_ha",l:"When",drv:true},{k:"ha_since",l:"Anything since",drv:true,opt:["","Nothing since","Another heart attack","Chest pain getting worse","Stent or bypass since"]}],
+ "Stent":[{k:"dx_stent",l:"When",drv:true},{k:"stent_n",l:"How many",opt:["","1","2","3 or more"]}],
+ "Heart surgery":[{k:"dx_hs",l:"When",drv:true},{k:"hs_what",l:"What kind",drv:true,opt:["","Bypass","Valve","Other"]}],
+ "Stroke / TIA":[{k:"dx_str",l:"When",drv:true},{k:"str_deficit",l:"Any lasting effects",drv:true,opt:["","No","Yes"]}],
  "Cancer":[{k:"dx_ca",l:"When",drv:true},{k:"ca_type",l:"Type (optional)",drv:true},
            {k:"ca_stage",l:"Stage (optional)",drv:true,opt:["","0 / in situ","I","II","III","IV","Not sure"]},
-           {k:"ca_status",l:"Status",opt:["","In remission","In treatment","Active"]},
-           {k:"ca_last",l:"Last treatment"}],
- "Defibrillator / pacemaker":[{k:"pace_what",l:"Which",opt:["","Pacemaker","Defibrillator","Both"]},{k:"dx_pace",l:"When",drv:true}],
- "COPD":[{k:"copd_ox",l:"On oxygen?",opt:["","No","Yes"]}],
- "Kidney disease / failure":[{k:"kid_stage",l:"Stage / dialysis?"}],
- "Liver disease":[{k:"liv_what",l:"What kind"}]
+           {k:"ca_status",l:"Status",drv:true,opt:["","In remission","In treatment","Active"]},
+           {k:"ca_last",l:"Last treatment (month and year)",drv:true}],
+ "Defibrillator / pacemaker":[{k:"pace_what",l:"Which",drv:true,opt:["","Pacemaker","Defibrillator","Both"]},{k:"dx_pace",l:"When",drv:true}],
+ "COPD":[{k:"copd_ox",l:"On oxygen?",drv:true,opt:["","No","Yes"]}],
+ "Kidney disease / failure":[{k:"kid_stage",l:"Stage / dialysis?",drv:true,opt:["","Early / mild","Advanced / failure","On dialysis"]}],
+ "Liver disease":[{k:"liv_what",l:"What kind",drv:true,opt:["","Fatty liver","Hepatitis","Cirrhosis","Other"]}]
 };
 
 var BLANKMAP={
@@ -4070,7 +4075,7 @@ document.addEventListener("click",function(e){
          pFlash(); return; }
   var n=e.target.closest && e.target.closest("[data-cond-skip]");
   if(n){ var k=n.getAttribute("data-cond-skip"); var sk=(P.med_skip||[]).slice();
-         if(sk.indexOf(k)<0) sk.push(k); P.med_skip=sk; pStore();
+         if(sk.indexOf(k)<0) sk.push(k); P.med_skip=sk; bpSync(); pStore();
          var fw2=document.getElementById("medflagwrap"); if(fw2) fw2.innerHTML=medFlagHTML(); return; }
 });
 
@@ -4101,7 +4106,7 @@ function medAdd(name,from,typed){
   }
   var a=(P.meds_list||[]).slice();
   if(a.indexOf(name)<0) a.push(name);
-  P.meds_list=a; P.meds=a.join(", "); pStore(); pMedsRefresh(); pFlash();
+  P.meds_list=a; P.meds=a.join(", "); bpSync(); pStore(); pMedsRefresh(); pFlash();
   [].forEach.call(document.querySelectorAll(".medinput"),function(i){ i.value=""; });
   [].forEach.call(document.querySelectorAll(".medsug"),function(g){ g.innerHTML=""; });
   if(from) from.focus();
@@ -4126,7 +4131,7 @@ document.addEventListener("click",function(e){
          medAdd(a.getAttribute("data-medadd"), inp, inp&&inp.value); return; }
   var d=e.target.closest && e.target.closest("[data-meddel]");
   if(d){ var i=+d.getAttribute("data-meddel"); var arr=(P.meds_list||[]).slice(); arr.splice(i,1);
-         P.meds_list=arr; P.meds=arr.join(", "); pStore(); pMedsRefresh(); pFlash(); }
+         P.meds_list=arr; P.meds=arr.join(", "); bpSync(); pStore(); pMedsRefresh(); pFlash(); }
 });
 
 var BEN_COLS=[["role","Primary / contingent"],["n","Name"],["rel","Relationship"],
@@ -4393,13 +4398,33 @@ var PF_DRIVERS=["inplace","inplace_kind","married","has_assets","has_mortgage","
    follow-up has to tick it as a condition too - otherwise the agent answers the question
    and the carriers never hear it. Only ever added, never removed: taking back something
    the agent ticked deliberately would be worse than leaving it. */
-var COND_FROM_FOLLOW={dia_neuro:"Neuropathy"};
+/* Answers that imply another condition. The Product Wizard holds the same table (LIFT), and its
+   tools/check.sh fails if the two differ. */
+var COND_FROM_FOLLOW={dia_neuro:{Yes:"Neuropathy"},ha_since:{"Stent or bypass since":"Angioplasty / bypass"},copd_ox:{Yes:"Oxygen / ventilator"},
+                      kid_stage:{"On dialysis":"Dialysis"},liv_what:{Cirrhosis:"Cirrhosis"}};
+function pLift(k,v){
+  var c=(COND_FROM_FOLLOW[k]||{})[v]; if(!c) return false;
+  var cs=(P.conds||[]).slice(); if(cs.indexOf(c)>-1) return false;
+  cs.push(c); P.conds=cs; return true;
+}
+/* Blood pressure is rated on how many medications control it, and the medications are usually
+   already on the profile. The count follows that list until the agent picks a count; clearing the
+   pick hands it back. A drug answered No for blood pressure is not counted. Same rule as the wizard. */
+function bpFromMeds(){
+  var n=0;
+  (P.meds_list||[]).forEach(function(m){ var b=m.replace(/\s*\(.*\)$/,"");
+    if((MED_FOR[b]||[]).indexOf("High blood pressure")>-1 && (P.med_skip||[]).indexOf(m+"|High blood pressure")<0) n++; });
+  return n;
+}
+function bpSync(){
+  if(P.bp_meds_set) return;
+  var n=bpFromMeds();
+  if(n){ var v=n>=4?"4 or more":String(n); P.bp_meds_auto="1"; if(P.bp_meds!==v){ P.bp_meds=v; if(typeof pSyncChips==="function") pSyncChips("bp_meds"); } }
+  else if(P.bp_meds_auto){ P.bp_meds=""; P.bp_meds_auto=""; if(typeof pSyncChips==="function") pSyncChips("bp_meds"); }
+}
 function pSet(k,v,fromCard){
-  var lift=COND_FROM_FOLLOW[k];
-  if(lift && String(v).toLowerCase()==="yes"){
-    var cs=(P.conds||[]).slice();
-    if(cs.indexOf(lift)<0){ cs.push(lift); P.conds=cs; }
-  } if(k.indexOf("a_")===0){A[k]=v}else{P[k]=v} pStore(); pFlash();
+  pLift(k,v);
+  if(k.indexOf("a_")===0){A[k]=v}else{P[k]=v} pStore(); pFlash();
   if(PF_DRIVERS.indexOf(k)>-1 && document.getElementById("profbody")) pRender();
   if(!fromCard && typeof render==="function"&&$("script")) render(); }
 function pFlash(){ var h=document.getElementById("psaved"); if(!h)return; h.textContent="saved"; clearTimeout(PSAVE); PSAVE=setTimeout(function(){h.textContent=""},1100); }
@@ -4877,6 +4902,7 @@ function whenYears(v){
 }
 
 function wizClient(){
+  bpSync();
   var c={}, a=parseInt(P.age,10);
   if(a) c.age=a;
   /* The wizard's box is <input type="date">, which only accepts ISO. Handing it
@@ -4891,7 +4917,7 @@ function wizClient(){
   c.lb="lb";
   c.conds=(P.conds||[]).map(function(n){
     var o={name:n};
-    if(n==="High blood pressure"){ var bm=String(P.bp_meds||"").replace(/[^0-9]/g,""); o.m=bm||null; }
+    if(n==="High blood pressure"){ var bm=String(P.bp_meds||"").replace(/[^0-9]/g,""); o.m=bm||null; if(P.bp_meds_set) o.mSet=true; }
     else {
       var w=wizWhen(n);
       if(w){ o.yr=w.yr; if(w.mo) o.mo=w.mo; }
@@ -4907,9 +4933,22 @@ function wizClient(){
         if(a1>=3 && a1<=20) o.a1c=a1;
         if(P.dia_tx) o.tx=P.dia_tx;
       }
+      /* Every follow-up answer rides along under its own key; the wizard asks the same questions
+         (its DETAILS table) and check.sh there fails if the two lists drift. */
+      var d={};
+      (PF_FOLLOW[n==="Active cancer"?"Cancer":n]||[]).forEach(function(f){
+        if(/^dx_/.test(f.k)) return;
+        var v=P[f.k]; if(v==null || String(v).trim()==="") return;
+        if(f.k==="a1c"){ var a2=parseFloat(String(v).replace(/[^0-9.]/g,"")); if(a2>=3 && a2<=20) d.a1c=a2; }
+        else if(f.k==="ca_last"){ var wp=whenParts(v); if(wp) d.ca_last=wp.yr; }
+        else d[f.k]=String(v).trim();
+      });
+      if(Object.keys(d).length) o.d=d;
     }
     return o;
   });
+  c.meds=(P.meds_list||[]).map(function(m){ return m.replace(/\s*\(.*\)$/,""); });
+  if((P.med_skip||[]).length) c.medSkip=P.med_skip.map(function(x){ return x.replace(/\s*\([^)]*\)(?=\|)/,""); });
   return c;
 }
 function wizHas(){
