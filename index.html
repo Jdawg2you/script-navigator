@@ -3339,10 +3339,14 @@ function condKey(c){ return "dx_"+String(c).toLowerCase().replace(/[^a-z0-9]+/g,
 /* The wizard resolves clauses like "within 2 yrs - Select; over 2 yrs - Premier" against years
    since diagnosis, and nearly every row it carries has language like that. Only seven of our
    conditions had a date to give it, so the rest left those clauses unresolved. Now they all do. */
+/* Blood pressure is rated on how many medications it takes to control, not on when it
+   started - one or two is controlled, three is questionable, four is a knockout. Asking
+   for a date as well would add a question to the most common, least important condition. */
+var NO_DATE={"High blood pressure":1};
 function condFollow(c){
   var fu=(PF_FOLLOW[c]||[]).slice();
   var hasWhen=fu.some(function(f){ return /^(when|diagnosed)/i.test(f.l||""); });
-  if(!hasWhen) fu.unshift({k:condKey(c), l:"When? (month and year)", drv:true});
+  if(!hasWhen && !NO_DATE[c]) fu.unshift({k:condKey(c), l:"When? (month and year)", drv:true});
   return fu;
 }
 function cfollowHTML(names){
