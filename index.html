@@ -3857,14 +3857,15 @@ var PF_CONDS=[
 /* follow-ups the script already works through for the big ones */
 var PF_FOLLOW={
  "High blood pressure":[{k:"bp_meds",l:"How many BP medications",drv:true,opt:["","1","2","3","4 or more"]}],
- "Diabetes":[{k:"dx_dia",l:"Diagnosed when",drv:true},{k:"a1c",l:"Last A1C"},
-             {k:"dia_tx",l:"Pills or insulin",opt:["","Pills","Insulin","Both"]},
+ "Diabetes":[{k:"dx_dia",l:"Diagnosed when",drv:true},{k:"a1c",l:"Last A1C",drv:true},
+             {k:"dia_tx",l:"Pills or insulin",drv:true,opt:["","Pills","Insulin","Both"]},
              {k:"dia_neuro",l:"Neuropathy?",drv:true,opt:["","No","Yes"]}],
  "Heart attack":[{k:"dx_ha",l:"When",drv:true},{k:"ha_since",l:"Anything since"}],
  "Stent":[{k:"dx_stent",l:"When",drv:true},{k:"stent_n",l:"How many"}],
  "Heart surgery":[{k:"dx_hs",l:"When",drv:true},{k:"hs_what",l:"What kind"}],
  "Stroke / TIA":[{k:"dx_str",l:"When",drv:true},{k:"str_deficit",l:"Any lasting effects"}],
- "Cancer":[{k:"dx_ca",l:"When",drv:true},{k:"ca_type",l:"Type"},
+ "Cancer":[{k:"dx_ca",l:"When",drv:true},{k:"ca_type",l:"Type (optional)",drv:true},
+           {k:"ca_stage",l:"Stage (optional)",drv:true,opt:["","0 / in situ","I","II","III","IV","Not sure"]},
            {k:"ca_status",l:"Status",opt:["","In remission","In treatment","Active"]},
            {k:"ca_last",l:"Last treatment"}],
  "Defibrillator / pacemaker":[{k:"pace_what",l:"Which",opt:["","Pacemaker","Defibrillator","Both"]},{k:"dx_pace",l:"When",drv:true}],
@@ -4895,6 +4896,17 @@ function wizClient(){
       var w=wizWhen(n);
       if(w){ o.yr=w.yr; if(w.mo) o.mo=w.mo; }
       var y=wizYears(n); if(y!=null) o.y=y;   /* kept so an older wizard still works */
+      /* Corebridge SimpliNow Legacy issues Level or Graded on these, so the wizard needs them. Both
+         are optional: the wizard falls back to the plain grid cell when they are blank. */
+      if(n==="Cancer"||n==="Active cancer"){
+        if(String(P.ca_type||"").trim()) o.type=String(P.ca_type).trim();
+        if(P.ca_stage) o.stage=P.ca_stage;
+      }
+      if(n==="Diabetes"){
+        var a1=parseFloat(String(P.a1c||"").replace(/[^0-9.]/g,""));
+        if(a1>=3 && a1<=20) o.a1c=a1;
+        if(P.dia_tx) o.tx=P.dia_tx;
+      }
     }
     return o;
   });
