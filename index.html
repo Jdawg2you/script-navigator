@@ -3689,7 +3689,10 @@ function restart(){
   disarm();
   P={}; pStore();                       /* clear the client, keep the agent's own details */
   if(document.getElementById("profbody")) pRender();
-  cur="start"; hist=[]; redo=[];
+  /* Reset to THIS script's first card. Hardcoding "start" only worked on the veteran script:
+     on IUL and Mortgage it set cur to a card that does not exist, render() threw, the card never
+     reset, and the bad id sat in hist so Back threw when you walked onto it. */
+  cur=(LIB[curScript]&&LIB[curScript].first)||"start"; hist=[]; redo=[];
   clearInterval(tick); tick=null; t0=null;
   $("timer").textContent="00:00";
   render();

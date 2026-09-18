@@ -1,0 +1,4 @@
+#!/bin/bash
+# Blocks a commit whose index.html does not parse or has a dead branch.
+# Enabled with: git config core.hooksPath .githooks
+exec tools/check.sh
