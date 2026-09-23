@@ -327,9 +327,11 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 
 /* the one-time nudge toward the profile */
 .profcta{margin-left:auto;display:inline-flex;align-items:center;gap:0}
-.profnudge{display:flex;flex-direction:column;align-items:flex-end;margin-right:-6px;align-self:flex-start;margin-top:-26px;pointer-events:none}
-.pntxt{font-family:var(--sans);font-size:11.5px;font-weight:700;letter-spacing:.01em;color:var(--golddk);white-space:nowrap;padding-right:14px}
-.profnudge svg{width:56px;height:36px;color:var(--gold);flex:0 0 auto;margin:-2px 4px -22px 0}
+/* The label sits above the title row; the arrow is hung off the END of the word 'profile'
+   and drops onto the button, so the two read as one gesture rather than two stacked marks. */
+.profnudge{position:relative;align-self:flex-start;margin:-26px 10px 0 0;pointer-events:none}
+.pntxt{display:block;font-family:var(--sans);font-size:11.5px;font-weight:700;letter-spacing:.01em;color:var(--golddk);white-space:nowrap}
+.profnudge svg{position:absolute;right:-34px;top:9px;width:50px;height:34px;color:var(--gold)}
 .cardprof.pulse{box-shadow:0 0 0 0 rgba(201,162,78,.55);animation:profpulse 2.4s ease-out 3}
 @keyframes profpulse{0%{box-shadow:0 0 0 0 rgba(201,162,78,.55)}70%{box-shadow:0 0 0 9px rgba(201,162,78,0)}100%{box-shadow:0 0 0 0 rgba(201,162,78,0)}}
 @media(max-width:900px){.pntxt{font-size:10.5px}.profnudge svg{width:48px}}
@@ -3632,9 +3634,9 @@ function render(){
      agents most likely to be looking for it were the ones who never saw it. */
   var nudge = (n.s==="1")
     ? '<span class="profnudge"><span class="pntxt">Click here for the interactive profile</span>'+
-      '<svg viewBox="0 0 58 38" aria-hidden="true">'+
-      '<path d="M5 6 C 30 4, 45 13, 48 28" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/>'+
-      '<path d="M48 30.5 L 41.5 24.5 M48 30.5 L 51.5 22" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/>'+
+      '<svg viewBox="0 0 50 34" aria-hidden="true">'+
+      '<path d="M3 5 C 22 4, 33 10, 36 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/>'+
+      '<path d="M36 26.5 L 30 20.5 M36 26.5 L 40 18.5" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/>'+
       '</svg></span>'
     : "";
   $("cardtitle").innerHTML=n.t+leadSw+'<span class="profcta">'+nudge+
