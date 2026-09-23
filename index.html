@@ -317,6 +317,23 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .pkhint{margin-left:auto;font-size:11.5px;color:var(--muted);white-space:nowrap}
 .pkhint b{color:var(--golddk)}
 
+/* lead switch in the card header */
+.leadsw{display:inline-flex;gap:2px;margin:0 0 0 14px;padding:2px;border-radius:999px;
+  background:var(--fill);border:1px solid var(--rule);vertical-align:middle}
+.leadopt{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.02em;
+  color:var(--muted);border-radius:999px;padding:4px 13px;line-height:1.2}
+.leadopt:hover{color:var(--ink)}
+.leadopt.on{background:var(--navy);color:var(--gold)}
+
+/* the one-time nudge toward the profile */
+.profnudge{display:inline-flex;align-items:center;gap:4px;margin-left:auto;
+  font-family:var(--sans);font-size:11.5px;font-weight:700;letter-spacing:.01em;
+  color:var(--golddk);white-space:nowrap}
+.profnudge svg{width:40px;height:20px;color:var(--gold);flex:0 0 auto}
+.cardprof.pulse{box-shadow:0 0 0 0 rgba(201,162,78,.55);animation:profpulse 2.4s ease-out 3}
+@keyframes profpulse{0%{box-shadow:0 0 0 0 rgba(201,162,78,.55)}70%{box-shadow:0 0 0 9px rgba(201,162,78,0)}100%{box-shadow:0 0 0 0 rgba(201,162,78,0)}}
+@media(max-width:700px){.profnudge{display:none}}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
 /* GOAT call-out modal */
@@ -947,7 +964,7 @@ fresh:{s:"1",pf:"who",t:"Fresh opener",l:[
 {t:"do",x:"No apology, no permission-asking. They did it days ago. Act like it."},
 {t:"say",x:"Hey ___(their first name)&hellip;"},
 {t:"do",x:"Pause. Get confirmation it's them before you keep going."},
-{t:"pf",always:true,ks:["lead_type"]},{t:"say",when:["lead_type","Vet"],dflt:true,x:"This is ___(your name) &mdash; the veteran benefits consultant assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance programs for veterans, so I'm getting right back to you on that."},{t:"say",when:["lead_type","FEX"],x:"This is ___(your name) &mdash; the benefits advisor assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance program, so I'm getting right back to you on that."},
+{t:"say",when:["lead_type","Vet"],dflt:true,x:"This is ___(your name) &mdash; the veteran benefits consultant assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance programs for veterans, so I'm getting right back to you on that."},{t:"say",when:["lead_type","FEX"],x:"This is ___(your name) &mdash; the benefits advisor assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance program, so I'm getting right back to you on that."},
 {t:"do",x:"Say the real timeframe. Five days, a week, ten days &mdash; whatever the lead actually says."},
 {t:"ask",when:["lead_type","Vet"],dflt:true,x:"I've got you down as ___(branch of service) &mdash; is that right?"},{t:"pf",when:["lead_type","Vet"],ks:["branch"]},{t:"ask",when:["lead_type","FEX"],x:"I've got your date of birth as ___ &mdash; is that right?"},{t:"pf",when:["lead_type","FEX"],ks:["dob"]},{t:"say",when:["lead_type","FEX"],x:"&hellip; <b>or</b> &mdash; I've got your beneficiary as ___ &mdash; is that right?"},{t:"pf",when:["lead_type","FEX"],ks:["ben"]},{t:"do",when:["lead_type","FEX"],x:"Whichever one the lead actually gave you. On an FEX lead it is sometimes the date of birth and sometimes the beneficiary &mdash; you only need one of them to confirm."},,
 {t:"do",x:"Let them talk. If they offer years or where they served, take it. Don't rush past it."},
@@ -3600,7 +3617,21 @@ function pJump(id){
 function render(){
   var n=N[cur];
   $("eyebrow").textContent=S[n.s];
-  $("cardtitle").innerHTML=n.t+'<button type="button" class="cardprof" id="cardprofbtn">Client profile</button>';
+  /* The lead switch belongs in the header, beside the title - it steers the wording rather than
+     recording an answer. It shows on any card that actually reads it, so it is there on the opener
+     and again at the VA question, and nowhere it would be noise. */
+  var leadSw = (n.l||[]).some(function(L){ return L.when && L.when[0]==="lead_type"; })
+    ? '<span class="leadsw" role="radiogroup" aria-label="Lead type">'+
+      ["Vet","FEX"].map(function(v){
+        return '<button type="button" class="leadopt'+((pVal("lead_type")||"Vet")===v?" on":"")+
+               '" data-pfset="lead_type" data-pfval="'+v+'">'+v+'</button>'; }).join("")+'</span>'
+    : "";
+  /* The nudge to open the profile earns its place while the call is still opening, then stops. */
+  var nudge = (n.s==="1" && !PROFILE_ON)
+    ? '<span class="profnudge">Click here for the interactive profile'+
+      '<svg viewBox="0 0 48 24" aria-hidden="true"><path d="M2 6 C 18 2, 32 6, 42 13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M44 14 L 35 12.5 L 39.5 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'
+    : "";
+  $("cardtitle").innerHTML=n.t+leadSw+nudge+'<button type="button" class="cardprof'+(nudge?" pulse":"")+'" id="cardprofbtn">Client profile</button>';
   var cpb=document.getElementById("cardprofbtn"); if(cpb) cpb.onclick=pOpen;
   $("jump").value=n.s;
   /* Follow the script only when the CARD changes. render() also runs on every keystroke in
