@@ -304,10 +304,16 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   main{padding:12px 10px}
   .stages{margin-left:10px;margin-right:10px}
 }
-.mmath .mmrow{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;padding:4px 0}
-.mmath .mmrow+.mmrow{border-top:1px solid var(--goldline)}
-.mmath .mmrow>b{flex:0 0 100%;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--golddk)}
-.mmath .mmrow.mmplus>b{color:var(--green)}
+.mmath .mmeq{display:flex;align-items:baseline;gap:8px;padding:0 0 7px;margin:0 0 7px;border-bottom:1px solid var(--goldline)}
+.mmath .mmeq i{font-style:normal;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--golddk)}
+.mmath .mmeq b{font-size:15px;color:var(--ink)}
+.mmath .mmgrid{display:grid;grid-template-columns:auto repeat(4,1fr);gap:3px 12px;align-items:baseline}
+.mmath .mmh{font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);text-align:right}
+.mmath .mml{font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--golddk);white-space:nowrap;padding-right:6px}
+.mmath .mmv{font-size:14px;font-weight:600;color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
+.mmath .mmplus{color:var(--green)}
+.mmath .mmv.mmplus{color:var(--green)}
+@media(max-width:620px){.mmath .mmgrid{grid-template-columns:auto repeat(2,1fr)}}
 .pkhint{margin-left:auto;font-size:11.5px;color:var(--muted);white-space:nowrap}
 .pkhint b{color:var(--golddk)}
 
@@ -4014,20 +4020,23 @@ function mMathHTML(){
   var pay=num(pVal("m_payment")), val=num(pVal("m_value")), bal=num(pVal("m_balance"));
   if(!pay && !(val&&bal)) return "";
   /* Their own figure for the arrangements if they gave one, otherwise the averages the script
-     quotes: 15,000 burial, 5,000 cremation. */
+     quotes: 15,000 burial, 5,000 cremation. Unsure adds nothing - no second row. */
   var arr=num(pVal("arrangement_cost")), kind=String(pVal("burial")||"");
   var isCrem=/cremat/i.test(kind);
   if(!arr) arr = isCrem ? 5000 : (/burial/i.test(kind) ? 15000 : 0);
   var MO=[3,6,12,24], out="";
 
-  if(val&&bal) out += '<div class="mmrow"><b>Equity</b><span>'+money(val-bal)+'</span></div>';
+  if(val&&bal) out += '<div class="mmeq"><i>Equity</i><b>'+money(val-bal)+'</b></div>';
 
   if(pay){
-    /* The mortgage on its own first, so the two numbers can be read against each other. */
-    out += '<div class="mmrow"><b>Mortgage only</b>'+MO.map(function(mo){
-      return '<span><i>'+mo+' months</i>'+money(pay*mo)+'</span>'; }).join("")+'</div>';
-    if(arr) out += '<div class="mmrow mmplus"><b>Each includes '+money(arr)+' '+(isCrem?"cremation":"burial")+'</b>'+
-      MO.map(function(mo){ return '<span><i>'+mo+' months</i>'+money(pay*mo+arr)+'</span>'; }).join("")+'</div>';
+    /* A grid so a window sits directly above the same window with the arrangements added, and
+       the two numbers can be read off against each other in one glance. */
+    out += '<div class="mmgrid">';
+    out += '<span class="mmh"></span>'+MO.map(function(mo){ return '<span class="mmh">'+mo+' months</span>'; }).join("");
+    out += '<span class="mml">Mortgage only</span>'+MO.map(function(mo){ return '<span class="mmv">'+money(pay*mo)+'</span>'; }).join("");
+    if(arr) out += '<span class="mml mmplus">plus '+money(arr)+' '+(isCrem?"cremation":"burial")+'</span>'+
+      MO.map(function(mo){ return '<span class="mmv mmplus">'+money(pay*mo+arr)+'</span>'; }).join("");
+    out += '</div>';
   }
   return '<div class="line"><div class="mmath">'+out+
     '<em>What it would take to keep them in the house while they work out what to do.</em></div></div>';
