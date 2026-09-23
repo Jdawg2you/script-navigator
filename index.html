@@ -304,6 +304,13 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   main{padding:12px 10px}
   .stages{margin-left:10px;margin-right:10px}
 }
+.mmath .mmrow{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;padding:4px 0}
+.mmath .mmrow+.mmrow{border-top:1px solid var(--goldline)}
+.mmath .mmrow>b{flex:0 0 100%;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--golddk)}
+.mmath .mmrow.mmplus>b{color:var(--green)}
+.pkhint{margin-left:auto;font-size:11.5px;color:var(--muted);white-space:nowrap}
+.pkhint b{color:var(--golddk)}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
 /* GOAT call-out modal */
@@ -850,8 +857,8 @@ var GOAT_URL    = "https://goatleads.com/registration/new?affiliate_id=66c4aa379
 var OPTIMUM_URL = "https://www.ffloptimum.com/";
 
 var SCRIPTS=[
- {k:"veteran", ready:true,  title:"Veterans Life Insurance",
-  desc:"Outbound to veteran life leads. Fresh and aged openers, full discovery, three-tier quote, application and wrap."},
+ {k:"veteran", ready:true,  title:"Veterans / FEX Life Script",
+  desc:"Outbound to veteran and final expense life leads. Fresh and aged openers, full discovery, three-tier quote, application and wrap."},
  {k:"iul",     ready:true,  title:"Indexed Universal Life",
   desc:"Warm or scheduled IUL calls. Goal discovery, eligibility, then a fork into IUL, a Zoom for larger cases, or a whole life pivot."},
  {k:"mortgage",ready:true,  title:"Mortgage Protection",
@@ -934,9 +941,9 @@ fresh:{s:"1",pf:"who",t:"Fresh opener",l:[
 {t:"do",x:"No apology, no permission-asking. They did it days ago. Act like it."},
 {t:"say",x:"Hey ___(their first name)&hellip;"},
 {t:"do",x:"Pause. Get confirmation it's them before you keep going."},
-{t:"say",x:"This is ___(your name) &mdash; veteran consultant assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance programs for veterans, so I'm getting right back to you on that."},
+{t:"pf",always:true,ks:["lead_type"]},{t:"say",when:["lead_type","Vet"],dflt:true,x:"This is ___(your name) &mdash; the veteran benefits consultant assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance programs for veterans, so I'm getting right back to you on that."},{t:"say",when:["lead_type","FEX"],x:"This is ___(your name) &mdash; the benefits advisor assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance program, so I'm getting right back to you on that."},
 {t:"do",x:"Say the real timeframe. Five days, a week, ten days &mdash; whatever the lead actually says."},
-{t:"ask",x:"I've got you down as ___(branch of service) &mdash; is that right?"},
+{t:"ask",when:["lead_type","Vet"],dflt:true,x:"I've got you down as ___(branch of service) &mdash; is that right?"},{t:"pf",when:["lead_type","Vet"],ks:["branch"]},{t:"ask",when:["lead_type","FEX"],x:"I've got your date of birth as ___ &mdash; is that right?"},{t:"pf",when:["lead_type","FEX"],ks:["dob"]},{t:"say",when:["lead_type","FEX"],x:"&hellip; <b>or</b> &mdash; I've got your beneficiary as ___ &mdash; is that right?"},{t:"pf",when:["lead_type","FEX"],ks:["ben"]},{t:"do",when:["lead_type","FEX"],x:"Whichever one the lead actually gave you. On an FEX lead it is sometimes the date of birth and sometimes the beneficiary &mdash; you only need one of them to confirm."},,
 {t:"do",x:"Let them talk. If they offer years or where they served, take it. Don't rush past it."},
 {t:"note",x:"<b>Validate ONE thing. Purpose is trust, not data.</b> Branch of service first, because unlike a date of birth it opens a conversation. If branch isn't on the lead: <b>&ldquo;You listed ___ as your beneficiary &mdash; is that right?&rdquo;</b> then date of birth, then email."}
 ],b:[
@@ -1032,7 +1039,7 @@ sit_what:{s:"3",pf:"have",t:"What they have",l:[
 ],b:[{k:"Got it",to:"sit_trigger",c:"go"}]},
 
 sit_trigger:{s:"3",pf:"why",t:"The trigger (why)",l:[
-{t:"say",x:"I'm not trying to get political, but I think 2020 opened our eyes to the fact that tomorrow isn't promised &mdash; we can be taken in the blink of an eye."},
+{t:"say",x:"Now &mdash; we all remember 2020. Things got a little bit crazy on the health side, and there were a lot of people passing away. So I think we all realised tomorrow isn't promised for any of us, and we can be taken in the blink of an eye."},
 {t:"ask",x:"Was there something that got you looking now?"},
 {t:"do",x:"The trigger tells you the urgency."},
 {t:"note",x:"<b>If there's no trigger, name it for them:</b> &ldquo;So you just finally realized it's time to stop putting it off?&rdquo;"}
@@ -1040,12 +1047,12 @@ sit_trigger:{s:"3",pf:"why",t:"The trigger (why)",l:[
 
 sit_stakes:{s:"3",pf:"why",t:"The stakes question",l:[
 {t:"ask",x:"Let's say you didn't wake up yesterday. Who was the first person who was getting a call this morning? Who's handling the arrangements, paying the bills? Who does this all end up falling on? ___(beneficiary)"},
-{t:"pf",ks:["married","spouse","spouse_wants"]},
+{t:"pf",ks:["married","spouse","spouse_dob","spouse_wants"]},
 {t:"train",x:"You are not asking their marital status out of nowhere &mdash; you are asking who this lands on, and they will usually name the spouse themselves. Tick it as they say it. If they name someone who is not a spouse, that tells you more than the question would have."},
 {t:"note",x:"<b>Past tense on purpose.</b> A hypothetical invites a hypothetical answer &mdash; &ldquo;if I died someday&rdquo; can be held at arm's length forever. Something that already happened this morning cannot."},
 {t:"do",x:"You are not done until you have a name. If they say &ldquo;my family&rdquo; or &ldquo;the kids&rdquo; &mdash; push once: &ldquo;Which one of them, specifically?&rdquo;"},
 {t:"do",x:"If they're blunt with you, be blunt back. Match their energy."}
-],b:[{k:"I have a name",to:"sit_why",c:"go"}]},
+],b:[{k:"I have the beneficiary's name",to:"sit_why",c:"go"}]},
 
 sit_why:{s:"3",pf:"why",t:"Why it matters",l:[
 {t:"ask",x:"Why is protecting ___(the name) important to you? ___(their goal, in their words)"},
@@ -1125,7 +1132,7 @@ fw_reiterate:{s:"4",pf:"why",t:"Reiterate to solidify",l:[
 {t:"note",x:"Building the cost up from parts makes the number land as <b>math instead of a claim</b>. Planting inflation here does quiet work for you at the quote."}
 ],b:[{k:"Move to discounts",to:"disc_tobacco",c:"go"}]},
 
-disc_tobacco:{s:"5",pf:"build",t:"Tobacco",l:[
+disc_tobacco:{s:"5",pf:"health",t:"Tobacco",l:[
 {t:"say",x:"Alright, let me ask you a few quick things so I can see what discounts you qualify for."},
 {t:"ask",x:"Are you a smoker or non-smoker?"},
 {t:"pf",ks:["smoker"]},
@@ -1133,24 +1140,24 @@ disc_tobacco:{s:"5",pf:"build",t:"Tobacco",l:[
 {t:"do",x:"Casual, but never skip it. It changes pricing and placement both."}
 ],b:[{k:"Next",to:"disc_build",c:"go"}]},
 
-disc_build:{s:"5",pf:"build",t:"Build",l:[
+disc_build:{s:"5",pf:"health",t:"Build",l:[
 {t:"ask",x:"What's your height and weight on your best day?"},
 {t:"pf",ks:["height","weight","sex"]}
 ],b:[{k:"Next",to:"disc_va",c:"go"}]},
 
-disc_va:{s:"5",pf:"build",t:"VA rating",l:[
-{t:"ask",x:"You said ___(branch) &mdash; do you have a VA disability rating? What percentage?"},
+disc_va:{s:"5",pf:"who",t:"VA rating",l:[
+{t:"ask",when:["lead_type","Vet"],dflt:true,x:"You said ___(branch) &mdash; do you have a VA disability rating? What percentage?"},{t:"ask",when:["lead_type","FEX"],x:"Were you by chance ever in the service? &mdash; and if so, do you have a VA disability rating? What percentage?"},
 {t:"pf",ks:["varating"]},
 {t:"note",x:"<b>Double duty.</b> Disability compensation counts toward their income, and the rating previews their health history before you ask a single health question."}
 ],b:[{k:"Next",to:"disc_bank",c:"go"}]},
 
-disc_bank:{s:"5",pf:"build",t:"Banking",l:[
+disc_bank:{s:"5",pf:"bank",t:"Banking",l:[
 {t:"ask",x:"And this one matters for which companies I can shop for you &mdash; do you bank with a credit union, a national bank, or do your funds go onto one of those Direct Express cards?"},
 {t:"pf",ks:["bank","bank_kind"]},
 {t:"do",x:"Direct Express cuts your carrier list. You need this before you shop, not after."}
 ],b:[{k:"Next",to:"disc_access",c:"go"}]},
 
-disc_access:{s:"5",pf:"build",t:"Access check",l:[
+disc_access:{s:"5",pf:"bank",t:"Access check",l:[
 {t:"ask",x:"And when we find something that fits your budget, you'll have access to your routing and account number, right?"},
 {t:"train",x:"Ask now, at minute eight, while you can still solve it. Ask at minute forty and the whole call is done while they're rummaging through a drawer. <b>More callbacks close on &ldquo;I can't find my banking&rdquo; than on &ldquo;I want to think about it.&rdquo;</b>"}
 ],b:[{k:"Move to health",to:"h_hipaa",c:"go"}]},
@@ -1300,7 +1307,7 @@ q_pen:{pf:"plan",s:"9",t:"Soft hold, then pen and paper",l:[
 {t:"tip",x:"<b>Fill the three options in here</b> &mdash; they read themselves into the next three cards, and into the pick list at 9.5."},
 {t:"pf",ks:["carrier"]},
 {t:"pick"},
-{t:"wiz"},
+{t:"mmath",when:["has_mortgage","Yes"]},{t:"wiz"},
 {t:"ask",x:"You still have that pen and paper? Perfect &mdash; I'm going to give you three numbers."}
 ],b:[{k:"Next",to:"q_max",c:"go"}]},
 
@@ -1325,7 +1332,7 @@ q_rec:{s:"9",pf:"plan",t:"The recommendation",l:[
 {t:"do",x:"In this tier you're constructing a plan to protect their family, and you're cashing in on the emotional currency they gave you earlier. This number should be logical &mdash; but knowing their finances, it should still be within reason."}
 ],b:[{k:"Next",to:"q_basic",c:"go"}]},
 
-q_basic:{s:"9",pf:"plan",t:"Basic",l:[
+q_basic:{s:"9",pf:"plan",t:"Basic",l:[{t:"warn",x:"<b>Read your own numbers before you read this script.</b> The wording below assumes Basic still covers the arrangements. If their budget put Basic under what the burial or cremation actually costs, say that plainly instead &mdash; what it does cover, and what it does not."},
 {t:"say",x:"And at our basic level &mdash; ___(basic coverage) for ___(basic monthly) a month."},
 {t:"recmath",cov:"opt3_cov"},
 {t:"say",when:["_covfit3","over"],dflt:true,x:"Now this covers your ___(burial/cremation) with a little left over, and the monthly on this may be a lot more comfortable for your budget. So at its core, this makes sure ___(beneficiary) isn't coming out of pocket for your final expenses &mdash; which I know you said earlier was really important to you."},
@@ -1376,7 +1383,7 @@ q_obj_high:{pf:"plan",s:"9",t:"&ldquo;That's too high&rdquo;",l:[
 {t:"ask",x:"Do you want me to go higher or lower, or is ___(amount) good for you?"}
 ],b:[{k:"They picked an amount",to:"app_intro",c:"go"},{k:"Still too high &mdash; go to basic",to:"q_basic",c:"alert"}]},
 
-app_intro:{s:"10",pf:"app",t:"What happens now",l:[
+app_intro:{s:"10",pf:"who",t:"What happens now",l:[
 {t:"say",x:"Perfect. So here's what happens now &mdash; I'm going to fill out the request with you. It takes about five minutes, and we'll know pretty quickly whether they'll approve you."},
 {t:"say",x:"It's your basic information, then your beneficiary, then a couple of verification steps. There's no medical exam on this one &mdash; no blood draw, nobody coming to your house. The way the insurance company verifies everything instead is with your social: to confirm you're you, and to check your records."},
 {t:"say",x:"Before we get into it, there's a piece I'm required to read you, because what we're talking about now is your medical information."},
@@ -1385,7 +1392,7 @@ app_intro:{s:"10",pf:"app",t:"What happens now",l:[
 {t:"train",x:"Read this one slower and flatter than the rest of the call. It's meant to sound procedural &mdash; like something being read into a record. That formality is what settles the client down, because it signals a regulated process rather than a sales pitch. Don't warm it up."}
 ],b:[{k:"They understand",to:"app_page1",c:"go"}]},
 
-app_page1:{s:"10",pf:"app",t:"Application, page one",l:[
+app_page1:{s:"10",pf:"who",t:"Application, page one",l:[
 {t:"say",x:"Okay, let's get this started. I've got the spelling of your first name as ___(first name)."},
 {t:"say",x:"And your last name, and the spelling of your last name &mdash; I've got ___(last name)."},
 {t:"dobig",x:"On the first main page of the application, fill in everything you already have. Ask only for what you don't."},
@@ -1397,19 +1404,19 @@ app_page1:{s:"10",pf:"app",t:"Application, page one",l:[
 {t:"warn",x:"<b>Complete the entire page before you ask for the social.</b><br>If the SSN field sits in the middle of the page, skip past it, finish everything below it, then come back up to it."}
 ],b:[{k:"Ready for the social",to:"app_ssn",c:"go"}]},
 
-app_ssn:{s:"10",pf:"app",t:"The social",l:[
+app_ssn:{s:"10",pf:"who",t:"The social",l:[
 {t:"ask",x:"And your social?"},
 {t:"do",x:"Flat. Matter-of-fact. Do not over-explain, do not apologize, do not make it weird."},
 {t:"note",x:"<b>Three words on purpose.</b> It isn't a question, it's the next field on the form &mdash; you're continuing a list you were already filling in. The moment it becomes a full sentence, it becomes a request, and a request can be declined."}
 ],b:[{k:"Got it",to:"app_auth1",c:"go"},{k:"They're pushing back",to:"app_ssn_obj",c:"alert"}]},
 
-app_ssn_obj:{s:"10",pf:"app",t:"SSN objection",l:[
+app_ssn_obj:{s:"10",pf:"who",t:"SSN objection",l:[
 {t:"say",x:"The insurance company is only going to approve you if everything we talked about checks out. To verify it, they pull your medical and prescription history &mdash; and they do that with your social, through the MIB, the Medical Information Bureau."},
 {t:"say",x:"We know it's sensitive. That's exactly why I gave you my name, my direct number and my license information at the start of this call, and texted you my card. If you want, I'm happy to show you how to look me up on the Department of Insurance website."},
 {t:"do",x:"Only offer the lookup if you can actually walk them through it."}
 ],b:[{k:"Got the social",to:"app_auth1",c:"go"}]},
 
-app_auth1:{s:"10",pf:"app",t:"First authorization &mdash; the MIB pull",l:[
+app_auth1:{s:"10",pf:"who",t:"First authorization &mdash; the MIB pull",l:[
 {t:"warn",x:"<b>Most carriers run TWO text authorizations.</b> This is the first &mdash; it authorizes the medical records pull now that you have their social. The second one signs the final application at 10.7. Set that expectation here so the second text isn't a surprise."},
 {t:"say",x:"Alright, they're going to send you a text message in just a second. It'll come from a number you don't recognize &mdash; that's normal, that's the insurance company."},
 {t:"say",x:"There's going to be a six-digit code in there. Don't tap anything, don't click anything &mdash; just read me those six digits."},
@@ -1428,18 +1435,18 @@ app_draft:{s:"10",pf:"wrap",t:"Draft date",l:[
 {t:"do",x:"Be thoughtful about postdating the initial draft. If the premium is a stretch today, it's worth a gentle check on what changes by then &mdash; even with a check coming. More often than not the number needs to come down a little rather than the date needing to move."}
 ],b:[{k:"Next",to:"app_bank",c:"go"}]},
 
-app_bank:{s:"10",pf:"build",t:"Checking or savings",l:[
+app_bank:{s:"10",pf:"bank",t:"Checking or savings",l:[
 {t:"ask",x:"Do you want this coming out of checking or savings? &hellip; And who do you bank with?"},
 {t:"do",x:"While they answer: search their bank name + their state + &ldquo;routing.&rdquo; Have the number on your screen before the next question."}
 ],b:[{k:"Next",to:"app_routing",c:"go"}]},
 
-app_routing:{s:"10",pf:"build",t:"Confirm the routing",l:[
+app_routing:{s:"10",pf:"bank",t:"Confirm the routing",l:[
 {t:"say",x:"Great &mdash; I just need you to confirm the last four digits of your routing number, to make sure we've got the right one in our system. Banks merge and buy each other all the time, and routing numbers change."},
 {t:"ask",x:"Perfect. And your account number?"},
 {t:"note",x:"<b>You are not asking them for their routing number. You are asking them to confirm it.</b> Back at 10.5, while they were answering the bank question, you searched their bank name plus their state &mdash; or wherever they most likely opened the account &mdash; plus the word &ldquo;routing.&rdquo; That gives you the most likely number. Read it out and have them confirm the last four.<br><br><b>Why this works.</b> To confirm those four digits they have to go look it up &mdash; on a check, in the app, on a statement. And what sits right next to the routing number in every one of those places is the account number. You have built trust by confirming something you already had, and now they hand you the part you never had access to."}
 ],b:[{k:"Got it",to:"app_esign",c:"go"},{k:"They're hesitating",to:"app_bank_obj",c:"alert"}]},
 
-app_bank_obj:{pf:"build",s:"10",t:"Banking objection",l:[
+app_bank_obj:{pf:"bank",s:"10",t:"Banking objection",l:[
 {t:"say",x:"Using your checking is actually the safest way to pay for this, because it runs through your bank. Think about it &mdash; paper checks have that same information printed right on the front. Everybody who's ever cashed one has seen it, because it's that safe. Debit and credit cards are the things you never want to hand out."},
 {t:"do",x:"If they can't find it, that's all good. Walk them through their banking app, an old check, or a statement. You can even Google the bank name plus &ldquo;mobile app&rdquo; to pull up instructions on where the routing and account numbers live, so you can direct them step by step."},
 {t:"do",x:"If you truly believe they aren't stalling you and genuinely can't find it, book a callback &mdash; or offer to call the bank together with them on the line."}
@@ -1550,13 +1557,14 @@ w_saveme:{s:"12",t:"Save me in your phone",l:[
 {t:"warn",x:"<b>Easier route &mdash; use the digital business card you already texted them.</b><br>Have them open that text, tap your picture, then tap <b>Save Card</b>. Walk them through it while you're still on the phone so you know it actually got saved."}
 ],b:[{k:"Next",to:"w_legacy",c:"go"}]},
 
-w_legacy:{s:"12",t:"Legacy Safeguard",l:[
+w_legacy:{pf:"who",s:"12",t:"Legacy Safeguard",l:[
 {t:"say",x:"One more thing &mdash; I've got a free gift for you. It's called Legacy Safeguard, and it costs you nothing."},
 {t:"say",x:"When that time comes, ___(beneficiary) will call me to get the policy payout initiated &mdash; but there are going to be a lot of other things to figure out too."},
 {t:"say",x:"What Legacy Safeguard does is help you plan for all the important things &mdash; the arrangements, your will, all of that &mdash; and then it's a resource for your loved ones when that time comes as well."},
 {t:"say",x:"And you'll get a membership card in the mail for your wallet &mdash; with my information and theirs right there on it."},
 {t:"warn",x:"<b>You will need the mailing address and email for your client &mdash; and for their spouse, if they have one.</b><br>If you already have all of that, you can enroll them right after the call. If you don't, enroll them while you still have them on the phone."},
-{t:"note",x:"Full details and the enrollment link for Legacy Safeguard are linked at the bottom of this page."}
+{t:"note",x:"Full details and the enrollment link for Legacy Safeguard are linked at the bottom of this page."},
+{t:"pf",when:["married",["Married","Partnered"]],ks:["spouse_phone","spouse_email"]},{t:"note",x:"Legacy Safeguard enrols the spouse too. Their phone and email land on the client profile with the rest of this person, so it is all in one place when you fill the form in."}
 ],b:[{k:"Next",to:"w_referral",c:"go"}]},
 
 w_referral:{pf:"refs",s:"12",t:"Referral ask",l:[
@@ -1932,7 +1940,7 @@ i_profile:{s:"7",pf:"who",t:"Client profile",l:[
 {t:"ask",x:"I've got your date of birth as ___(DOB) &mdash; is that right? And how old does that make you? ___(age)"},
 {t:"do",x:"Let them do the math. Small thing, but people engage differently when they say the number themselves instead of hearing you say it."},
 {t:"ask",x:"Are you married or single? {{married}}"},
-{t:"pf",ks:["spouse","spouse_wants"],when:[["married","Married"],["married","Partnered"],["dm","With spouse / partner"]]},
+{t:"pf",ks:["spouse","spouse_dob","spouse_wants"],when:[["married","Married"],["married","Partnered"],["dm","With spouse / partner"]]},
 {t:"note",x:"<b>If married:</b> &ldquo;Wonderful &mdash; can I grab your spouse's name, just so I'm not being rude?&rdquo;"},
 {t:"ask",x:"Any children? {{kids}} How old are they? ___(children)"},
 {t:"do",x:"If they have kids, take a second on the ages. It's the easiest genuine interest you'll ever show, and those kids are the reason behind most of this."},
@@ -1994,7 +2002,7 @@ i_h_knock:{s:"8",pf:"health",t:"Knockouts",l:[
 {t:"dobig",x:"Ask these first. Any one of them changes which carriers are even in play &mdash; and on an IUL call it can end the underwritten route before you have spent an hour building toward it."}
 ],b:[{k:"Next",to:"i_h_build",c:"go"}]},
 
-i_h_build:{s:"8",pf:"build",t:"Build",l:[
+i_h_build:{s:"8",pf:"health",t:"Build",l:[
 {t:"say",x:"Now let's go through a few quick health items so I can see what you'll qualify for."},
 {t:"ask",x:"What's your height and weight?"},
 {t:"pf",ks:["height","weight","sex"]}
@@ -2044,7 +2052,7 @@ i_h_meds:{s:"8",pf:"health",t:"Medications",l:[
 {t:"do",x:"The med list is your lie detector. If they name a condition you didn't hear about, go back and ask about it."}
 ],b:[{k:"Next",to:"i_h_heart",c:"go"}]},
 
-i_h_tobacco:{s:"8",pf:"build",t:"Tobacco",l:[
+i_h_tobacco:{s:"8",pf:"health",t:"Tobacco",l:[
 {t:"ask",x:"Any tobacco or vape use? {{smoker}}"},
 {t:"do",x:"Ask casually, never skip it. It changes pricing and it changes which carriers you can use."},
 {t:"ask",x:"And how do you bank &mdash; a local credit union, a big-name bank, or an online-only account like Chime or Cash App? {{bank_kind}}"},
@@ -2350,7 +2358,7 @@ i_pivot_notnow:{s:"13",t:"Not right now",l:[
 ],b:[{k:"End the call",to:"i_start",c:"go"}]},
 
 /* ---------- 14 APPLICATION ---------- *//* ---------- 14 APPLICATION ---------- */
-i_app_intro:{s:"14",pf:"app",t:"What happens now",l:[
+i_app_intro:{s:"14",pf:"who",t:"What happens now",l:[
 {t:"say",x:"Perfect. So here's what happens now &mdash; I'm going to fill out the application with you. It takes about five minutes, and then it goes to the carrier for their decision."},
 {t:"say",x:"It's your basic information, then your beneficiary, then a couple of verification steps. We always go after a plan with no medical exam first &mdash; no blood draw, nobody coming to your house &mdash; so the way the carrier verifies your health instead is through your records, and they do that with your social."},
 {t:"say",x:"Before we get into it, there's a piece I'm required to read you, because what we're talking about now is your medical information."},
@@ -2359,7 +2367,7 @@ i_app_intro:{s:"14",pf:"app",t:"What happens now",l:[
 {t:"train",x:"Read this one slower and flatter than the rest of the call. It's meant to sound procedural &mdash; like something being read into a record. That formality is what settles the client down, because it signals a regulated process rather than a sales pitch. Don't warm it up."}
 ],b:[{k:"They understand",to:"i_app",c:"go"}]},
 
-i_app:{s:"14",pf:"app",t:"Application, page one",l:[
+i_app:{s:"14",pf:"who",t:"Application, page one",l:[
 {t:"say",x:"Alright, we're nearly there &mdash; just pulling up everything for the carrier to get your approval."},
 {t:"say",x:"I've got the spelling of your first name as ___(first name). And your last name, and the spelling of your last name &mdash; I've got ___(last name)."},
 {t:"dobig",x:"Fill in everything you already have from the profile. Ask only for what is still blank."},
@@ -2414,7 +2422,7 @@ i_app_draft:{s:"14",pf:"wrap",t:"Draft date",l:[
 {t:"do",x:"Be thoughtful about postdating the first draft. If the contribution is a stretch today, it's worth a gentle check on what changes by then. More often than not the number needs to come down a little rather than the date needing to move."}
 ],b:[{k:"Next",to:"i_app_bank",c:"go"}]},
 
-i_app_bank:{s:"14",pf:"build",t:"Banking",l:[
+i_app_bank:{s:"14",pf:"bank",t:"Banking",l:[
 {t:"ask",x:"So checking or savings? ___(or confirm what they said earlier)"},
 {t:"ask",x:"And who do you bank with?"},
 {t:"pf",ks:["bank","bank_kind"]},
@@ -2549,14 +2557,15 @@ i_wrap_saveme:{s:"16",t:"Save me in your phone",l:[
 {t:"warn",x:"<b>Easier route &mdash; use the digital business card you already texted them.</b><br>Have them open that text, tap your picture, then tap <b>Save Card</b>. Walk them through it while you're still on the phone so you know it actually got saved."}
 ],b:[{k:"Next",to:"i_wrap_legacy",c:"go"}]},
 
-i_wrap_legacy:{s:"16",t:"Legacy Safeguard",l:[
+i_wrap_legacy:{pf:"who",s:"16",t:"Legacy Safeguard",l:[
 {t:"say",x:"One more thing &mdash; I've got a free gift for you. It's called Legacy Safeguard, and it costs you nothing."},
 {t:"say",x:"When that time comes, ___(beneficiary) will call me to get the policy payout initiated &mdash; but there are going to be a lot of other things to figure out too."},
 {t:"say",x:"What Legacy Safeguard does is help you plan for all the important things. Your final arrangements, your will, and if you ever need help with a trust, they can point you in the right direction on that too."},
 {t:"say",x:"And when that time does come, they're a real resource for your loved ones &mdash; so they're not sorting all of it out on their own."},
 {t:"say",x:"You'll also get a membership card in the mail for your wallet &mdash; with my information and theirs right there on it."},
 {t:"warn",x:"<b>You will need the mailing address and email for your client &mdash; and for their spouse, if they have one.</b><br>If you already have all of that, you can enroll them right after the call. If you don't, enroll them while you still have them on the phone."},
-{t:"note",x:"Full details and the enrollment link for Legacy Safeguard are linked at the bottom of this page."}
+{t:"note",x:"Full details and the enrollment link for Legacy Safeguard are linked at the bottom of this page."},
+{t:"pf",when:["married",["Married","Partnered"]],ks:["spouse_phone","spouse_email"]},{t:"note",x:"Legacy Safeguard enrols the spouse too. Their phone and email land on the client profile with the rest of this person, so it is all in one place when you fill the form in."}
 ],b:[{k:"Next",to:"i_wrap_referral",c:"go"}]},
 
 i_wrap_referral:{s:"16",pf:"refs",t:"Referral ask",l:[
@@ -3246,14 +3255,15 @@ m_wrap_saveme:{s:"14",t:"Save me in your phone",l:[
 {t:"warn",x:"<b>Easier route &mdash; use the digital business card you already texted them.</b><br>Have them open that text, tap your picture, then tap <b>Save Card</b>. Walk them through it while you're still on the phone."}
 ],b:[{k:"Next",to:"m_wrap_legacy",c:"go"}]},
 
-m_wrap_legacy:{s:"14",t:"Legacy Safeguard",l:[
+m_wrap_legacy:{pf:"who",s:"14",t:"Legacy Safeguard",l:[
 {t:"say",x:"One more thing &mdash; I've got a free gift for you. It's called Legacy Safeguard, and it costs you nothing."},
 {t:"say",x:"When that time comes, ___(beneficiary) will call me to get the policy payout initiated &mdash; but there are going to be a lot of other things to figure out too."},
 {t:"say",x:"What Legacy Safeguard does is help you plan for all the important things. Your final arrangements, your will, and if you ever need help with a trust, they can point you in the right direction on that too."},
 {t:"say",x:"And when that time does come, they're a real resource for your loved ones &mdash; so they're not sorting all of it out on their own."},
 {t:"say",x:"You'll also get a membership card in the mail for your wallet &mdash; with my information and theirs right there on it."},
 {t:"warn",x:"<b>You will need the mailing address and email for your client &mdash; and for their spouse, if they have one.</b><br>If you already have all of that, enroll them right after the call. If you don't, enroll them while you still have them on the phone."},
-{t:"note",x:"Full details and the enrollment link are linked at the bottom of this page."}
+{t:"note",x:"Full details and the enrollment link are linked at the bottom of this page."},
+{t:"pf",when:["married",["Married","Partnered"]],ks:["spouse_phone","spouse_email"]},{t:"note",x:"Legacy Safeguard enrols the spouse too. Their phone and email land on the client profile with the rest of this person, so it is all in one place when you fill the form in."}
 ],b:[{k:"Next",to:"m_wrap_referral",c:"go"}]},
 
 m_wrap_referral:{s:"14",t:"Referral ask",l:[
@@ -3507,7 +3517,7 @@ function medSuggest(q,limit){
   return Object.keys(best).sort(function(a,b){return best[a]-best[b];}).slice(0,limit||8);
 }
 
-var PF_PLACEHOLDER={asset_where:"401k / IRA / Roth / etc"};
+var PF_PLACEHOLDER={arrangement_cost:"their number, or 15,000",asset_where:"401k / IRA / Roth / etc"};
 
 var MULTILINE={goal:1,health_notes:1,inplace_notes:1,recent_what:1,app_notes:1,bank_notes:1,
   doing_now:1,asset_notes:1,kids_names:1};
@@ -3569,10 +3579,15 @@ function pSyncChips(k){
     c.classList.toggle("on", picked.indexOf(c.getAttribute("data-pfval"))>-1); });
 }
 
+var PJ_LAST=null, PJ_MANUAL=false, PJ_SELF=false;
+(function watch(){ var d=document.getElementById("drawer");
+  if(!d) return setTimeout(watch,300);
+  d.addEventListener("scroll",function(){ if(!PJ_SELF) PJ_MANUAL=true; },{passive:true}); })();
 function pJump(id){
   var d=$("drawer"); if(!d.classList.contains("open")) return;
   var el=document.getElementById("ps_"+id); if(!el) return;
-  d.scrollTo({top:Math.max(0,el.offsetTop-64),behavior:"smooth"});
+  PJ_SELF=true; d.scrollTo({top:Math.max(0,el.offsetTop-64),behavior:"smooth"});
+  setTimeout(function(){PJ_SELF=false;},700);
   el.classList.add("psflash"); setTimeout(function(){el.classList.remove("psflash")},1200);
 }
 
@@ -3582,7 +3597,10 @@ function render(){
   $("cardtitle").innerHTML=n.t+'<button type="button" class="cardprof" id="cardprofbtn">Client profile</button>';
   var cpb=document.getElementById("cardprofbtn"); if(cpb) cpb.onclick=pOpen;
   $("jump").value=n.s;
-  if(n.pf) setTimeout(function(){pJump(n.pf)},60);
+  /* Follow the script only when the CARD changes. render() also runs on every keystroke in
+     the panel, which used to yank it to another section mid-word. And once the agent has
+     scrolled by hand, leave it alone until they move card. */
+  if(n.pf && PJ_LAST!==cur){ PJ_LAST=cur; PJ_MANUAL=false; setTimeout(function(){ if(!PJ_MANUAL) pJump(n.pf); },60); }
   $("cardid").textContent=ID[cur]||"?";
 
   $("stages").innerHTML=STAGES.map(function(st){
@@ -3631,7 +3649,9 @@ function render(){
     if(L.t==="refs") return !PROFILE_ON ? "" : '<div class="line" id="refscard">'+pRefsHTML()+'</div>';
     if(L.t==="meds") return !PROFILE_ON ? "" : '<div class="line">'+pMedsHTML(true)+'<div id="medflagwrap">'+medFlagHTML()+'</div></div>';
     if(L.t==="pf"){
-      if(!PROFILE_ON) return "";
+      /* always:true is for a control the agent steers the SCRIPT with rather than a field they
+         fill in - it belongs on the card whether or not the profile panel is open. */
+      if(!PROFILE_ON && !L.always) return "";
       if(L.when && !whenHit(L.when)) return "";
       return '<div class="line"><div class="pfline">'+pfInline(L.ks)+'</div></div>';
     }
@@ -3727,20 +3747,25 @@ $("restart").onclick=restart;
 /* ---------- Client profile ---------- */
 var PF_SPEC=[
  {sec:"Who you're calling",id:"who"},
- {k:"first",l:"First name",w:1},{k:"last",l:"Last name",w:1},
- {k:"dob",l:"DOB",w:1},{k:"age",l:"Age",w:1},
- {k:"age_nearest",l:"Age nearest birthday &mdash; one carrier, one product",w:2,showIf:["age_nearest","*"]},
- {k:"state",l:"State",w:1},{k:"branch",l:"Branch of service",w:1},
- {k:"married",drives:true,l:"Married?",w:1,opt:["","Married","Partnered","Single","Widowed"]},{k:"spouse",l:"Spouse",w:1,showIf:[["married","Married"],["married","Partnered"],["dm","With spouse / partner"]]},
- {k:"kids",l:"Children",w:1,opt:["","0","1","2","3","4+"]},
- {k:"kids_names",l:"Children &mdash; names and ages",w:2},
- {k:"dm",drives:true,l:"Who makes financial decisions",w:1,opt:["","Self","With spouse / partner","Someone else helps"]},
- {k:"dm_who",l:"Who else is in on it",w:1,showIf:["dm","Someone else helps"]},
+ {k:"first",l:"First name",w:1},{k:"last",l:"Last name",w:1},{k:"dob",l:"DOB",w:1},{k:"age",l:"Age",w:1},
+ {k:"age_nearest",l:"Age nearest birthday &mdash; one carrier, one product",w:2,showIf:["age_nearest","*"]},{k:"phone",l:"Phone",w:1},
+ {k:"email",l:"Email",w:1},{k:"address",l:"Address",w:2},{k:"city",l:"City",w:1},{k:"zip",l:"ZIP",w:1},{k:"state",l:"State",w:1},
+ {k:"lead_type",drives:true,l:"Lead",w:1,opt:["Vet","FEX"]},{k:"branch",l:"Branch of service",w:1},{k:"married",drives:true,l:"Married?",w:1,opt:["","Married","Partnered","Single","Widowed"]},
+ {k:"spouse",l:"Spouse / partner",w:1,showIf:[["married","Married"],["married","Partnered"],["dm","With spouse / partner"]]},
+ {k:"spouse_dob",l:"Spouse DOB",w:1,showIf:["married",["Married","Partnered"]]},
+ {k:"spouse_phone",l:"Spouse phone &mdash; Legacy Safeguard",w:1,showIf:["married",["Married","Partnered"]]},
+ {k:"spouse_email",l:"Spouse email &mdash; Legacy Safeguard",w:2,showIf:["married",["Married","Partnered"]]},
  {k:"spouse_wants",l:"Spouse wants coverage too?",w:2,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
+ {k:"kids",l:"Children",w:1,opt:["","0","1","2","3","4+"]},{k:"kids_names",l:"Children &mdash; names and ages",w:2},
+ {k:"dm",drives:true,l:"Who makes financial decisions",w:1,opt:["","Self","With spouse / partner","Someone else helps"]},
+ {k:"dm_who",l:"Who else is in on it",w:1,showIf:["dm","Someone else helps"]},{k:"varating",l:"VA rating %",w:1},
+ {k:"app_notes",l:"Notes &mdash; licence, employer, anything else",type:"area",w:2},
+
+{sec:"Beneficiary",id:"bendetail"},
+ {k:"bens",type:"bens"},
 
  {sec:"What they have now",id:"have"},
- {k:"inplace",l:"Anything in place?",w:2,opt:["","No","Yes"]},
- {k:"inplace_carrier",l:"Their current carrier",w:1,showIf:["inplace","Yes"]},
+ {k:"inplace",l:"Anything in place?",w:2,opt:["","No","Yes"]},{k:"inplace_carrier",l:"Their current carrier",w:1,showIf:["inplace","Yes"]},
  {k:"inplace_src",drives:true,l:"Through work or private?",w:1,opt:["","Work","Private","Both"],showIf:["inplace","Yes"]},
  {k:"inplace_amt",l:"How much coverage",money:"cov",w:1,showIf:["inplace","Yes"]},
  {k:"inplace_kind",drives:true,l:"Term or whole life?",w:1,opt:["","Term","Whole life","Not sure"],showIf:["inplace","Yes"]},
@@ -3750,75 +3775,52 @@ var PF_SPEC=[
 
  {sec:"Why",id:"why"},
  {k:"goal",l:"Goal / why &mdash; in their words",type:"area",w:2},
- {k:"burial",l:"Burial, cremation or unsure",w:1,opt:["","Burial","Cremation","Unsure"]},
- {k:"arrangement_cost",l:"Cost they expect",w:1,money:"plain"},
+ {k:"burial",l:"Burial, cremation or unsure",w:1,opt:["","Burial","Cremation","Unsure"]},{k:"arrangement_cost",l:"Cost they expect",w:1,money:"plain"},
  {k:"ben",l:"Beneficiary",w:1},
 
- {sec:"Build &amp; habits",id:"build"},
- {k:"height",l:"Height",w:1},{k:"weight",l:"Weight",w:1},
- {k:"sex",l:"Sex",w:1,opt:["","Male","Female"]},
- {k:"smoker",l:"Tobacco",w:1,opt:["","No","Yes"]},{k:"varating",l:"VA rating %",w:1},
- {k:"bank",l:"Bank name",w:1},{k:"bank_kind",l:"Type",w:1,opt:["","Credit union","National bank","Direct Express","Online only (Chime, Cash App)"]},
- {k:"bank_notes",l:"Notes",w:2},
-
- {sec:"Health",id:"health"},
- {k:"conds",l:"Conditions",type:"conds"},
- {k:"meds",l:"Medications",type:"meds"},
+ {sec:"Health &amp; build",id:"health"},
+ {k:"height",l:"Height",w:1},{k:"weight",l:"Weight",w:1},{k:"sex",l:"Sex",w:1,opt:["","Male","Female"]},
+ {k:"smoker",l:"Tobacco",w:1,opt:["","No","Yes"]},{k:"conds",l:"Conditions",type:"conds"},{k:"meds",l:"Medications",type:"meds"},
  {k:"past_meds",drives:true,l:"Prescribed in the last 1&ndash;5 yrs, not on now",w:1,opt:["","No","Yes"]},
  {k:"past_meds_what",l:"What, and when",type:"area",w:2,showIf:["past_meds","Yes"]},
  {k:"recent_stay",drives:true,l:"Surgery or overnight stay, last 5 yrs",l_iul:"Surgery or hospital stay, last 10 yrs",w:1,opt:["","No","Yes"]},
  {k:"recent_what",l:"What, and when",w:2,showIf:["recent_stay","Yes"]},
- {k:"covid",l:"COVID in last 2 yrs",w:1,opt:["","No","Not hospitalised","Hospitalised"]},
- {k:"health_notes",l:"Anything else",w:2},
+ {k:"covid",l:"COVID in last 2 yrs",w:1,opt:["","No","Not hospitalised","Hospitalised"]},{k:"health_notes",l:"Anything else",w:2},
 
  {sec:"Income",id:"income"},
- {k:"occupation",l:"Occupation",w:1},
- {k:"sp_works",drives:true,l:"Do they work?",w:1,opt:["","Yes","No"],showIf:["married",["Married","Partnered"]]},
+ {k:"occupation",l:"Occupation",w:1},{k:"sp_works",drives:true,l:"Do they work?",w:1,opt:["","Yes","No"],showIf:["married",["Married","Partnered"]]},
  {k:"sp_income",l:"Their monthly income",w:1,money:"plain",showIf:["sp_works","Yes"]},
  {k:"hh_income",l:"Household income",w:1,money:"plain",showIf:["hh_income","*"]},
  {k:"inc_kind",l:"Source",w:2,multi:true,opt:["","Working","Retired","Social Security","Disability","Pension"]},
  {k:"i_income",l:"Monthly income",money:"plain",w:1},{k:"i_left",l:"Left over each month",l_iul:"Able to save each month",money:"plain",w:1},
  {k:"money_style",l:"Spender or saver",w:1,opt:["","Spender","Saver","Bit of both"]},
  {k:"has_assets",drives:true,l:"Anything that acts like insurance?",w:1,opt:["","No","Yes"]},
- {k:"asset_where",l:"Where is it",w:1,showIf:["has_assets","Yes"]},
- {k:"asset_amt",l:"Roughly how much",w:1,money:"plain",showIf:["has_assets","Yes"]},
- {k:"asset_employer",drives:true,l:"Where is it held",w:1,opt:["","Current employer","Previous employer","They hold it themselves","Mixed"],showIf:["has_assets","Yes"]},
- {k:"asset_prot",l:"Protectable?",w:1,opt:["","Yes","No","See notes"],showIf:["has_assets","Yes"]},
- {k:"doing_now",l:"What they are doing now",type:"area",w:2},
- {k:"asset_notes",l:"Notes on their money",w:2,showIf:["has_assets","Yes"]},
+ {k:"asset_where",l:"Where is it",w:1,showIf:["has_assets","Yes"]},{k:"asset_amt",l:"Roughly how much",w:1,money:"plain",showIf:["has_assets","Yes"]},
+ {k:"asset_employer",drives:true,l:"Where is it held",w:1,opt:["","Current employer","Previous employer","They hold it themselves","Mixed"],needsAll:true,showIf:[["has_assets","Yes"],["inc_kind","~Working"]]},
+ {k:"asset_prot",l:"Protectable?",w:1,opt:["","Yes","No","See notes"],needsAll:true,showIf:[["has_assets","Yes"],["inc_kind","~Working"]]},
+ {k:"doing_now",l:"What they are doing now",type:"area",w:2},{k:"asset_notes",l:"Notes on their money / details",w:2},
  {k:"i_prot",l:"Retirement protected?",w:1,opt:["","No","Yes"]},
 
- {sec:"Mortgage &mdash; ask if it comes up",id:"mortgage"},
- {k:"own_rent",drives:true,l:"Own or rent",w:1,opt:["","Own","Rent"]},
- {k:"rent",l:"Monthly rent",w:1,money:"plain",showIf:["own_rent","Rent"]},
- {k:"has_mortgage",drives:true,l:"Mortgage?",w:2,opt:["","No","Yes"]},
- {k:"m_balance",l:"Balance left",money:"cov",w:1},{k:"m_payment",l:"Monthly payment",money:"plain",w:1},
- {k:"m_years",l:"Years left",w:1},
- {k:"m_value",l:"What the house would sell for",w:1,money:"cov"},{k:"m_equity",l:"Equity",money:"cov",w:1},
- {k:"m_co",l:"Co-borrower",w:2},
-
  {sec:"Retirement &amp; money &mdash; ask if it comes up",id:"retirement"},
- {k:"i_contrib",l:"Monthly contribution",money:"plain",w:1},{k:"i_401k",l:"401k / TSP",w:1},
- {k:"i_roth",l:"Roth / IRA",w:1},{k:"i_liquid",l:"Liquid savings",money:"plain",w:1},
- {k:"i_debt",l:"Debt",money:"plain",w:1},{k:"i_retire",l:"Retire timeline",w:1},
+ {k:"i_contrib",l:"Monthly contribution",money:"plain",w:1},{k:"i_401k",l:"401k / TSP",w:1},{k:"i_roth",l:"Roth / IRA",w:1},
+ {k:"i_liquid",l:"Liquid savings",money:"plain",w:1},{k:"i_debt",l:"Debt",money:"plain",w:1},{k:"i_retire",l:"Retire timeline",w:1},
+
+ {sec:"Mortgage &mdash; ask if it comes up",id:"mortgage"},
+ {k:"own_rent",drives:true,l:"Own or rent",w:1,opt:["","Own","Rent"]},{k:"rent",l:"Monthly rent",w:1,money:"plain",showIf:["own_rent","Rent"]},
+ {k:"has_mortgage",drives:true,l:"Mortgage?",w:2,opt:["","No","Yes"]},{k:"m_balance",l:"Balance left",money:"cov",w:1},
+ {k:"m_payment",l:"Monthly payment",money:"plain",w:1},{k:"m_years",l:"Years left",w:1},
+ {k:"m_value",l:"What the house would sell for",w:1,money:"cov"},{k:"m_equity",l:"Equity",money:"cov",w:1},{k:"m_co",l:"Co-borrower",w:2},
 
  {sec:"The plan",id:"plan"},
- {k:"carrier",l:"Carrier",w:2},
- {k:"opt1_cov",l:"1 &middot; Max &mdash; coverage",money:"cov",w:1},{k:"opt1_prem",l:"Max &mdash; monthly",money:"prem",w:1},
- {k:"opt2_cov",l:"2 &middot; Recommended &mdash; coverage",money:"cov",w:1},{k:"opt2_prem",l:"Recommended &mdash; monthly",money:"prem",w:1},
- {k:"opt3_cov",l:"3 &middot; Basic &mdash; coverage",money:"cov",w:1},{k:"opt3_prem",l:"Basic &mdash; monthly",money:"prem",w:1},
- {k:"chosen",l:"Which did they take?",w:2,opt:["","Max","Recommended","Basic","Other"]},
+ {k:"carrier",l:"Carrier",w:2},{k:"opt1_cov",l:"1 &middot; Max &mdash; coverage",money:"cov",w:1},
+ {k:"opt1_prem",l:"Max &mdash; monthly",money:"prem",w:1},{k:"opt2_cov",l:"2 &middot; Recommended &mdash; coverage",money:"cov",w:1},
+ {k:"opt2_prem",l:"Recommended &mdash; monthly",money:"prem",w:1},{k:"opt3_cov",l:"3 &middot; Basic &mdash; coverage",money:"cov",w:1},
+ {k:"opt3_prem",l:"Basic &mdash; monthly",money:"prem",w:1},{k:"chosen",l:"Which did they take?",w:2,opt:["","Max","Recommended","Basic","Other"]},
  {k:"coverage",l:"Coverage chosen",money:"cov",w:1},{k:"premium",l:"Monthly premium",money:"prem",w:1},
 
- {sec:"Application",id:"app"},
- {k:"phone",l:"Phone",w:1},{k:"email",l:"Email",w:1},
- {k:"address",l:"Address",w:2},
- {k:"city",l:"City",w:1},{k:"zip",l:"ZIP",w:1},
- {k:"app_notes",l:"Notes &mdash; licence, employer, anything else",type:"area",w:2},
-
- {sec:"Beneficiary detail",id:"bendetail"},
- {k:"bens",type:"bens"},
- {k:"crm",l:"Saved to GOAT / CRM?",w:2,opt:["","Not yet","Added to CRM"]},
+ {sec:"Banking &amp; draft",id:"bank"},
+ {k:"bank",l:"Bank name",w:1},{k:"bank_kind",l:"Type",w:1,opt:["","Credit union","National bank","Direct Express","Online only (Chime, Cash App)"]},
+ {k:"bank_notes",l:"Notes",w:2},{k:"draft",l:"Draft date",w:1},
 
  {sec:"Referrals",id:"refs"},
  {k:"refs",type:"refs"},
@@ -3827,7 +3829,7 @@ var PF_SPEC=[
  {k:"wl_method",drives:true,l:"How you sized it",w:2,opt:["","Three tiers","Monthly contribution"]},
  {k:"disposition",l:"How the call ended",w:2,opt:["","Sold \u2014 app submitted","Callback booked",
    "Thinking about it","Not interested","Never got there"]},
- {k:"draft",l:"Draft date",w:1},{k:"policy",l:"Policy #",w:1}
+ {k:"policy",l:"Policy #",w:1},{k:"crm",l:"Saved to GOAT / CRM?",w:2,opt:["","Not yet","Added to CRM"]}
 ];
 
 /* print groups things logically instead of in call order */
@@ -3839,6 +3841,9 @@ function whenHit(w){
 }
 function condHit(got,want){
   got=String(got||"").toLowerCase();
+  /* "~Working" means the value CONTAINS Working. Income source is multi-select, so an exact
+     match fails the moment someone is both retired and on Social Security. */
+  if(typeof want==="string" && want.charAt(0)==="~") return got.indexOf(want.slice(1).toLowerCase())>-1;
   if(Object.prototype.toString.call(want)==="[object Array]")
     return want.some(function(w){ return String(w).toLowerCase()===got; });
   return String(want).toLowerCase()===got;
@@ -3986,7 +3991,9 @@ function pRender(){
     if(f.showIf){
     var w=f.showIf, ok;
     if(Object.prototype.toString.call(w[0])==="[object Array]")
-      ok=w.some(function(pr){ return condHit(P[pr[0]], pr[1]); });
+      /* a list of pairs is "any will do", unless the field asks for all of them */
+      ok = f.needsAll ? w.every(function(pr){ return condHit(P[pr[0]], pr[1]); })
+                      : w.some(function(pr){ return condHit(P[pr[0]], pr[1]); });
     else ok = (w[1]==="*") ? !!P[w[0]] : condHit(P[w[0]], w[1]);
     if(!ok) return;
   }
@@ -4006,12 +4013,23 @@ function num(v){ var n=parseFloat(String(v||"").replace(/[^0-9.]/g,"")); return 
 function mMathHTML(){
   var pay=num(pVal("m_payment")), val=num(pVal("m_value")), bal=num(pVal("m_balance"));
   if(!pay && !(val&&bal)) return "";
-  var bits=[];
-  if(val&&bal) bits.push('<span><i>Equity</i>'+money(val-bal)+'</span>');
-  if(pay) bits.push('<span><i>3 months</i>'+money(pay*3)+'</span>',
-                    '<span><i>6 months</i>'+money(pay*6)+'</span>',
-                    '<span><i>12 months</i>'+money(pay*12)+'</span>');
-  return '<div class="line"><div class="mmath">'+bits.join("")+
+  /* Their own figure for the arrangements if they gave one, otherwise the averages the script
+     quotes: 15,000 burial, 5,000 cremation. */
+  var arr=num(pVal("arrangement_cost")), kind=String(pVal("burial")||"");
+  var isCrem=/cremat/i.test(kind);
+  if(!arr) arr = isCrem ? 5000 : (/burial/i.test(kind) ? 15000 : 0);
+  var MO=[3,6,12,24], out="";
+
+  if(val&&bal) out += '<div class="mmrow"><b>Equity</b><span>'+money(val-bal)+'</span></div>';
+
+  if(pay){
+    /* The mortgage on its own first, so the two numbers can be read against each other. */
+    out += '<div class="mmrow"><b>Mortgage only</b>'+MO.map(function(mo){
+      return '<span><i>'+mo+' months</i>'+money(pay*mo)+'</span>'; }).join("")+'</div>';
+    if(arr) out += '<div class="mmrow mmplus"><b>Each includes '+money(arr)+' '+(isCrem?"cremation":"burial")+'</b>'+
+      MO.map(function(mo){ return '<span><i>'+mo+' months</i>'+money(pay*mo+arr)+'</span>'; }).join("")+'</div>';
+  }
+  return '<div class="line"><div class="mmath">'+out+
     '<em>What it would take to keep them in the house while they work out what to do.</em></div></div>';
 }
 
@@ -4044,7 +4062,17 @@ function pickHTML(){
       '<input class="pkin" data-pk="'+o[1]+'" data-inline="1" placeholder="coverage" value="'+esc(cov).replace(/"/g,"&quot;")+'">'+
       '<span class="pkf">for</span>'+
       '<input class="pkin" data-pk="'+o[2]+'" data-inline="1" placeholder="monthly" value="'+esc(prem).replace(/"/g,"&quot;")+'">'+
-      '<span class="pkf">a month</span></label>';
+      '<span class="pkf">a month</span>'+
+      /* Jesse's sizing rule, served up rather than enforced: the recommendation should sit around
+         half of what they actually have spare, and Basic around a quarter. Only shown once they
+         have told us what is left at the end of the month. */
+      (function(){
+        var left=num(pVal("i_left")); if(!left) return "";
+        var share = o[0]==="Recommended" ? 0.5 : (o[0]==="Basic" ? 0.25 : 0);
+        if(!share) return "";
+        return '<span class="pkhint">'+Math.round(share*100)+'% of what is left over &middot; <b>'+money(left*share)+'</b> a month</span>';
+      })()+
+      '</label>';
   }).join("")+'<div id="mwarnwrap"></div></div></div>';
 }
 document.addEventListener("click",function(e){
@@ -4273,8 +4301,10 @@ function pMoneyPrem(v){                      /* 7847 -> $78.47 ; 68 -> $68.00 ; 
   if(/^\d+\.\d{1,2}$/.test(t)) return "$"+parseFloat(t).toFixed(2);
   if(/^\d+\.\d{3,}$/.test(t)) t=t.replace(".","");     /* they appended to an already-formatted value */
   if(!/^\d+$/.test(t)) return null;
-  var n = t.length<=2 ? parseFloat(t) : parseInt(t,10)/100;
-  return "$"+n.toFixed(2);
+  /* A whole number is dollars. It used to read 3+ digits as cents, so a $120 premium typed
+     as "120" came back as $1.20 - the number an agent is most likely to type, read the one
+     way it cannot have meant. Cents still work when typed as cents: 78.47. */
+  return "$"+parseFloat(t).toFixed(2);
 }
 var BRANCHES=["Army","Navy","Air Force","Marine Corps","Coast Guard","Space Force","National Guard","Reserves"];
 var BRANCH_ABBR={USA:"Army",ARMY:"Army",USN:"Navy",NAVY:"Navy",AF:"Air Force",USAF:"Air Force",
@@ -4548,9 +4578,9 @@ function pOpen(){
   $("drawertitle").textContent="Client profile";
   $("drawerbody").innerHTML=
     '<div class="ptools">'+
-      '<button type="button" class="pbtn" id="profprint">Print</button>'+
-      '<button type="button" class="pbtn" id="profsave">Save</button>'+
-      '<button type="button" class="pbtn" id="profopen">Open</button>'+
+      '<button type="button" class="pbtn" id="profprint">Print profile</button>'+
+      '<button type="button" class="pbtn" id="profsave">Save profile</button>'+
+      '<button type="button" class="pbtn" id="profopen">Load profile</button>'+
       '<button type="button" class="pbtn pwiz" id="profwiz">Product Wizard <span>&#8599;</span></button>'+
       '<span class="psaved" id="psaved"></span></div>'+
     '<div class="profnotes"><label for="pnotes">Notes</label>'+
@@ -5153,6 +5183,7 @@ function buildLauncher(){
 }
 
 function openScript(k){
+  if(!P.lead_type) P.lead_type="Vet";   /* the switch reads Vet until the agent moves it */
   var x=SCRIPTS.filter(function(a){return a.k===k})[0];
   if(!x||!x.ready||!LIB[k])return;
   if(curScript!==k){
