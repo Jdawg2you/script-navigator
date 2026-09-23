@@ -2046,7 +2046,9 @@ i_h_meds:{s:"8",pf:"health",t:"Medications",l:[
 
 i_h_tobacco:{s:"8",pf:"build",t:"Tobacco",l:[
 {t:"ask",x:"Any tobacco or vape use? {{smoker}}"},
-{t:"do",x:"Ask casually, never skip it. It changes pricing and it changes which carriers you can use."}
+{t:"do",x:"Ask casually, never skip it. It changes pricing and it changes which carriers you can use."},
+{t:"ask",x:"And how do you bank &mdash; a local credit union, a big-name bank, or an online-only account like Chime or Cash App? {{bank_kind}}"},
+{t:"note",x:"<b>Why you ask it here.</b> Carriers need a real routing and account number, and the answer decides which carriers are even available to you. Finding this out at the application is finding it out too late."}
 ],b:[{k:"Next",to:"i_h_surg",c:"go"}]},
 
 i_h_surg:{s:"8",pf:"health",t:"Surgeries and hospitalizations",l:[
@@ -2893,7 +2895,7 @@ m_tiedown:{s:"7",t:"The tie-down",l:[
 m_budget:{s:"8",t:"Discount questions",l:[
 {t:"say",x:"Couple of quick questions to help us unlock any applicable discounts."},
 {t:"ask",x:"Are you a smoker or non-smoker?"},
-{t:"ask",x:"Do you bank with a local credit union or a big-name bank? It's not an online-only bank like Chime or GoBank, right?"},
+{t:"ask",x:"Do you bank with a local credit union or a big-name bank? It's not an online-only bank like Chime or GoBank, right? {{bank_kind}}"},
 {t:"note",x:"<b>Why you ask:</b> carriers need a real routing and account number. Some online-only banks are incompatible, and a traditional bank opens up more carrier options."}
 ],b:[{k:"Next",to:"m_income",c:"go"}]},
 
@@ -3756,7 +3758,7 @@ var PF_SPEC=[
  {k:"height",l:"Height",w:1},{k:"weight",l:"Weight",w:1},
  {k:"sex",l:"Sex",w:1,opt:["","Male","Female"]},
  {k:"smoker",l:"Tobacco",w:1,opt:["","No","Yes"]},{k:"varating",l:"VA rating %",w:1},
- {k:"bank",l:"Bank name",w:1},{k:"bank_kind",l:"Type",w:1,opt:["","Credit union","National bank","Direct Express","Online only"]},
+ {k:"bank",l:"Bank name",w:1},{k:"bank_kind",l:"Type",w:1,opt:["","Credit union","National bank","Direct Express","Online only (Chime, Cash App)"]},
  {k:"bank_notes",l:"Notes",w:2},
 
  {sec:"Health",id:"health"},
@@ -4918,6 +4920,14 @@ function wizClient(){
   if(w) c.wt=w;
   if(P.sex==="Male") c.sex="m"; else if(P.sex==="Female") c.sex="f";
   c.lb="lb";
+  /* How the premium will be drawn decides the carrier list before underwriting does — a Direct
+     Express card or an app-only account is refused by most carriers' billing. Sent only when the
+     agent has actually answered, so an untouched field leaves the wizard on its own default
+     rather than silently claiming a bank account. */
+  var bk=String(P.bank_kind||"");
+  if(bk==="Direct Express") c.pay="dx";
+  else if(bk.indexOf("Online only")===0) c.pay="app";
+  else if(bk==="Credit union"||bk==="National bank") c.pay="bank";
   c.conds=(P.conds||[]).map(function(n){
     var o={name:n};
     if(n==="High blood pressure"){ var bm=String(P.bp_meds||"").replace(/[^0-9]/g,""); o.m=bm||null; if(P.bp_meds_set) o.mSet=true; }
