@@ -448,6 +448,9 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .cinline:checked:after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;
   border:solid #fff;border-width:0 2px 2px 0;transform:rotate(42deg)}
 .ichips{display:inline-flex;gap:3px;vertical-align:baseline;margin:0 3px}
+.isel{font-family:var(--sans);font-size:13px;color:var(--ink);background:#fff;
+  border:1px solid var(--rule);border-radius:5px;padding:2px 6px;margin:0 3px;vertical-align:baseline}
+.isel:focus{outline:2px solid var(--goldline);border-color:var(--gold)}
 .ichip{appearance:none;cursor:pointer;font-family:var(--sans);font-size:11px;font-weight:700;
   color:var(--blue);background:#fff;border:1.5px solid var(--navy);border-radius:4px;padding:1px 6px;line-height:1.5}
 .ichip:hover{background:var(--bluesoft)}
@@ -564,6 +567,25 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .apptpick input:focus{outline:2px solid var(--goldline);border-color:var(--gold)}
 .apptshow{font-family:var(--sans);font-size:12.5px;color:var(--golddk);align-self:center}
 .apptshow b{color:var(--navy)}
+.fhgrid{display:grid;grid-template-columns:1fr auto;gap:7px 14px;align-items:center;
+  font-family:var(--sans);font-size:13px;margin:2px 0}
+.fhgrid.withsp{grid-template-columns:1fr auto auto}
+.fhhead{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--golddk);text-align:center}
+.fhq{color:var(--ink);line-height:1.4}
+.fhcell{display:inline-flex;justify-content:center}
+.fhtog{appearance:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--sans);font-size:12px;font-weight:600;color:var(--muted);
+  background:#fff;border:1px solid var(--rule);border-radius:999px;padding:3px 10px 3px 4px}
+.fhtog .fhknob{width:26px;height:15px;border-radius:999px;background:#d8d4c8;position:relative;
+  transition:background .15s ease;flex:none}
+.fhtog .fhknob:after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;
+  border-radius:50%;background:#fff;transition:left .15s ease}
+.fhtog i{font-style:normal;min-width:22px;text-align:left}
+.fhtog.yes{color:var(--navy);border-color:var(--gold)}
+.fhtog.yes .fhknob{background:var(--gold)}
+.fhtog.yes .fhknob:after{left:13px}
+.fhtog:hover{border-color:var(--gold)}
 .chiplbl{font-family:var(--sans);font-size:12px;font-weight:600;color:var(--muted);
   margin:0 2px 0 10px;white-space:nowrap}
 .rowx{appearance:none;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--muted);
@@ -2692,10 +2714,11 @@ hs_start:"1.1",
 hs_warm:"1.2", hs_warm_yes:"1.2a", hs_warm_book:"1.2b",
 hs_book_times:"1.3", hs_book_who:"1.3a", hs_book_lock:"1.3b", hs_book_end:"1.3c",
 hs_open:"2.1", hs_qualify_first:"2.2", hs_tone:"2.3", hs_why:"2.4",
-hs_why_losing:"2.4a", hs_diff:"2.5", hs_startdate:"2.6",
+hs_why_losing:"2.4a", hs_current:"2.4b", hs_diff:"2.5", hs_startdate:"2.6",
 hs_family:"3.1", hs_occupation:"3.2",
 hs_qualify:"4.1", hs_household:"4.2",
-hs_history:"5.1", hs_conds:"5.2", hs_recent:"5.3",
+hs_history:"5.1", hs_conds:"5.2", hs_famhist:"5.2a", hs_recent:"5.3",
+hs_sp_history:"5.4", hs_sp_conds:"5.5",
 hs_found:"2.2a", hs_found_end:"2.2b",
 hs_income:"6.1", hs_budget:"6.2",
 hs_book:"7.1"
@@ -2772,7 +2795,7 @@ hs_book_end:{s:"1",t:"After the booking",l:[
 ],b:[{k:"Back to the start",to:"hs_start",c:"go"}]},
 
 hs_open:{s:"2",pf:"who",t:"Open",l:[
-{t:"say",x:"Hi, ___(first name) ___(last name)?"},
+{t:"say",x:"Hi, ___(first name) ___(last name)? {{sex}}"},
 {t:"do",x:"Pause. Get confirmation it's them before you keep going. The last name is for spelling checks later &mdash; it only needs typing once."},
 {t:"say",x:"Hi ___(first name) &mdash; this is ___(your name) with ___(your agency). We have the appointment for the private health insurance. How are you today?"},
 {t:"do",x:"Pause."},
@@ -2822,14 +2845,35 @@ hs_why:{s:"2",pf:"why",t:"Why they're shopping",l:[
 {t:"ask",x:"Was it the cost, the coverage, or something else that made you realise what you've got going on isn't working?"},
 {t:"warn",x:"<b>Only skip that second question if they're losing it through work.</b> That is the reason, and you already have it. Anything else &mdash; cost, a rate rise, a network change, a claim that didn't pay &mdash; and you dig until you know what actually broke. That answer is the why you sell back to them later."}
 ],bh:"What did they say?",b:[
-{k:"Cost, coverage, general",to:"hs_diff",c:"go"},
+{k:"Cost, coverage, something else",to:"hs_current",c:"go"},
 {k:"They're losing coverage",to:"hs_why_losing",c:"alert"}]},
 
-hs_why_losing:{s:"2",t:"Losing coverage",l:[
-{t:"say",x:"Okay, I understand."},
-{t:"ask",x:"Now &mdash; is that a done deal? {{losing}}"},
+hs_why_losing:{s:"2",pf:"current",t:"Losing coverage",l:[
+{t:"say",x:"I understand that you're losing your coverage. Let me understand what type of coverage you've been used to most recently."},
+{t:"do",x:"Past tense throughout. They are describing something they are about to lose, and it is easier to talk about than a plan they are defending."},
+{t:"ask",x:"Who's your current carrier? ___(current carrier) &mdash; and do you know what the plan's called? ___(plan name)"},
+{t:"ask",x:"What are you paying for that out of pocket? ___(they pay)"},
+{t:"ask",x:"And do you know what your employer puts in on top of that? ___(employer pays) &mdash; so the real cost is ___(total cost)."},
+{t:"do",x:"The employer's share is the number that makes a private plan look reasonable later. Most people have never added the two together."},
+{t:"ask",x:"What's the deductible on it? ___(deductible)"},
+{t:"ask",x:"Roughly how many times a year do you end up at the doctor? ___(visits a year) &mdash; and is there a copay? ___(copay)"},
+{t:"train",x:"<b>You are building the comparison now, not at the presentation.</b> Deductible, visits and copay are what turn &ldquo;my premium is $420&rdquo; into what they actually spend in a year. Without them you are comparing your plan against a number they half remember."},{t:"ask",x:"And were you comfortable with that coverage, or were there pieces of it you still felt were missing? ___(what was missing)"},
+{t:"do",x:"Write it the way they say it. This is the one line you read back on the presentation when you show them what the new plan covers."},
+{t:"say",x:"<b>Now &mdash; a couple of practical things.</b>"},
+{t:"ask",x:"Is it a done deal that you're losing it? {{losing}}"},
 {t:"ask",x:"And when's your last day of coverage? ___(last day of cover)"},
 {t:"warn",x:"<b>The date, not the month.</b> It sets the effective date and the enrolment clock. It was never asked on Boo or Cosgriff and both cases stalled on it."}
+],b:[{k:"Next",to:"hs_diff",c:"go"}]},
+
+hs_current:{s:"2",pf:"current",t:"What they have now",l:[
+{t:"say",x:"Okay &mdash; before I show you anything, let me understand what you've got, so I'm comparing like for like."},
+{t:"ask",x:"Who's your current carrier? ___(current carrier) &mdash; and do you know what the plan's called? ___(plan name)"},
+{t:"ask",x:"What are you paying for that out of pocket? ___(they pay)"},
+{t:"ask",x:"And do you know what your employer puts in on top of that? ___(employer pays) &mdash; so the real cost is ___(total cost)."},
+{t:"do",x:"The employer's share is the number that makes a private plan look reasonable later. Most people have never added the two together."},
+{t:"ask",x:"What's the deductible on it? ___(deductible)"},
+{t:"ask",x:"Roughly how many times a year do you end up at the doctor? ___(visits a year) &mdash; and is there a copay? ___(copay)"},
+{t:"train",x:"<b>You are building the comparison now, not at the presentation.</b> Deductible, visits and copay are what turn &ldquo;my premium is $420&rdquo; into what they actually spend in a year. Without them you are comparing your plan against a number they half remember."},{t:"do",x:"If they don't know a number, write what they said and move on. You are not auditing them, and a guess you can check beats a silence."}
 ],b:[{k:"Next",to:"hs_diff",c:"go"}]},
 
 hs_diff:{s:"2",t:"The differentiator",l:[
@@ -2871,11 +2915,13 @@ hs_household:{s:"4",t:"Household",l:[
 {t:"ask",x:"Now let me grab a little more information about the members of your household."},
 {t:"say",when:["married",["Married"]],x:"<b>And your spouse &mdash;</b>"},
 {t:"say",when:["married",["Partnered"]],x:"<b>And your partner &mdash;</b>"},
-{t:"ask",when:["married",["Married","Partnered"]],x:"Name? ___(spouse first name) ___(spouse last name) &mdash; date of birth? ___(spouse DOB), so that's ___(spouse age)."},
+{t:"ask",when:["married",["Married","Partnered"]],x:"Name? ___(spouse first name) ___(spouse last name) {{sp_sex}} &mdash; date of birth? ___(spouse DOB), so that's ___(spouse age)."},
 {t:"ask",when:["married",["Married","Partnered"]],x:"Height and weight? ___(spouse height) ___(spouse weight) &mdash; and tobacco? {{sp_tobacco}}"},
 {t:"say",when:["kids",["1","2","3","4+"]],x:"<b>Okay &mdash; now on to the kids.</b>"},
 {t:"deps",when:["kids",["1","2","3","4+"]]},
-{t:"do",x:"Name, date of birth and gender for each child &mdash; the age works itself out. No height, weight or tobacco; those only rate the adults."}
+{t:"do",x:"Name, date of birth and gender for each child &mdash; the age works itself out. No height, weight or tobacco; those only rate the adults."},
+{t:"ask",when:["kids",["1","2","3","4+"]],x:"And how's their health &mdash; everything all good, or is there anything major, or any medications? ___(kids health)"},
+{t:"do",when:["kids",["1","2","3","4+"]],x:"One open question, not a health history each. You are listening for anything that changes which plan the family can go on &mdash; asthma, an inhaler, a specialist they see. Type what they say."}
 ],b:[{k:"Move to health",to:"hs_history",c:"go"}]},
 
 hs_history:{s:"5",pf:"health",t:"Health history",l:[
@@ -2896,16 +2942,51 @@ hs_conds:{s:"5",pf:"health",t:"Recent history",l:[
 {t:"ask",x:"And any hospital stays in the last two years? {{hosp_stay}}"},
 {t:"ask",when:["hosp_stay","Yes"],x:"What was that for? ___(hospital stay)"},
 {t:"note",x:"<b>Standing rule on every yes:</b> when was it, what was it for, and what are they taking for it now."}
+],b:[{k:"Next",to:"hs_famhist",c:"go"}]},
+
+hs_famhist:{s:"5",pf:"famhist",t:"Family history and general",l:[
+{t:"say",x:"A few quick yes or no questions &mdash; these change which plans are worth quoting."},
+{t:"fhgrid"},
+{t:"do",x:"Family history, not their own diagnosis. Their own conditions you already have."},
+{t:"train",x:"<b>Maternity is the expensive one.</b> A plan without it is materially cheaper, and putting someone on a plan that excludes it when they are planning a family is the single worst outcome here. Ask it plainly, of both of them."}
 ],b:[{k:"Next",to:"hs_recent",c:"go"}]},
 
-hs_recent:{s:"5",pf:"health",t:"Doctors they want to keep",l:[
+hs_recent:{s:"5",pf:"health",t:"Doctors to keep \u2014 and coverage wanted",l:[
 {t:"ask",x:"Are there any doctors you'd really like to keep, if we can? {{keep_docs}}"},
 {t:"docs",when:["keep_docs","Yes"]},
 {t:"train",when:["keep_docs","Yes"],x:"<b>The name is not the point. &ldquo;Must keep&rdquo; is.</b> If a doctor is a hard requirement that decides whether a network plan is even on the table, before you quote anything. If they're relaxed about it you have far more room."},
-{t:"do",when:["keep_docs","Yes"],x:"They usually have not checked whether that doctor takes their ACA plan. &ldquo;Not checked&rdquo; is a real answer &mdash; record it rather than guessing."}
-],b:[{k:"Move to money",to:"hs_income",c:"go"}]},
+{t:"do",when:["keep_docs","Yes"],x:"They usually have not checked whether that doctor takes their ACA plan. &ldquo;Not checked&rdquo; is a real answer &mdash; record it rather than guessing."},
+{t:"say",x:"<b>And while we're here &mdash;</b>"},
+{t:"ask",x:"Would you like me to look into dental coverage for you? {{want_dental}}"},
+{t:"ask",x:"Vision? {{want_vision}}"},
+{t:"ask",x:"And hearing? {{want_hearing}}"},
+{t:"do",x:"Three quick asks. They cost nothing here and they are the easiest thing to add to a package later."}
+],bh:"Is there a spouse or partner on the plan?",b:[
+{k:"Do their spouse\u2019s / partner\u2019s health history",to:"hs_sp_history",c:"go",when:["married",["Married","Partnered"]]},
+{k:"Skip spouse health \u2014 move to income",to:"hs_income",when:["married",["Married","Partnered"]]},
+{k:"Move to income",to:"hs_income",c:"go",allOf:[["married",["Single","Divorced","Widowed",""]]]}]},
 
 
+
+hs_sp_history:{s:"5",pf:"sphealth",t:"Spouse health history",l:[
+{t:"say",x:"Now the same few questions about ___(spouse first name), so I know what they'll qualify for."},
+{t:"ask",x:"Is ___(spouse first name) on any medications right now?"},
+{t:"meds",who:"sp"},
+{t:"tip",x:"This is a separate list from yours. What goes in here is recorded as the spouse's, which is how the plan gets rated on the right person."},
+{t:"cfollow",all:true,who:"sp"},
+{t:"do",x:"Same rule as before &mdash; the medications tell you the conditions. Answer the follow-ups they raise. The full condition list is on the profile if you need it; you do not read it at someone."},
+{t:"warn",x:"<b>Spell them, per person.</b> It matters twice as much here: a medication logged against the wrong person rates the wrong life."},
+{t:"ask",x:"And aside from what we've covered &mdash; any other health conditions for ___(spouse first name)? ___(spouse anything else)"}
+],b:[{k:"Next",to:"hs_sp_conds",c:"go"}]},
+
+hs_sp_conds:{s:"5",pf:"sphealth",t:"Spouse recent history",l:[
+{t:"ask",x:"In the last two years, any surgeries for ___(spouse first name)? {{sp_recent_stay}}"},
+{t:"ask",when:["sp_recent_stay","Yes"],x:"What was that for? ___(spouse what for)"},
+{t:"ask",x:"And any hospital stays in the last two years? {{sp_hosp_stay}}"},
+{t:"ask",when:["sp_hosp_stay","Yes"],x:"What was that for? ___(spouse stay what)"},
+{t:"note",x:"<b>Standing rule on every yes:</b> when was it, what was it for, and what are they taking for it now."},
+{t:"train",x:"<b>Doctors, dental, vision and hearing were asked once, for the household.</b> If the spouse has a doctor they want to keep that you have not recorded, go back to 5.3 and add them &mdash; that list is shared."}
+],b:[{k:"Move to income",to:"hs_income",c:"go"}]},
 
 hs_income:{s:"6",pf:"income",t:"Income and the cliff",l:[
 {t:"say",x:"Okay &mdash; and this is the part I flagged at the start, where I look at the whole picture."},
@@ -3669,6 +3750,11 @@ function fmt(x){
             if(!f||!f.opt) return "";
             var v=(typeof pVal==="function")?pVal(k):"";
             var sel = f.multi ? String(v||"").split(", ").filter(Boolean) : (v?[v]:[]);
+            /* Some answers read better as a dropdown sitting in the sentence than as a row of
+               chips - gender beside a name, for one. The field asks for it; the token does not
+               change, so a card never has to know which it gets. */
+            if(f.inlineSel) return '<select class="isel" data-pk="'+k+'">'+
+              f.opt.map(function(oo){ return '<option'+(v===oo?" selected":"")+'>'+oo+'</option>'; }).join("")+'</select>';
             return '<span class="ichips">'+f.opt.filter(function(x){return x!==""}).map(function(oo){
               return '<button type="button" class="ichip'+(sel.indexOf(oo)>-1?" on":"")+'" data-pfset="'+k+
                      '" data-pfval="'+oo.replace(/"/g,"&quot;")+'">'+oo+'</button>';}).join("")+'</span>';
@@ -3726,17 +3812,21 @@ function condFollow(c){
    `all` widens it to every condition on the case. The health script needs that, because there
    the conditions arrive from the medication list rather than from a tick on the card - and a
    follow-up the agent can only find by opening the profile panel is a follow-up nobody asks. */
-function cfollowHTML(names,all){
-  var on=(P.conds||[]), out=[];
+function cfollowHTML(names,all,who){
+  who=who||"";
+  var on=(P[CONDKEY(who)]||[]), out=[];
   (all ? on.slice() : names).forEach(function(c){
     if(on.indexOf(c)<0) return;
     var fu=condFollow(c);
     out.push('<div class="cfollow"><div class="cfh">They said yes to <b>'+esc(c)+'</b> &mdash; ask:</div>'+
       fu.map(function(f){
-        var v=pVal(f.k), dv=f.drv?" drv":"";
-        if(f.opt) return '<span class="pfi'+dv+'"><i>'+pLabel(f)+'</i>'+(f.k==="bp_meds"&&P.bp_meds_auto&&!P.bp_meds_set?'<em class="autonote">counted from the medication list</em>':'')+f.opt.filter(function(x){return x!==""}).map(function(oo){
-          return '<button type="button" class="chip'+(v===oo?" on":"")+'" data-pfset="'+f.k+'" data-pfval="'+oo+'">'+oo+'</button>';}).join("")+'</span>';
-        return '<span class="pfi'+dv+'"><i>'+pLabel(f)+'</i><input data-pk="'+f.k+'" data-inline="1" value="'+
+        /* The ANSWERS are per person too, not just the condition. Both of them can have
+           diabetes, and one A1C box shared between two people records neither. */
+        var k=(who?who+"_":"")+f.k;
+        var v=pVal(k), dv=f.drv?" drv":"";
+        if(f.opt) return '<span class="pfi'+dv+'"><i>'+pLabel(f)+'</i>'+(k==="bp_meds"&&P.bp_meds_auto&&!P.bp_meds_set?'<em class="autonote">counted from the medication list</em>':'')+f.opt.filter(function(x){return x!==""}).map(function(oo){
+          return '<button type="button" class="chip'+(v===oo?" on":"")+'" data-pfset="'+k+'" data-pfval="'+oo+'">'+oo+'</button>';}).join("")+'</span>';
+        return '<span class="pfi'+dv+'"><i>'+pLabel(f)+'</i><input data-pk="'+k+'" data-inline="1" value="'+
                esc(v).replace(/"/g,"&quot;")+'"></span>';
       }).join("")+'</div>');
   });
@@ -3825,9 +3915,10 @@ var MED_FOR={
    medFlags() is the other half - it lists the ones NOT yet ticked, so it can offer them.
    This is what a medication card shows the detail for: the diseases that came up because
    of a medication, rather than everything on the case. */
-function medCondsOn(){
-  var on=(P.conds||[]), out=[];
-  (P.meds_list||[]).forEach(function(m){
+function medCondsOn(who){
+  who=who||"";
+  var on=(P[CONDKEY(who)]||[]), out=[];
+  (P[MEDKEY(who)]||[]).forEach(function(m){
     var base=m.replace(/\s*\(.*\)$/,"");
     (MED_FOR[base]||[]).forEach(function(c){
       if(on.indexOf(c)>-1 && out.indexOf(c)<0) out.push(c);
@@ -3835,12 +3926,13 @@ function medCondsOn(){
   });
   return out;
 }
-function medFlags(){
-  var on=(P.conds||[]), out=[];
-  (P.meds_list||[]).forEach(function(m){
+function medFlags(who){
+  who=who||"";
+  var on=(P[CONDKEY(who)]||[]), out=[];
+  (P[MEDKEY(who)]||[]).forEach(function(m){
     var base=m.replace(/\s*\(.*\)$/,"");
     (MED_FOR[base]||[]).forEach(function(c){
-      if(on.indexOf(c)<0 && (P.med_skip||[]).indexOf(m+"|"+c)<0 && !out.some(function(x){return x.m===m&&x.c===c})) out.push({m:m,c:c});
+      if(on.indexOf(c)<0 && (P.med_skip||[]).indexOf(who+m+"|"+c)<0 && !out.some(function(x){return x.m===m&&x.c===c})) out.push({m:m,c:c});
     });
   });
   return out;
@@ -4026,7 +4118,7 @@ function render(){
     while((m=re.exec(L.x||""))) if(cardConds.indexOf(m[1])<0) cardConds.push(m[1]);
   });
   $("script").innerHTML=n.l.map(function(L){
-    if(L.t==="cfollow") return cfollowHTML(L.meds ? medCondsOn() : cardConds, L.all);
+    if(L.t==="cfollow") return cfollowHTML(L.meds ? medCondsOn(L.who) : cardConds, L.all, L.who);
     var x=fmt(L.x||"");
     if(L.when && L.t!=="askif" && L.t!=="alt" && L.t!=="pf"){
       var isList=Object.prototype.toString.call(L.when[0])==="[object Array]";
@@ -4057,7 +4149,9 @@ function render(){
     if(L.t==="csize") return !PROFILE_ON ? "" : contribSizeHTML();
     if(L.t==="bens") return !PROFILE_ON ? "" : '<div class="line" id="benscard">'+pBensHTML()+'</div>';
     if(L.t==="refs") return !PROFILE_ON ? "" : '<div class="line" id="refscard">'+pRefsHTML()+'</div>';
-    if(L.t==="meds") return !PROFILE_ON ? "" : '<div class="line">'+pMedsHTML(true)+'<div id="medflagwrap">'+medFlagHTML()+'</div></div>';
+    if(L.t==="meds") return !PROFILE_ON ? "" : '<div class="line">'+pMedsHTML(true,L.who)+
+        '<div id="'+(L.who?'spmedflagwrap':'medflagwrap')+'">'+medFlagHTML(L.who)+'</div></div>';
+    if(L.t==="conds") return !PROFILE_ON ? "" : '<div class="line">'+condsHTMLFor(L.who)+'</div>';
     if(L.t==="handoff") return '<div class="line"><div class="handoff">'+
       '<button type="button" class="hbtn hprimary" data-handoff="save">Save the profile'+
         '<span>A .json file you can reload next time &mdash; or send with the file</span></button>'+
@@ -4067,6 +4161,7 @@ function render(){
         '<span>Start building the private health presentation</span></button>'+
       '</div></div>';
     if(L.t==="appt") return '<div class="line"><div class="apptpick">'+apptHTML()+'</div></div>';
+    if(L.t==="fhgrid") return '<div class="line">'+fhGridHTML()+'</div>';
     if(L.t==="deps") return !PROFILE_ON ? "" : '<div class="line" id="depscard">'+pDepsHTML()+'</div>';
     if(L.t==="docs") return !PROFILE_ON ? "" : '<div class="line" id="docscard">'+pDocsHTML()+'</div>';
     if(L.t==="pf"){
@@ -4304,7 +4399,7 @@ PF_SPEC_HEALTH=[
  {sec:"Who you're calling",id:"who"},
  {k:"first",l:"First name",w:1},{k:"last",l:"Last name",w:1},
  {k:"dob",l:"DOB",w:1},{k:"age",l:"Age",w:1},
- {k:"sex",l:"Gender",w:1,opt:["","Male","Female"]},
+ {k:"sex",l:"Gender",w:1,inlineSel:true,opt:["","Male","Female"]},
  {k:"phone",l:"Phone",w:1},{k:"email",l:"Email",w:1},
  {k:"zip",l:"ZIP",w:1},{k:"state",l:"State",w:1},
  {k:"address",l:"Address",w:2},{k:"city",l:"City",w:1},
@@ -4316,11 +4411,12 @@ PF_SPEC_HEALTH=[
  {k:"sp_name",l:"Spouse first name",w:1,showIf:["married",["Married","Partnered"]]},{k:"sp_last",l:"Spouse last name",w:1,showIf:["married",["Married","Partnered"]]},
  {k:"sp_dob",l:"Their DOB",w:1,showIf:["married",["Married","Partnered"]]},
  {k:"sp_age",l:"Age",w:1,showIf:["married",["Married","Partnered"]]},
- {k:"sp_sex",l:"Gender",w:1,opt:["","Male","Female"],showIf:["married",["Married","Partnered"]]},
+ {k:"sp_sex",l:"Gender",w:1,inlineSel:true,opt:["","Male","Female"],showIf:["married",["Married","Partnered"]]},
  {k:"sp_height",l:"Height",w:1,showIf:["married",["Married","Partnered"]]},
  {k:"sp_weight",l:"Weight",w:1,showIf:["married",["Married","Partnered"]]},
  {k:"sp_tobacco",l:"Tobacco",w:1,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
  {k:"deps",type:"deps"},
+ {k:"kids_health",l:"Kids \u2014 health, medications, anything to know",type:"area",w:3},
 
  {sec:"Why they're looking",id:"why"},
  {k:"why_note",l:"Why they need this coverage",hint:"in general / now / what changed",type:"area",w:3},
@@ -4328,6 +4424,36 @@ PF_SPEC_HEALTH=[
  {k:"last_day",l:"Last day of cover",w:1,showIf:["losing",["Yes","No"]]},
  {k:"start_when",l:"Wants cover to start",w:1},
 
+ {sec:"What they have now",id:"current"},
+ {k:"cur_carrier",l:"Current carrier",w:1},{k:"cur_plan",l:"Plan name",w:1},
+ {k:"cur_prem",l:"They pay",money:"plain",w:1},{k:"cur_emp_prem",l:"Employer pays",money:"plain",w:1},
+ {k:"cur_total",l:"Total actual cost",money:"plain",w:1},
+ {k:"cur_ded",l:"Deductible",money:"plain",w:1},
+ {k:"cur_visits",l:"Doctor visits a year",w:1},{k:"cur_copay",l:"Copay",money:"plain",w:1},
+ {k:"cov_gap",l:"Comfortable with it, or pieces missing",type:"area",w:3},
+ {sec:"Family history and general",id:"famhist"},
+ {k:"fh_cancer",l:"Family history \u2014 cancer",w:1,opt:["","No","Yes"]},
+ {k:"sp_fh_cancer",l:"Spouse \u2014 cancer",w:1,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
+ {k:"fh_heart",l:"Family history \u2014 heart",w:1,opt:["","No","Yes"]},
+ {k:"sp_fh_heart",l:"Spouse \u2014 heart",w:1,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
+ {k:"fh_stroke",l:"Family history \u2014 stroke",w:1,opt:["","No","Yes"]},
+ {k:"sp_fh_stroke",l:"Spouse \u2014 stroke",w:1,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
+ {k:"mh_needs",l:"Mental health needs",w:1,opt:["","No","Yes"]},
+ {k:"sp_mh_needs",l:"Spouse \u2014 mental health",w:1,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
+ {k:"mat_needs",l:"Future maternity needs",w:1,opt:["","No","Yes"]},
+ {k:"sp_mat_needs",l:"Spouse \u2014 maternity",w:1,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
+ {sec:"Coverage wanted",id:"wanted"},
+ {k:"want_dental",l:"Dental",w:1,opt:["","No","Yes"]},
+ {k:"want_vision",l:"Vision",w:1,opt:["","No","Yes"]},
+ {k:"want_hearing",l:"Hearing",w:1,opt:["","No","Yes"]},
+ {sec:"Spouse health",id:"sphealth"},
+ {k:"sp_conds",type:"conds",who:"sp"},
+ {k:"sp_meds",type:"meds",who:"sp"},
+ {k:"sp_recent_stay",l:"Surgery, last 2 yrs",w:1,opt:["","No","Yes"]},
+ {k:"sp_recent_what",l:"What for",w:2},
+ {k:"sp_hosp_stay",l:"Hospital stay, last 2 yrs",w:1,opt:["","No","Yes"]},
+ {k:"sp_stay_what",l:"What for",w:2},
+ {k:"sp_health_notes",l:"Anything else about their health",type:"area",w:3},
  {sec:"Work",id:"work"},
  {k:"occupation",l:"What they do",w:2},{k:"occ_years",l:"How long",w:1},
 
@@ -4457,6 +4583,11 @@ var BLANKMAP={
     blank had nothing behind it, so the one field Set up asks for and never used was the
     one the agent had to say out loud. It is also the name that goes over to MyPOP Pro. */
  "your agency":"a_agency","agency":"a_agency","your agency name":"a_agency",
+ "current carrier":"cur_carrier","plan name":"cur_plan","they pay":"cur_prem",
+ "employer pays":"cur_emp_prem","total cost":"cur_total","deductible":"cur_ded",
+ "visits a year":"cur_visits","copay":"cur_copay","what was missing":"cov_gap",
+ "spouse what for":"sp_recent_what","spouse stay what":"sp_stay_what",
+ "spouse anything else":"sp_health_notes","kids health":"kids_health",
  "your phone":"a_phone","your phone number":"a_phone","agent phone":"a_phone",
  "agent email":"a_email",};
 function pAgeHint(){
@@ -4538,12 +4669,9 @@ function pRender(){
     if(f.type==="deps"){ flush(); o.push(pDepsHTML()); return; }
     if(f.type==="docs"){ flush(); o.push(pDocsHTML()); return; }
     if(f.type==="refs"){ flush(); o.push(pRefsHTML()); return; }
-    if(f.type==="meds"){ flush(); o.push(pMedsHTML()); return; }
+    if(f.type==="meds"){ flush(); o.push(pMedsHTML(false,f.who)); return; }
     if(f.type==="conds"){ flush();
-      o.push('<div class="conds">'+PF_CONDS.map(function(c){
-        var on=(P.conds||[]).indexOf(c)>-1;
-        return '<label class="'+(on?"on":"")+'"><input type="checkbox" data-cond="'+esc(c).replace(/"/g,"&quot;")+'"'+(on?" checked":"")+'>'+c+'</label>';
-      }).join("")+'</div><div id="pfollow"></div>'); return; }
+      o.push(condsHTMLFor(f.who)+(f.who?'':'<div id="pfollow"></div>')); return; }
     if(f.showIf){
     var w=f.showIf, ok;
     if(Object.prototype.toString.call(w[0])==="[object Array]")
@@ -4650,18 +4778,20 @@ document.addEventListener("click",function(e){
   pFlash();
 });
 
-function medFlagHTML(){
-  var f=medFlags(); if(!f.length) return "";
+function medFlagHTML(who){
+  who=who||"";
+  var f=medFlags(who); if(!f.length) return "";
   return '<div class="medflag">'+f.map(function(x){
     return '<div class="mfrow"><span>'+esc(x.m)+' is usually for <b>'+esc(x.c)+'</b> &mdash; is that why?</span>'+
-      '<button type="button" class="chip" data-cond-add="'+esc(x.c).replace(/"/g,"&quot;")+'">Yes, add it</button>'+
-      '<button type="button" class="chip" data-cond-skip="'+esc(x.m)+'|'+esc(x.c).replace(/"/g,"&quot;")+'">No</button></div>';
+      '<button type="button" class="chip" data-cond-add="'+esc(x.c).replace(/"/g,"&quot;")+'" data-condwho="'+who+'">Yes, add it</button>'+
+      '<button type="button" class="chip" data-cond-skip="'+who+esc(x.m)+'|'+esc(x.c).replace(/"/g,"&quot;")+'">No</button></div>';
   }).join("")+'</div>';
 }
 document.addEventListener("click",function(e){
   var a=e.target.closest && e.target.closest("[data-cond-add]");
-  if(a){ var c=a.getAttribute("data-cond-add"); var arr=(P.conds||[]).slice();
-         if(arr.indexOf(c)<0) arr.push(c); P.conds=arr; pStore();
+  if(a){ var c=a.getAttribute("data-cond-add"), aw=a.getAttribute("data-condwho")||"", ak=CONDKEY(aw);
+         var arr=(P[ak]||[]).slice();
+         if(arr.indexOf(c)<0) arr.push(c); P[ak]=arr; pStore();
          if(document.getElementById("profbody")) pRender();
          /* The card carries the follow-up questions for this condition. Accepting the
             suggestion without redrawing left them on the profile panel only, which is the
@@ -4676,23 +4806,42 @@ document.addEventListener("click",function(e){
          var fw2=document.getElementById("medflagwrap"); if(fw2) fw2.innerHTML=medFlagHTML(); return; }
 });
 
-function pMedsHTML(inCard){
-  var list=(P.meds_list||[]);
+/* Medications and conditions belong to a PERSON, not to the case. "" is the applicant and
+   "sp" is the spouse. It is the same distinction POP Pro draws with its forP / forS ticks on
+   each medication row, and it is what lets the spouse have their own health history. */
+function MEDKEY(who){ return who ? "sp_meds_list" : "meds_list"; }
+function CONDKEY(who){ return who ? "sp_conds" : "conds"; }
+function pMedsHTML(inCard,who){
+  who=who||"";
+  var list=(P[MEDKEY(who)]||[]);
   return (inCard?'':'<div class="profsec" style="border:0;padding:0;margin:14px 0 6px">Medications</div>')+
-    '<div class="medchips">'+list.map(function(m,i){
-      return '<span class="medchip">'+esc(m)+'<button type="button" data-meddel="'+i+'" title="Remove">&times;</button></span>';
+    '<div class="medchips" data-who="'+who+'">'+list.map(function(m,i){
+      return '<span class="medchip">'+esc(m)+'<button type="button" data-meddel="'+i+'" data-medwho="'+who+'" title="Remove">&times;</button></span>';
     }).join("")+'</div>'+
-    '<div class="medbox"><input class="medinput" placeholder="Start typing a medication&hellip;" autocomplete="off">'+
+    '<div class="medbox" data-who="'+who+'"><input class="medinput" placeholder="Start typing a medication&hellip;" autocomplete="off">'+
     '<div class="medsug"></div></div>';
+}
+function condsHTMLFor(who){
+  who=who||"";
+  var key=CONDKEY(who), on=(P[key]||[]);
+  return '<div class="conds">'+PF_CONDS.map(function(c){
+    var isOn=on.indexOf(c)>-1;
+    return '<label class="'+(isOn?"on":"")+'"><input type="checkbox" data-cond="'+esc(c).replace(/"/g,"&quot;")+
+           '" data-condwho="'+who+'"'+(isOn?" checked":"")+'>'+c+'</label>';
+  }).join("")+'</div>';
 }
 
 function pMedsRefresh(){
-  [].forEach.call(document.querySelectorAll(".medchips"),function(w){ w.innerHTML=(P.meds_list||[]).map(function(m,i){
-    return '<span class="medchip">'+esc(m)+'<button type="button" data-meddel="'+i+'" title="Remove">&times;</button></span>';
-  }).join(""); });
+  [].forEach.call(document.querySelectorAll(".medchips"),function(w){
+    var who=w.getAttribute("data-who")||"";
+    w.innerHTML=(P[MEDKEY(who)]||[]).map(function(m,i){
+      return '<span class="medchip">'+esc(m)+'<button type="button" data-meddel="'+i+'" data-medwho="'+who+'" title="Remove">&times;</button></span>';
+    }).join(""); });
   var fw=document.getElementById("medflagwrap"); if(fw) fw.innerHTML=medFlagHTML();
+  var fw2=document.getElementById("spmedflagwrap"); if(fw2) fw2.innerHTML=medFlagHTML("sp");
 }
-function medAdd(name,from,typed){
+function medAdd(name,from,typed,who){
+  who = who || (from && from.closest && from.closest(".medbox") ? (from.closest(".medbox").getAttribute("data-who")||"") : "");
   if(!name) return;
   if(typed){
     var t=String(typed).trim();
@@ -4701,9 +4850,13 @@ function medAdd(name,from,typed){
       if(hit && hit.n.toLowerCase()!==name.toLowerCase()) name = name+" ("+hit.n+")";
     }
   }
-  var a=(P.meds_list||[]).slice();
+  var key=MEDKEY(who);
+  var a=(P[key]||[]).slice();
   if(a.indexOf(name)<0) a.push(name);
-  P.meds_list=a; P.meds=a.join(", "); bpSync(); pStore(); pMedsRefresh(); pFlash();
+  P[key]=a;
+  if(!who){ P.meds=a.join(", "); bpSync(); }
+  pStore(); pMedsRefresh(); pFlash();
+  if(typeof render==="function" && $("script")) render();
   [].forEach.call(document.querySelectorAll(".medinput"),function(i){ i.value=""; });
   [].forEach.call(document.querySelectorAll(".medsug"),function(g){ g.innerHTML=""; });
   if(from) from.focus();
@@ -4747,6 +4900,7 @@ document.addEventListener("change",function(e){
   if(k==="hh_income_next"){ P.hh_next_manual=t.value.trim()?"1":""; }
   if(k==="income_this"||k==="sp_income") hhSync();
   if(k==="income_next"||k==="sp_income_next") hhNextSync();
+  if(k==="cur_prem"||k==="cur_emp_prem") curTotalSync();
 });
 
 /* ZIP fills the state, the date fields normalise themselves, and a DOB without a year is
@@ -4819,6 +4973,13 @@ document.addEventListener("keydown",function(e){
   }
 });
 document.addEventListener("click",function(e){
+  var tg=e.target.closest && e.target.closest("[data-fhtog]");
+  if(tg){ var tk=tg.getAttribute("data-fhtog");
+          P[tk]=(pVal(tk)||"")==="Yes" ? "No" : "Yes";
+          pStore(); pFlash();
+          if(document.getElementById("profbody")) pRender();
+          if(typeof render==="function" && $("script")) render();
+          return; }
   var h=e.target.closest && e.target.closest("[data-handoff]");
   if(h){ var w=h.getAttribute("data-handoff");
          if(w==="save") pSaveFile();
@@ -4829,8 +4990,11 @@ document.addEventListener("click",function(e){
   if(a){ var box=a.closest(".medbox"), inp=box&&box.querySelector(".medinput");
          medAdd(a.getAttribute("data-medadd"), inp, inp&&inp.value); return; }
   var d=e.target.closest && e.target.closest("[data-meddel]");
-  if(d){ var i=+d.getAttribute("data-meddel"); var arr=(P.meds_list||[]).slice(); arr.splice(i,1);
-         P.meds_list=arr; P.meds=arr.join(", "); bpSync(); pStore(); pMedsRefresh(); pFlash(); }
+  if(d){ var dw=d.getAttribute("data-medwho")||"", dk=MEDKEY(dw);
+         var i=+d.getAttribute("data-meddel"); var arr=(P[dk]||[]).slice(); arr.splice(i,1);
+         P[dk]=arr; if(!dw){ P.meds=arr.join(", "); bpSync(); }
+         pStore(); pMedsRefresh(); pFlash();
+         if(typeof render==="function" && $("script")) render(); }
 });
 
 var BEN_COLS=[["role","Primary / contingent"],["n","Name"],["rel","Relationship"],
@@ -4868,6 +5032,32 @@ document.addEventListener("change",function(e){
   if(sh){ sh.innerHTML='Booked for <b>'+esc(w)+'</b>'; if(w) sh.removeAttribute("hidden"); else sh.setAttribute("hidden",""); }
   if(document.getElementById("profbody")) pRender();
 });
+/* A You / Spouse grid. The spouse column only exists when there is a spouse on the plan -
+   an empty column is a question the agent reads out and should not. */
+var FHROWS=[
+ ["fh_cancer","sp_fh_cancer","Family history of cancer"],
+ ["fh_heart","sp_fh_heart","Family history of heart attack or heart disease"],
+ ["fh_stroke","sp_fh_stroke","Family history of stroke"],
+ ["mh_needs","sp_mh_needs","Significant mental health needs"],
+ ["mat_needs","sp_mat_needs","Any future maternity needs"]
+];
+function fhGridHTML(){
+  var sp=["Married","Partnered"].indexOf(String(P.married||""))>-1;
+  /* A toggle resting on No, not two empty chips. Nobody answers "no" to five questions in a
+     row by clicking five times, and an unanswered box looks identical to a "no" anyway - so
+     No is the resting state and the agent only moves the ones that are a yes. */
+  var cell=function(k){
+    var yes=(pVal(k)||"")==="Yes";
+    return '<span class="fhcell"><button type="button" class="fhtog'+(yes?" yes":"")+
+           '" data-fhtog="'+k+'" role="switch" aria-checked="'+(yes?"true":"false")+'">'+
+           '<span class="fhknob"></span><i>'+(yes?"Yes":"No")+'</i></button></span>';
+  };
+  return '<div class="fhgrid'+(sp?' withsp':'')+'">'+
+    '<span class="fhhead"></span><span class="fhhead">You</span>'+(sp?'<span class="fhhead">Spouse</span>':'')+
+    FHROWS.map(function(r){
+      return '<span class="fhq">'+r[2]+'</span>'+cell(r[0])+(sp?cell(r[1]):'');
+    }).join("")+'</div>';
+}
 function pDepsHTML(){
   var list=P.deps||[];
   /* Give them the number of rows they said they had, rather than one and a button they
@@ -5285,6 +5475,14 @@ function hhSync(){
   if(String(pVal("hh_income")||"")!==v) pSet("hh_income", v, true);
   hhPaint("hh_income");
 }
+/* What they pay plus what their employer pays is the real cost of the plan they have.
+   Almost nobody has added the two together, and it is the number the comparison rests on. */
+function curTotalSync(){
+  var a=num(pVal("cur_prem"))||0, b=num(pVal("cur_emp_prem"))||0;
+  var v=(a||b) ? money(a+b) : "";
+  if(String(pVal("cur_total")||"")!==v) pSet("cur_total", v, true);
+  hhPaint("cur_total");
+}
 function hhNextSync(){
   if(P.hh_next_manual) return;
   var mine=num(pVal("income_next"))||0, sp=num(pVal("sp_income_next"))||0;
@@ -5377,12 +5575,15 @@ document.addEventListener("change",function(e){
   if(t.getAttribute&&t.getAttribute("data-pk")==="height"){ var h=pHeight(t.value); if(h){ t.value=h; pSet("height",h,inCard);
       [].forEach.call(document.querySelectorAll('[data-pk="height"]'),function(el){ el.value=h; if(el.classList.contains("iblank")) pFit(el); }); } }
   if(t.getAttribute&&t.getAttribute("data-cond")){
-    var c=t.getAttribute("data-cond"), a=P.conds||[];
+    var c=t.getAttribute("data-cond"), cw=t.getAttribute("data-condwho")||"", ck=CONDKEY(cw);
+    var a=(P[ck]||[]).slice();
     if(t.checked){ if(a.indexOf(c)<0)a.push(c) } else { a=a.filter(function(x){return x!==c}) }
-    P.conds=a; pStore();
+    P[ck]=a; pStore();
     if(t.parentNode && t.parentNode.tagName==="LABEL") t.parentNode.classList.toggle("on",t.checked);
     [].forEach.call(document.querySelectorAll('[data-cond]'),function(el){
-      if(el.getAttribute("data-cond")===c) el.checked=t.checked; });
+      if(el.getAttribute("data-cond")===c && (el.getAttribute("data-condwho")||"")===cw){
+        el.checked=t.checked;
+        if(el.parentNode && el.parentNode.tagName==="LABEL") el.parentNode.classList.toggle("on",t.checked); } });
     if(document.getElementById("profbody")) pRender();
     /* Redraw wherever the tick came from. It used to redraw only for the checkbox embedded
        in the card, on the assumption that a card only ever shows its own conditions - but a
@@ -5508,6 +5709,14 @@ function popClient(){
     height:P.height||"", heightIn:inches(P.height), weight:P.weight||"",
     sex:P.sex||"", tobacco:yn(P.tobacco),
     meds:wc.meds||[], medSkip:wc.medSkip||[], conds:wc.conds||[],
+    /* The spouse's own lists. POP Pro ticks each medication row applicant or spouse, and
+       this is where that distinction comes from - which card it was typed on. */
+    spMeds:(P.sp_meds_list||[]).map(function(m){ return m.replace(/\s*\(.*\)$/,""); }),
+    spConds:(P.sp_conds||[]).map(function(n){ return {name:n}; }),
+    /* The conditions written out with the answers that were given for each. POP Pro shows
+       no condition list anywhere, so a tick there is invisible - this is the readable version
+       that goes into its routing notes. */
+    condLines:condLines(),
     spouse:{
       first:P.sp_name||"", last:P.sp_last||"", dob:dt(P.sp_dob), age:P.sp_age||"",
       height:P.sp_height||"", heightIn:inches(P.sp_height), weight:P.sp_weight||"", sex:P.sp_sex||"",
@@ -5526,6 +5735,17 @@ function popClient(){
          agent looks for "when am I seeing this person again". */
       apptWhen:P.appt_when||"", apptWho:P.appt_who||"", apptNotes:P.appt_notes||"",
       occupation:P.occupation||"",
+      kidsHealth:P.kids_health||"",
+      wantDental:P.want_dental||"", wantVision:P.want_vision||"", wantHearing:P.want_hearing||"",
+      curCarrier:P.cur_carrier||"", curPlan:P.cur_plan||"", curPrem:P.cur_prem||"",
+      curEmpPrem:P.cur_emp_prem||"", curTotal:P.cur_total||"", curDed:P.cur_ded||"",
+      curVisits:P.cur_visits||"", curCopay:P.cur_copay||"", covGap:P.cov_gap||"",
+      fhCancer:P.fh_cancer||"", fhHeart:P.fh_heart||"", fhStroke:P.fh_stroke||"",
+      mhNeeds:P.mh_needs||"", matNeeds:P.mat_needs||"",
+      spFhCancer:P.sp_fh_cancer||"", spFhHeart:P.sp_fh_heart||"", spFhStroke:P.sp_fh_stroke||"",
+      spMhNeeds:P.sp_mh_needs||"", spMatNeeds:P.sp_mat_needs||"",
+      spSurgery:P.sp_recent_stay||"", spSurgeryWhat:P.sp_recent_what||"",
+      spHospStay:P.sp_hosp_stay||"", spHealthNotes:P.sp_health_notes||"",
       incomeNext:P.income_next||"", spIncomeNext:P.sp_income_next||"", hhIncomeNext:P.hh_income_next||"",
       assetWhere:P.asset_where||"", assetEmployer:P.asset_employer||"",
       surgery:yn(P.recent_stay), surgeryWhat:P.recent_what||"",
@@ -5585,6 +5805,22 @@ function popStateFile(){
    POP Pro saves its whole state to its own storage, so one push is enough: these are there
    the next time it opens. There is no shared cookie to lean on - four subdomains is four
    origins, and nothing crosses between them except a message like this one. */
+/* Conditions and their follow-up answers, in the words the profile uses, grouped by person.
+   The follow-up keys are prefixed per person (a1c / sp_a1c), so read them the same way. */
+function condLines(){
+  var who=function(prefix){
+    return (P[prefix?"sp_conds":"conds"]||[]).map(function(c){
+      var parts=(condFollow(c)||[]).map(function(f){
+        var v=P[(prefix?"sp_":"")+f.k];
+        return v ? String(f.l).replace(/\s*\([^)]*\)\s*$/,"")+" "+v : null;
+      }).filter(Boolean);
+      return c+(parts.length? " ("+parts.join(", ")+")" : "");
+    });
+  };
+  var out={primary:who(false)};
+  if(["Married","Partnered"].indexOf(String(P.married||""))>-1) out.spouse=who(true);
+  return out;
+}
 function popAgent(){
   var g=function(k){ return String(pVal(k)||"").trim(); };
   return { name:g("a_name"), agency:g("a_agency"), npn:g("a_npn"),
