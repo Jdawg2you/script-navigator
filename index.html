@@ -499,7 +499,9 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .pfi i{font-style:normal;color:var(--muted);font-weight:600}
 .pfi input{font-family:var(--sans);font-size:13px;color:var(--ink);background:#fff;border:1px solid var(--rule);
   border-radius:5px;padding:3px 7px;width:96px}
-.pfi input:focus{outline:2px solid var(--goldline);border-color:var(--gold)}
+.pfi select{font-family:var(--sans);font-size:13px;color:var(--ink);background:#fff;
+  border:1px solid var(--rule);border-radius:5px;padding:3px 6px;height:26px;width:100%}
+.pfi input:focus,.pfi select:focus{outline:2px solid var(--goldline);border-color:var(--gold)}
 .chip{appearance:none;cursor:pointer;font-family:var(--sans);font-size:12px;font-weight:600;color:var(--slate);
   background:#fff;border:1px solid var(--rule);border-radius:20px;padding:3px 11px}
 .chip:hover{border-color:var(--gold)}
@@ -554,14 +556,57 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   background:#fff;border:1px solid var(--rule);border-radius:5px;padding:3px 9px}
 .medsug button:hover{background:var(--bluesoft);border-color:var(--blue)}
 .refrow{align-items:flex-end}
+/* A word sitting in the run of chips - same weight as the options beside it, so it reads as
+   part of the row rather than as a heading. */
+.apptpick{display:flex;align-items:flex-end;flex-wrap:wrap;gap:12px}
+.apptpick input{font-family:var(--sans);font-size:13px;color:var(--ink);background:#fff;
+  border:1px solid var(--rule);border-radius:5px;padding:4px 7px}
+.apptpick input:focus{outline:2px solid var(--goldline);border-color:var(--gold)}
+.apptshow{font-family:var(--sans);font-size:12.5px;color:var(--golddk);align-self:center}
+.apptshow b{color:var(--navy)}
+.chiplbl{font-family:var(--sans);font-size:12px;font-weight:600;color:var(--muted);
+  margin:0 2px 0 10px;white-space:nowrap}
+.rowx{appearance:none;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--muted);
+  border-radius:5px;width:22px;height:22px;line-height:1;font-size:14px;margin-left:2px;margin-bottom:1px;flex:none}
+.rowx:hover{border-color:var(--rust);color:var(--rust);background:#fff6f4}
+/* A dependant row is a name, a date and an age. The name needs room for a real name and the
+   date needs room for a whole date - the default 96px cut both off mid-word. */
+.depswrap .pfi input[data-depk="n"]{min-width:180px}
+.depswrap .pfi input[data-depk="dob"]{min-width:118px}
+.depswrap .pfi input[data-depk="age"]{max-width:64px}
+.docswrap .pfi input[data-dock="n"],
+.docswrap .pfi input[data-dock="prac"]{min-width:190px}
 .refx{appearance:none;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--muted);
   border-radius:6px;padding:5px 9px;font-size:14px;line-height:1;flex:none;margin-bottom:1px}
 .refx:hover{border-color:var(--rust);color:var(--rust)}
 .refadd{appearance:none;cursor:pointer;font-family:var(--sans);font-size:12px;font-weight:600;
   color:var(--golddk);background:#fff;border:1px dashed var(--goldline);border-radius:6px;padding:6px 12px;margin-top:2px}
 .refadd:hover{background:var(--goldsoft);border-style:solid}
+.handoff{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px;margin:2px 0}
+.hbtn{appearance:none;cursor:pointer;text-align:left;font-family:var(--sans);font-size:13px;
+  font-weight:700;color:var(--navy);background:#fff;border:1px solid var(--rule);
+  border-radius:9px;padding:11px 13px;line-height:1.3}
+.hbtn span{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:4px;line-height:1.45}
+.hbtn:hover{border-color:var(--gold);background:var(--goldsoft)}
+.hbtn.hprimary{border-color:var(--gold);background:var(--goldsoft);box-shadow:inset 0 0 0 1px var(--goldline)}
+.hbtn.hpop{background:linear-gradient(135deg,#17305C 0%,#1F4076 100%);border-color:var(--navy);color:#fff}
+.hbtn.hpop span{color:rgba(255,255,255,.72)}
+.hbtn.hpop:hover{background:linear-gradient(135deg,#1F4076 0%,#2A538F 100%)}
 .psflash{background:var(--goldsoft);border-radius:4px;transition:background .5s ease}
-.ptools{display:flex;align-items:center;gap:6px;margin:0 0 12px}
+.ptools{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+/* On the health profile the Product Wizard is the wrong tool - it rates life carriers.
+   This takes its place and spans the whole row, because it is the next step, not a sidebar. */
+.poppro{flex:1 0 100%;appearance:none;cursor:pointer;text-align:left;font-family:var(--sans);
+  background:linear-gradient(135deg,#17305C 0%,#1F4076 100%);border:1px solid var(--navy);
+  border-radius:8px;padding:9px 12px;margin-top:2px;color:#fff;display:flex;align-items:center;gap:10px}
+.poppro:hover{background:linear-gradient(135deg,#1F4076 0%,#2A538F 100%)}
+.poppro b{display:block;font-size:12.5px;font-weight:700;letter-spacing:.01em;color:#fff}
+.poppro b em{font-style:normal;color:var(--gold)}
+.poppro span{display:block;font-size:10.5px;line-height:1.45;color:rgba(255,255,255,.72);margin-top:2px}
+.poppro .arr{margin-left:auto;font-size:15px;color:var(--gold);flex:none}
+.poppro.busy{opacity:.75}
+.popnote{flex:1 0 100%;font-family:var(--sans);font-size:10.5px;line-height:1.5;
+  color:var(--muted);margin:2px 0 0}
 .pbtn{appearance:none;cursor:pointer;font-family:var(--sans);font-size:11.5px;font-weight:600;
   color:var(--golddk);background:#fff;border:1px solid var(--goldline);border-radius:6px;padding:5px 11px}
 .pbtn:hover{background:var(--goldsoft)}
@@ -862,6 +907,9 @@ var WIZ_URL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname)
 var WIZ_UNKNOWN=["High cholesterol"];
 
 var DRAWERS={
+hfpl:{title:"The subsidy cliff",html:'<div class="agentnote"><b>400% of federal poverty level, 2026. It is a cliff, not a slope.</b> A dollar over and the credit stops dead.</div><table style="width:100%;border-collapse:collapse"><tr><th align="left">Household</th><th align="left">Cut-off</th></tr><tr><td>1</td><td>$62,600</td></tr><tr><td>2</td><td>$84,600</td></tr><tr><td>3</td><td>$106,050</td></tr><tr><td>4</td><td>$127,500</td></tr><tr><td>5</td><td>$150,600</td></tr></table><h3>Why it has to happen on the call</h3><ul><li>Cosgriff, household of two, Maricopa County AZ: the same bronze plan with the same $18,000 deductible cost <b>$1,521.85/month at $100,000</b> of household income and <b>$321.85 at $84,000</b>.</li><li>She was aiming for $100,000 to fund her husband\'s spending. The extra $16,000 of income cost $14,400 in lost credit &mdash; she would have finished behind, after tax on the withdrawal.</li><li>Checked afterwards it is a correction. Checked on the call it is advice.</li></ul>'},
+hsay:{title:"Say it this way",html:'<div class="agentnote">Language that has already cost a correction once.</div><h3>Never say PPO</h3><ul><li>These are <b>fixed-benefit policies</b>, not a PPO and not a network plan.</li><li>Say: <b>&ldquo;no network restriction &mdash; any doctor, any hospital, the same benefit&rdquo;</b>, then name the trade: <b>there is no annual out-of-pocket cap.</b></li><li>On the Cosgriff discovery call the words &ldquo;PPO option, private network&rdquo; were used and a written correction was owed.</li></ul><h3>The share question</h3><ul><li>&ldquo;Is that your share, or the whole premium?&rdquo; Both Boo and Livingston gave their payroll share and the true premium was roughly double.</li></ul>'},
+
 
 iulobj:{title:"Objections",html:'<div class="agentnote">Every one of these is built into the script as a branch button. This panel is the whole set on one page, in call order.</div><h3>Opening</h3><ul><li><b>No longer interested</b> &mdash; find out whether something changed or they never wanted it, before you argue with it.</li><li><b>I already got one</b> &mdash; run the quick policy review. Half the time it isn\'t built the way they think it is, and that conversation is worth more than the objection.</li><li><b>I don\'t remember filling anything out</b> &mdash; re-anchor on the request itself, then on what they were trying to solve.</li><li><b>Not much cash available right now</b> &mdash; separate &ldquo;this month is tight&rdquo; from &ldquo;money is genuinely tight.&rdquo; They are different calls.</li><li><b>Money is genuinely tight</b> &mdash; forks on whether they have anything in place at all. If they have nothing, protection comes before wealth building.</li></ul><h3>At the close &mdash; &ldquo;I need to think about it&rdquo;</h3><div class="agentnote"><b>Never take this one at face value.</b> It is almost always the polite version of one of the three below. Ask &ldquo;while I\'ve got you, what questions can I answer?&rdquo; and listen for which one it actually is.</div><ul><li><b>It\'s the money</b> &mdash; the IUL is flexible, so go smaller rather than losing it. &ldquo;Start small, you can increase it later once you see how it performs.&rdquo; Then: <b>&ldquo;What would a more comfortable amount be for you?&rdquo;</b> Let them name the number &mdash; if you name it, they negotiate against it.</li><li><b>Something they aren\'t saying</b> &mdash; &ldquo;If you had to point at one thing making you want to sit on it, what would that be?&rdquo; If they still won\'t name it, give them doors: is it the amount, or how the plan works?</li><li><b>They want to talk to their spouse</b> &mdash; forks again: get the spouse on the phone, or find out whether they only need buy-in and can be direct.</li></ul><div class="agentnote"><b>Only book a follow-up if it is real.</b> Someone who genuinely needs to look at their numbers and then get set up is a real appointment. Someone being polite is not, and taking it costs you the call.</div><h3>During the application</h3><ul><li><b>The social</b> &mdash; the carrier verifies health through the MIB rather than taking your word for it, and the social is how they do it. Then remind them you sent your license information at the start.</li><li><b>Banking</b> &mdash; checking runs through their bank and is the safest form of payment; the same numbers are printed on the front of every paper check.</li></ul><h3>After underwriting</h3><ul><li><b>Hesitant about the changes</b> &mdash; when it comes back different from what you quoted, handle the change itself rather than re-selling the whole plan.</li></ul>'},
 
@@ -888,7 +936,9 @@ var SCRIPTS=[
  {k:"iul",     ready:true,  title:"Indexed Universal Life",
   desc:"Warm or scheduled IUL calls. Goal discovery, eligibility, then a fork into IUL, a Zoom for larger cases, or a whole life pivot."},
  {k:"mortgage",ready:true,  title:"Mortgage Protection",
-  desc:"Homeowner leads. Reframes payoff into protecting equity and buying time, then forks into IUL, whole life, or term."}
+  desc:"Homeowner leads. Reframes payoff into protecting equity and buying time, then forks into IUL, whole life, or term."},
+ {k:"health",   ready:true,  title:"Health — Discovery Call",
+  desc:"Private health discovery. Appointment or warm call, the qualifying open, household and health, the subsidy cliff, then book the presentation."}
 ];
 
 var LIB={
@@ -1207,7 +1257,9 @@ h_meds_yes:{s:"6",pf:"health",t:"On medications",l:[
 {t:"meds"},
 {t:"tip",x:"Type them here and they land on the profile. It knows brand names and copes with a rough spelling. Working off paper instead? Just write them down."},
 {t:"paper",x:"<b>Are you on more than three?</b><br>If more than three: &ldquo;Take your time and go grab those for me.&rdquo; &middot; If three or fewer: &ldquo;What are they, and what\'s each one for?&rdquo;<br>Have them SPELL them, not read them. That\'s how you catch Eliquis versus Elavil."},
-{t:"do",x:"The med list is your lie detector. They'll say no heart problems while you're looking at Eliquis on your notepad."}
+{t:"do",x:"The med list is your lie detector. They'll say no heart problems while you're looking at Eliquis on your notepad."},
+{t:"cfollow",meds:true},
+{t:"do",x:"When a medication raises a condition, say yes and answer the questions that open up right here. Don't save it for the condition cards &mdash; you have them talking about it now."}
 ],b:[{k:"Move to conditions",to:"h_heart",c:"go"}]},
 
 h_meds_no:{pf:"health",s:"6",t:"No medications",l:[
@@ -2075,7 +2127,9 @@ i_h_meds:{s:"8",pf:"health",t:"Medications",l:[
 {t:"meds"},
 {t:"ask",x:"Anything you've been prescribed in the last one to five years that you're not on now? {{past_meds}}"},
 {t:"pf",ks:["past_meds_what"],when:["past_meds","Yes"]},
-{t:"do",x:"The med list is your lie detector. If they name a condition you didn't hear about, go back and ask about it."}
+{t:"do",x:"The med list is your lie detector. If they name a condition you didn't hear about, go back and ask about it."},
+{t:"cfollow",meds:true},
+{t:"do",x:"When a medication raises a condition, say yes and answer the questions that open up right here. Don't save it for the condition cards &mdash; you have them talking about it now."}
 ],b:[{k:"Next",to:"i_h_heart",c:"go"}]},
 
 i_h_tobacco:{s:"8",pf:"health",t:"Tobacco",l:[
@@ -2611,6 +2665,281 @@ i_wrap_close:{s:"16",t:"Close",l:[
 ],b:[{k:"Start a new call",to:"i_start",c:"go"}]}
 
 }},
+health:{
+first:"hs_start",
+P:{
+"1":"Decide which call this is, and either start it or book it.",
+"2":"Earn the right to ask, and find out why they are shopping.",
+"3":"Who is in the household and what they do for a living.",
+"4":"The facts that decide which plans they can actually buy.",
+"5":"Health history, in enough detail to underwrite.",
+"6":"Income, the subsidy cliff, and what they can genuinely afford.",
+"7":"Position the presentation and book it with the right people on it."
+},
+drawers:["hfpl","hsay"],
+S:{"1":"Appointment or Warm","2":"The Open","3":"The Household","4":"Qualify",
+   "5":"Health","6":"Money","7":"Book It"},
+STAGES:[
+{n:1,lbl:"Start",secs:["1"]},
+{n:2,lbl:"Open",secs:["2"]},
+{n:3,lbl:"Discovery",secs:["3","4","5"]},
+{n:4,lbl:"Money",secs:["6"]},
+{n:5,lbl:"Book",secs:["7"]}],
+ENTRY:{"1":"hs_start","2":"hs_open","3":"hs_family","4":"hs_qualify",
+       "5":"hs_history","6":"hs_income","7":"hs_book"},
+ID:{
+hs_start:"1.1",
+hs_warm:"1.2", hs_warm_yes:"1.2a", hs_warm_book:"1.2b",
+hs_book_times:"1.3", hs_book_who:"1.3a", hs_book_lock:"1.3b", hs_book_end:"1.3c",
+hs_open:"2.1", hs_qualify_first:"2.2", hs_tone:"2.3", hs_why:"2.4",
+hs_why_losing:"2.4a", hs_diff:"2.5", hs_startdate:"2.6",
+hs_family:"3.1", hs_occupation:"3.2",
+hs_qualify:"4.1", hs_household:"4.2",
+hs_history:"5.1", hs_conds:"5.2", hs_recent:"5.3",
+hs_found:"2.2a", hs_found_end:"2.2b",
+hs_income:"6.1", hs_budget:"6.2",
+hs_book:"7.1"
+},
+N:{
+
+hs_start:{s:"1",t:"Which call is this?",unmark:"did_discovery",l:[
+{t:"do",x:"Pick before you dial. It changes the first thirty seconds and nothing after them."}
+],bh:"Which is it?",b:[
+{k:"They booked an appointment",to:"hs_open",c:"go"},
+{k:"Warm call — they requested info",to:"hs_warm"}]},
+
+hs_warm:{s:"1",pf:"who",t:"Warm reach-out",l:[
+{t:"say",x:"Hi ___(first name)? This is ___(your name) &mdash; I'm reaching out because you'd originally requested some information about private health options."},
+{t:"say",x:"I wanted to get back to you and see how we can best help you out."},
+{t:"ask",x:"I've got your date of birth as ___ &mdash; is that right? {{dob}}"},
+{t:"do",x:"Confirm one thing you already have. It proves the request was real and it earns the next sixty seconds."},
+{t:"train",x:"They did not book this call, so the first objection lands here rather than later. Handle it and keep going, or book it properly &mdash; do not push a discovery call into a bad moment."}
+],bh:"How does it land?",b:[
+{k:"Good — keep going now",to:"hs_warm_yes",c:"go"},
+{k:"Not a good time — book it",to:"hs_warm_book",c:"alert"}]},
+
+hs_warm_yes:{s:"1",t:"They'll talk now",l:[
+{t:"say",x:"Perfect &mdash; this'll only take a few minutes, and I'll tell you straight away whether I can help."},
+{t:"do",x:"Go straight into the open. You have already confirmed who they are, so skip the verification there."}
+],b:[{k:"Into the call",to:"hs_qualify_first",c:"go"}]},
+
+hs_warm_book:{s:"1",t:"Book it instead",l:[
+{t:"say",x:"No problem at all &mdash; let's get a proper time on the calendar so I'm not rushing you."},
+{t:"do",x:"Do not try to salvage it into a discovery call. A booked call with the right people on it beats a half call now."}
+],b:[{k:"Set the time",to:"hs_book_times",c:"go"}]},
+
+hs_book_times:{s:"1",t:"Two times",l:[
+{t:"say",x:"Let's look at tomorrow &mdash; would during the day or the evening be better for you?"},
+{t:"do",x:"Let them pick the half of the day. You are narrowing, not offering a blank calendar."},
+{t:"ask",x:"Okay &mdash; I have ___(time A) or ___(time B). Which is better for you?"},
+{t:"warn",x:"<b>Two times, from your own calendar, in their time zone.</b> You captured their ZIP at qualification, so you know which one that is. Never ask &ldquo;when are you free?&rdquo;"}
+],b:[{k:"They have a spouse or partner",to:"hs_book_who",c:"go"},{k:"Just them",to:"hs_book_lock"}]},
+
+hs_book_who:{s:"1",pf:"who",t:"Who else needs to be on it",l:[
+{t:"ask",x:"Would you like your ___(spouse or partner) to be with you for the presentation call?"},
+{t:"say",x:"The reason I ask is that I don't want to put you in a position where you have to re-explain everything we covered. That wouldn't really be fair to you &mdash; they'll have questions, and you wouldn't have the answers to hand. I'd rather give them the chance to ask me directly."},
+{t:"ask",x:"So &mdash; would you like them on the appointment as well?"},
+{t:"pf",ks:["appt_who"]}
+],bh:"What do they say?",b:[{k:"Yes \u2014 are they free at that time?",to:"hs_book_lock",c:"go"},{k:"No \u2014 let\u2019s get you locked in",to:"hs_book_lock"}]},
+
+hs_book_lock:{s:"1",t:"Lock it in",l:[
+{t:"say",x:"I just want to make sure you have my full name &mdash; ___(your name)."},
+{t:"say",x:"Please block off about 15 minutes on either side, in case I'm running early or behind."},
+{t:"say",x:"I'm going to send you a text message confirmation. When that comes through, if you can just reply with a yes or a thumbs up, so I know you received it."},
+{t:"do",x:"Send the text now, while they're still on the phone. Not after."},
+{t:"say",x:"Now, I do have one request that I'd like to make."},
+{t:"do",x:"Micro-pause. Let them say &ldquo;sure&rdquo;. The pause is what turns this from a throwaway line into a commitment."},
+{t:"say",x:"<i>&ldquo;If anything comes up, would you do me the courtesy of letting me know as soon as possible? I'd hate to be sitting there waiting for our call, getting sucked into TikTok. So if something changes, just let me know and I'll move our time to what works better. Is that fair?&rdquo;</i>"},
+{t:"tip",x:"Say it however it comes out of your mouth &mdash; the words are not the point. The point is that they hear our time is worth something too. That is what turns a booking into a kept appointment."},
+{t:"do",x:"Wait for the yes. That yes is the appointment."},
+{t:"say",x:"And just so you know, we won't be committing to anything on that call. What I'll do is break it all down so you're completely clear, and then you'll tell me which direction you'd like to go from there."},
+{t:"ask",x:"Real quick &mdash; what time do you have us down for?"},
+{t:"appt"},
+{t:"do",x:"Make them say it back. That is what makes appointments hold."}
+],b:[{k:"Wrap up client for next steps",to:"hs_book_end",c:"go"}]},
+
+hs_book_end:{s:"1",t:"After the booking",l:[
+{t:"note",x:"Log it, send the confirmation text, set your own reminder. Call back at the exact time you promised."},
+
+/* The plain booking ends here. The one that follows a full discovery does not - there is a
+   profile sitting in front of the agent and it is worth something only if it gets saved. */
+{t:"dobig",when:["did_discovery","Yes"],x:"You have a full profile on this one. Don't let it die in the browser tab."},
+{t:"say",when:["did_discovery","Yes"],x:"<b>Save it, then push it over.</b> Saving keeps a copy on record and gives you a file you can reload before the presentation call &mdash; so you walk in already knowing their medications, their doctors, their income and their number."},
+{t:"handoff",when:["did_discovery","Yes"]},
+{t:"do",when:["did_discovery","Yes"],x:"Save first, every time. Once it is saved, open MyPOP Pro and start building the good / better / best while the call is still fresh."},
+{t:"train",when:["did_discovery","Yes"],x:"<b>The presentation is built before the call, not on it.</b> If you open POP Pro cold at the appointment time you will spend the first ten minutes typing what they already told you, and they will hear it."},
+{t:"warn",when:["did_discovery","Yes"],x:"The saved file lives in your downloads folder, not in this browser. It has health information in it &mdash; keep it where you keep client paperwork, and don't email it around."}
+],b:[{k:"Back to the start",to:"hs_start",c:"go"}]},
+
+hs_open:{s:"2",pf:"who",t:"Open",l:[
+{t:"say",x:"Hi, ___(first name) ___(last name)?"},
+{t:"do",x:"Pause. Get confirmation it's them before you keep going. The last name is for spelling checks later &mdash; it only needs typing once."},
+{t:"say",x:"Hi ___(first name) &mdash; this is ___(your name) with ___(your agency). We have the appointment for the private health insurance. How are you today?"},
+{t:"do",x:"Pause."},
+{t:"say",x:"<i>Optional &mdash; (is this still a good time to connect?)</i>"}
+],b:[{k:"Next",to:"hs_qualify_first",c:"go"}]},
+
+hs_qualify_first:{s:"2",t:"Qualify first",l:[
+{t:"say",x:"Before I get into who we are and the boring stuff &mdash; I need to see if we can even help you out."},
+{t:"ask",x:"Have you already found a really good plan that's affordable for you, or are you still looking?"},
+{t:"do",x:"Ask this before the credibility block. If they're already covered and happy, you've both saved twenty minutes."}
+],bh:"What do they say?",b:[{k:"Still looking",to:"hs_tone",c:"go"},{k:"They found something great",to:"hs_found",c:"alert"}]},
+
+
+hs_found:{s:"2",pf:"why",t:"\u201cI already found something great\u201d",l:[
+{t:"say",x:"That's genuinely good to hear &mdash; most people I speak to haven't."},
+{t:"ask",x:"So I'm not wasting your time: what did you land on, and what are you paying for it?"},
+{t:"pf",ks:["why_note"]},
+{t:"do",x:"Write down what they say. You are deciding in the next thirty seconds whether there is a reason to keep going, and if there isn't you end the call cleanly and quickly."},
+{t:"train",x:"<b>Do not argue with their plan.</b> They just told you they solved the problem you rang about. Arguing makes you the pushy agent. The only honest reasons to keep talking are that something is <i>missing</i>, not that what they have is bad."},
+{t:"dobig",x:"Four things worth one question each. Stop at the first no."},
+{t:"note",x:"<b>1 &middot; Is it actually in force?</b> &ldquo;Has it started yet, or does it kick in later?&rdquo; A plan they have chosen but not started is still a plan you can compare."},
+{t:"note",x:"<b>2 &middot; Is the whole household on it?</b> &ldquo;Does that cover everyone, or just you?&rdquo; A spouse or child left off is the most common gap."},
+{t:"note",x:"<b>3 &middot; Dental and vision.</b> &ldquo;Did they include dental and vision, or is that separate?&rdquo; Almost never included, cheap to add, and it is a real gap rather than a pitch."},
+{t:"note",x:"<b>4 &middot; The rest of the picture.</b> &ldquo;While I've got you &mdash; is anything in place if you couldn't work for a few months? Life cover? Anything for retirement?&rdquo; This is the Package of Protection conversation and it is the reason the call was worth making."},
+{t:"warn",x:"<b>If all four come back covered, end it and mean it.</b> &ldquo;Honestly, it sounds like you're in good shape &mdash; I'm not going to try to sell you something you don't need. If anything changes, keep my number.&rdquo; You will get referrals from that call. You will not get them from the other kind."}
+],bh:"Where did that land?",b:[
+{k:"There's a gap \u2014 keep going",to:"hs_tone",c:"go"},
+{k:"They're genuinely covered \u2014 end well",to:"hs_found_end"}]},
+
+hs_found_end:{s:"2",t:"Ending it well",l:[
+{t:"say",x:"Honestly &mdash; it sounds like you're in good shape, and I'm not going to try to sell you something you don't need."},
+{t:"say",x:"Do me one favour though: keep my number. If anything changes with the plan, or with work, or if anyone you know is stuck on this &mdash; I'd rather be the person you call than the one you have to go looking for."},
+{t:"do",x:"Log it honestly. A clean no today is worth more than a bad fit you spend three months servicing."}
+],b:[{k:"Back to the start",to:"hs_start",c:"go"}]},
+
+hs_tone:{s:"2",t:"Set the tone",l:[
+{t:"say",x:"Most agents will try to sell you a policy right away. We look at your whole situation and put together a <b>Package of Protection</b>."},
+{t:"say",x:"That doesn't mean more insurance. It means making sure there are no financial risks sitting right in front of you that could hurt you or your family."},
+{t:"say",x:"It also means I'm going to ask you some questions that aren't only about your health and your health insurance &mdash; some are about your overall finances. That's so I've got the whole picture, because your situation affects both the coverage that's <i>available</i> to you and the coverage you actually <i>need</i>."},
+{t:"train",x:"That third line buys you the income and savings questions later. Say it now and they are expected. Skip it and question 9 sounds nosy."}
+],b:[{k:"Next",to:"hs_why",c:"go"}]},
+
+hs_why:{s:"2",pf:"why",t:"Why they're shopping",l:[
+{t:"ask",x:"So what made you start looking?"},
+{t:"pf",ks:["why_note"]},
+{t:"do",x:"Whatever they say, they're right. Agree. You'll say it back to them on the presentation."},
+{t:"ask",x:"Was it the cost, the coverage, or something else that made you realise what you've got going on isn't working?"},
+{t:"warn",x:"<b>Only skip that second question if they're losing it through work.</b> That is the reason, and you already have it. Anything else &mdash; cost, a rate rise, a network change, a claim that didn't pay &mdash; and you dig until you know what actually broke. That answer is the why you sell back to them later."}
+],bh:"What did they say?",b:[
+{k:"Cost, coverage, general",to:"hs_diff",c:"go"},
+{k:"They're losing coverage",to:"hs_why_losing",c:"alert"}]},
+
+hs_why_losing:{s:"2",t:"Losing coverage",l:[
+{t:"say",x:"Okay, I understand."},
+{t:"ask",x:"Now &mdash; is that a done deal? {{losing}}"},
+{t:"ask",x:"And when's your last day of coverage? ___(last day of cover)"},
+{t:"warn",x:"<b>The date, not the month.</b> It sets the effective date and the enrolment clock. It was never asked on Boo or Cosgriff and both cases stalled on it."}
+],b:[{k:"Next",to:"hs_diff",c:"go"}]},
+
+hs_diff:{s:"2",t:"The differentiator",l:[
+{t:"say",x:"I work with a lot of self-employed people frustrated with what healthcare costs. Every marketplace plan &mdash; ACA, Obamacare, same thing &mdash; has to carry all ten essential benefits."},
+{t:"say",x:"Most people don't need all ten. If you're not planning on having a baby, why pay for maternity &mdash; one of the most expensive things a plan can cover? So I tailor a plan around what you actually use."},
+{t:"warn",x:"<b>Never call these PPO plans.</b> They're fixed-benefit policies. Say &ldquo;no network restriction &mdash; any doctor, any hospital, the same benefit&rdquo;, then name the trade: there's no annual out-of-pocket cap."}
+],b:[{k:"Next",to:"hs_startdate",c:"go"}]},
+
+hs_startdate:{s:"2",t:"Start date",l:[
+{t:"ask",x:"Assuming we get you qualified &mdash; when would you want your coverage to start? ___(start date)"},
+{t:"do",x:"Usually no sooner than 15 days out. Most carriers start on the 1st or the 15th."},
+{t:"train",x:"<b>Ask it even when you think you know.</b> If they're losing cover you'll assume they want it the day after, and you'll often be right. But some are on a spouse's plan for a month, some are waiting on a new job's cover, some want it lined up with a birthday. Asking costs a sentence; assuming wrong costs the effective date.<br><br>Ask it forward: <i>&ldquo;so we line this up right &mdash; when would you want it to start?&rdquo;</i> reads as planning."}
+],b:[{k:"Move to the household",to:"hs_family",c:"go"}]},
+
+hs_family:{s:"3",pf:"who",t:"Family",l:[
+{t:"ask",x:"Tell me about your family. Married, single, children, grandchildren? Anyone financially dependent on you? {{married}} <span class=\"chiplbl\">Dependents / kids</span> {{kids}}"},
+{t:"do",x:"You want the shape of the household here, not the detail. Names, dates of birth and the rest come at 4.2 in one pass, where they belong."}
+],b:[{k:"Next",to:"hs_occupation",c:"go"}]},
+
+hs_occupation:{s:"3",pf:"income",t:"Occupation",l:[
+{t:"ask",x:"What kind of work do you do? ___(type of work)"},
+{t:"ask",x:"And how long have you been doing that? ___(how long)"},
+{t:"train",x:"<b>This is not small talk.</b> What they do decides how much risk sits outside the health plan. An office job and a power-line job carry the same health premium and completely different exposure &mdash; accident cover, disability, workman's comp. You're listening for the gap you'll name on the presentation."},
+{t:"do",x:"If they're changing jobs or retiring, follow it. It moves the timeline and usually the income."}
+],b:[{k:"Move to qualifying",to:"hs_qualify",c:"go"}]},
+
+hs_qualify:{s:"4",pf:"build",t:"Qualification",l:[
+{t:"say",x:"So I know which private plans you may qualify for &mdash;"},
+{t:"ask",x:"what's your zip code? ___(zip) &mdash; and that's ___(state), right?"},
+{t:"ask",x:"Your date of birth? ___(DOB) &mdash; so that makes you ___(age)."},
+{t:"ask",x:"Height and weight? ___(height) ___(weight)"},
+{t:"ask",x:"And do you use any tobacco products? {{tobacco}}"}
+],b:[
+{k:"On to the household",to:"hs_household",c:"go",when:["married",["Married","Partnered"]]},
+{k:"On to the household",to:"hs_household",c:"go",when:["kids",["1","2","3","4+"]]},
+{k:"On to health",to:"hs_history",c:"go",allOf:[["married",["Single","Divorced","Widowed",""]],["kids",["","0"]]]}]},
+
+hs_household:{s:"4",t:"Household",l:[
+{t:"ask",x:"Now let me grab a little more information about the members of your household."},
+{t:"say",when:["married",["Married"]],x:"<b>And your spouse &mdash;</b>"},
+{t:"say",when:["married",["Partnered"]],x:"<b>And your partner &mdash;</b>"},
+{t:"ask",when:["married",["Married","Partnered"]],x:"Name? ___(spouse first name) ___(spouse last name) &mdash; date of birth? ___(spouse DOB), so that's ___(spouse age)."},
+{t:"ask",when:["married",["Married","Partnered"]],x:"Height and weight? ___(spouse height) ___(spouse weight) &mdash; and tobacco? {{sp_tobacco}}"},
+{t:"say",when:["kids",["1","2","3","4+"]],x:"<b>Okay &mdash; now on to the kids.</b>"},
+{t:"deps",when:["kids",["1","2","3","4+"]]},
+{t:"do",x:"Name, date of birth and gender for each child &mdash; the age works itself out. No height, weight or tobacco; those only rate the adults."}
+],b:[{k:"Move to health",to:"hs_history",c:"go"}]},
+
+hs_history:{s:"5",pf:"health",t:"Health history",l:[
+{t:"say",x:"Now a few health questions, so I know what you'll actually qualify for."},
+{t:"ask",x:"Are you on any medications right now?"},
+{t:"meds"},
+{t:"tip",x:"Type them here and they land on the profile. It knows brand names and copes with a rough spelling. Working off paper instead? Just write them down."},
+{t:"cfollow",all:true},
+{t:"do",x:"The medications tell you the conditions. Answer the follow-ups they raise &mdash; you do not need to read a list of illnesses at someone."},
+{t:"warn",x:"<b>Spell them, per person.</b> &ldquo;Alma Sartin&rdquo; turned out to be olmesartan and cost a follow-up call on the Cosgriff case."},
+{t:"ask",x:"And aside from what we've covered already &mdash; are there any other health conditions I should know about? ___(anything else)"}
+],b:[{k:"Next",to:"hs_conds",c:"go"}]},
+
+
+hs_conds:{s:"5",pf:"health",t:"Recent history",l:[
+{t:"ask",x:"In the last two years, any surgeries? {{recent_stay}}"},
+{t:"ask",when:["recent_stay","Yes"],x:"What was that for? ___(what for)"},
+{t:"ask",x:"And any hospital stays in the last two years? {{hosp_stay}}"},
+{t:"ask",when:["hosp_stay","Yes"],x:"What was that for? ___(hospital stay)"},
+{t:"note",x:"<b>Standing rule on every yes:</b> when was it, what was it for, and what are they taking for it now."}
+],b:[{k:"Next",to:"hs_recent",c:"go"}]},
+
+hs_recent:{s:"5",pf:"health",t:"Doctors they want to keep",l:[
+{t:"ask",x:"Are there any doctors you'd really like to keep, if we can? {{keep_docs}}"},
+{t:"docs",when:["keep_docs","Yes"]},
+{t:"train",when:["keep_docs","Yes"],x:"<b>The name is not the point. &ldquo;Must keep&rdquo; is.</b> If a doctor is a hard requirement that decides whether a network plan is even on the table, before you quote anything. If they're relaxed about it you have far more room."},
+{t:"do",when:["keep_docs","Yes"],x:"They usually have not checked whether that doctor takes their ACA plan. &ldquo;Not checked&rdquo; is a real answer &mdash; record it rather than guessing."}
+],b:[{k:"Move to money",to:"hs_income",c:"go"}]},
+
+
+
+hs_income:{s:"6",pf:"income",t:"Income and the cliff",l:[
+{t:"say",x:"Okay &mdash; and this is the part I flagged at the start, where I look at the whole picture."},
+{t:"ask",x:"Roughly what will your income be this year? ___(your income)"},
+{t:"pf",ks:["sp_income"],when:["married",["Married","Partnered"]]},
+{t:"pf",ks:["hh_income"]},
+{t:"ask",x:"And is next year going to look about the same, or different? {{next_same}}"},
+{t:"pf",ks:["income_next","sp_income_next","hh_income_next"],when:["next_same","Different"]},
+{t:"ask",x:"Have you given any thought to a target age for retirement? ___(your retirement age)"},
+{t:"pf",ks:["sp_retire"],when:["married",["Married","Partnered"]]},
+{t:"say",x:"Some plans carry high deductibles &mdash; I'll steer you away from those, but I do want to know what's behind you if something big happened."},
+{t:"ask",x:"Do you have liquid savings &mdash; something like six months put aside if there were an emergency? {{has_liquid}}"},
+{t:"ask",when:["has_liquid","Yes"],x:"Roughly how much? ___(approximate savings)"},
+{t:"ask",x:"And is there anything else that acts like an insurance policy for your finances? A 401(k), an IRA, savings? {{has_assets}}"},
+{t:"pf",ks:["asset_where","asset_amt"],when:["has_assets","Yes"]},
+{t:"pf",ks:["asset_employer"],when:["has_assets","Yes"]},
+{t:"pf",ks:["asset_prot","asset_notes"],when:["has_assets","Yes"]},
+{t:"train",x:"<b>You are not selling any of this today.</b> You are finding out whether a big medical bill would land on savings, on a retirement account, or on nothing at all. That answer is what the Package of Protection conversation is built from on the presentation call."}
+],b:[{k:"Next",to:"hs_budget",c:"go"}]},
+
+hs_budget:{s:"6",t:"Budget",l:[
+{t:"say",x:"Now &mdash; we all have a budget. With healthcare it can get expensive fast, and I'm going to work to get you the most protection for the least money."},
+{t:"say",x:"But it helps me to know roughly where you'd like to land, because when I put this together I'll show you a good, a better and a best option &mdash; and I'd rather build those around your number than guess at it."},
+{t:"ask",x:"So thinking about it that way: what would feel comfortable, and what's the top of what you'd want to spend? ___(comfortable budget) ___(max)"},
+],b:[{k:"Book the follow-up presentation",to:"hs_book",c:"go"}]},
+
+
+
+hs_book:{s:"7",t:"Book it",mark:"did_discovery",l:[
+{t:"say",x:"So the next step is a proper walk-through. I'll have real numbers in front of you and we'll go through them together."},
+{t:"do",x:"You are not closing here. You are booking. Same discipline as any other appointment &mdash; two times, who else needs to be on it, and the commitment."}
+],b:[{k:"Set the time",to:"hs_book_times",c:"go"}]}
+
+}},
 mortgage:{
 first:"m_open",
 P:{
@@ -2979,9 +3308,13 @@ m_h_rest:{s:"9",t:"Recent history",l:[
 {t:"ask",x:"Anything else medically I should know about?"}
 ],b:[{k:"Next",to:"m_h_meds",c:"go"}]},
 
-m_h_meds:{s:"9",t:"Medications",l:[
+m_h_meds:{s:"9",pf:"health",t:"Medications",l:[
 {t:"ask",x:"What prescriptions do you currently take, and what are they treating?"},
-{t:"dobig",x:"Dialogue this &mdash; don't machine-gun it. What they take usually reveals conditions they didn't mention. If a med doesn't match anything they told you, go back and ask about it."}
+{t:"meds"},
+{t:"tip",x:"Type them here and they land on the profile. It knows brand names and copes with a rough spelling. Working off paper instead? Just write them down."},
+{t:"dobig",x:"Dialogue this &mdash; don't machine-gun it. What they take usually reveals conditions they didn't mention. If a med doesn't match anything they told you, go back and ask about it."},
+{t:"cfollow",meds:true},
+{t:"do",x:"When a medication raises a condition, say yes and answer the questions that open up right here. Don't save it for the condition cards &mdash; you have them talking about it now."}
 ],b:[{k:"Next",to:"m_h_transition",c:"go"}]},
 
 m_h_transition:{s:"9",t:"Why you asked",l:[
@@ -3344,7 +3677,7 @@ function fmt(x){
             var k=(typeof BLANKMAP!=="undefined")?BLANKMAP[lab]:null;
             var v=(typeof pBlank==="function")?pBlank(lab):"";
             if(k && k.indexOf("a_")!==0 && PROFILE_ON){
-              var w=Math.max(9,Math.min(26,(v||lab).length+2));
+              var w=Math.max(DATEKEYS[k]?16:9,Math.min(26,(v||lab).length+2));
               if(MULTILINE[k])
                 return '<textarea class="iblank igrow" data-pk="'+k+'" data-inline="1" rows="1"'+
                        ' placeholder="'+esc(lab)+'">'+esc(v)+'</textarea>';
@@ -3388,9 +3721,14 @@ function condFollow(c){
   if(!hasWhen && !NO_DATE[c]) fu.unshift({k:condKey(c), l:"When? (month and year)", drv:true});
   return fu;
 }
-function cfollowHTML(names){
+/* Card-scoped by default: each card names its own conditions with {{c:}} and only asks the
+   follow-ups for those, so the heart card does not sprout diabetes questions.
+   `all` widens it to every condition on the case. The health script needs that, because there
+   the conditions arrive from the medication list rather than from a tick on the card - and a
+   follow-up the agent can only find by opening the profile panel is a follow-up nobody asks. */
+function cfollowHTML(names,all){
   var on=(P.conds||[]), out=[];
-  names.forEach(function(c){
+  (all ? on.slice() : names).forEach(function(c){
     if(on.indexOf(c)<0) return;
     var fu=condFollow(c);
     out.push('<div class="cfollow"><div class="cfh">They said yes to <b>'+esc(c)+'</b> &mdash; ask:</div>'+
@@ -3483,6 +3821,20 @@ var MED_FOR={
  "Truvada":["AIDS / HIV / ARC"],"Biktarvy":["AIDS / HIV / ARC"],"Descovy":["AIDS / HIV / ARC"],
  "Oxygen":["Oxygen / ventilator"],"Dialysis":["Dialysis"]
 };
+/* The conditions this client's medication list points at, that have since been ticked.
+   medFlags() is the other half - it lists the ones NOT yet ticked, so it can offer them.
+   This is what a medication card shows the detail for: the diseases that came up because
+   of a medication, rather than everything on the case. */
+function medCondsOn(){
+  var on=(P.conds||[]), out=[];
+  (P.meds_list||[]).forEach(function(m){
+    var base=m.replace(/\s*\(.*\)$/,"");
+    (MED_FOR[base]||[]).forEach(function(c){
+      if(on.indexOf(c)>-1 && out.indexOf(c)<0) out.push(c);
+    });
+  });
+  return out;
+}
 function medFlags(){
   var on=(P.conds||[]), out=[];
   (P.meds_list||[]).forEach(function(m){
@@ -3552,6 +3904,11 @@ function pGrow(el){ el.style.height="auto"; el.style.height=(el.scrollHeight+2)+
 function pFit(el){
   var len=(el.value||el.placeholder||"").length;
   var n=Math.max(9,Math.min(46,Math.ceil(len*1.25)+2));   /* serif letters are wider than a ch */
+  /* A date box is sized for the date it will hold, not for the word on the label. "DOB" is
+     three letters and 09/02/2014 is ten, so fitting the label leaves the date clipped. This
+     runs after render and has the last word on the width, so the floor belongs here. */
+  var k=el.getAttribute && el.getAttribute("data-pk");
+  if(k && typeof DATEKEYS!=="undefined" && DATEKEYS[k]) n=Math.max(n,16);
   el.style.width=n+"ch";
 }
 
@@ -3619,6 +3976,13 @@ function pJump(id){
 
 function render(){
   var n=N[cur];
+  /* Some cards are a fork in the road rather than a question - the booking card at the end
+     of a full discovery reads differently from the one at the end of a two-minute warm call,
+     and the only thing that tells them apart is which way the agent came. */
+  if(n.mark && P[n.mark]!=="Yes"){ P[n.mark]="Yes"; pStore(); }
+  /* and cleared again at the top of the call, so yesterday's discovery does not follow
+     today's two-minute warm call into the booking. */
+  if(n.unmark && P[n.unmark]){ delete P[n.unmark]; pStore(); }
   $("eyebrow").textContent=S[n.s];
   /* The lead switch belongs in the header, beside the title - it steers the wording rather than
      recording an answer. It shows on any card that actually reads it, so it is there on the opener
@@ -3662,7 +4026,7 @@ function render(){
     while((m=re.exec(L.x||""))) if(cardConds.indexOf(m[1])<0) cardConds.push(m[1]);
   });
   $("script").innerHTML=n.l.map(function(L){
-    if(L.t==="cfollow") return cfollowHTML(cardConds);
+    if(L.t==="cfollow") return cfollowHTML(L.meds ? medCondsOn() : cardConds, L.all);
     var x=fmt(L.x||"");
     if(L.when && L.t!=="askif" && L.t!=="alt" && L.t!=="pf"){
       var isList=Object.prototype.toString.call(L.when[0])==="[object Array]";
@@ -3694,6 +4058,17 @@ function render(){
     if(L.t==="bens") return !PROFILE_ON ? "" : '<div class="line" id="benscard">'+pBensHTML()+'</div>';
     if(L.t==="refs") return !PROFILE_ON ? "" : '<div class="line" id="refscard">'+pRefsHTML()+'</div>';
     if(L.t==="meds") return !PROFILE_ON ? "" : '<div class="line">'+pMedsHTML(true)+'<div id="medflagwrap">'+medFlagHTML()+'</div></div>';
+    if(L.t==="handoff") return '<div class="line"><div class="handoff">'+
+      '<button type="button" class="hbtn hprimary" data-handoff="save">Save the profile'+
+        '<span>A .json file you can reload next time &mdash; or send with the file</span></button>'+
+      '<button type="button" class="hbtn" data-handoff="print">Print the profile'+
+        '<span>Paper copy, or save as PDF</span></button>'+
+      '<button type="button" class="hbtn hpop" data-handoff="pop">Push client to MyPOP&nbsp;Pro'+
+        '<span>Start building the private health presentation</span></button>'+
+      '</div></div>';
+    if(L.t==="appt") return '<div class="line"><div class="apptpick">'+apptHTML()+'</div></div>';
+    if(L.t==="deps") return !PROFILE_ON ? "" : '<div class="line" id="depscard">'+pDepsHTML()+'</div>';
+    if(L.t==="docs") return !PROFILE_ON ? "" : '<div class="line" id="docscard">'+pDocsHTML()+'</div>';
     if(L.t==="pf"){
       /* always:true is for a control the agent steers the SCRIPT with rather than a field they
          fill in - it belongs on the card whether or not the profile panel is open. */
@@ -3707,8 +4082,21 @@ function render(){
   }).join("");
 
   [].forEach.call(document.querySelectorAll("#script .iblank"),function(el){ if(el.tagName==="TEXTAREA") pGrow(el); else pFit(el); });
-  $("branchhead").textContent = n.bh || (n.b.length===1 ? "Next" : "They say");
-  $("branches").innerHTML=n.b.map(function(b,i){
+  /* A branch can carry the same `when` a line does. It is how a card stops asking something
+     it was already told - 4.1 knows from 3.1 whether there is a household to go through. */
+  /* `when` is either-will-do, the same as everywhere else. `allOf` is the other one: every
+     pair has to hold. Skipping the household needs both - no partner AND no dependants. */
+  var bOK=function(b){
+    if(b.allOf) return b.allOf.every(function(pr){ return condHit(pVal(pr[0]),pr[1]); });
+    return !b.when || whenHit(b.when);
+  };
+  var bl=(n.b||[]).filter(bOK);
+  /* Two `when`s can be true at once - married AND children both mean "go to the household".
+     Keep the first button for any given destination rather than showing it twice. */
+  var seenTo={}; bl=bl.filter(function(b){ if(seenTo[b.to]) return false; seenTo[b.to]=1; return true; });
+  if(!bl.length) bl=n.b||[];
+  $("branchhead").textContent = n.bh || (bl.length===1 ? "Next" : "They say");
+  $("branches").innerHTML=bl.map(function(b,i){
     return '<button class="branch '+(b.c||"")+'" data-to="'+b.to+'"'+
     (b.set?' data-set=\''+JSON.stringify(b.set).replace(/'/g,"&#39;")+'\'':'')+'><span class="key">'+(i+1)+
     '</span><span class="blabel">'+b.k+'</span><span class="bid">&rarr; '+(ID[b.to]||"?")+'</span></button>';}).join("");
@@ -3728,7 +4116,13 @@ function render(){
   toTop();
 }
 
+/* Only when the agent actually moves card. Ticking a box or opening a follow-up redraws
+   the same card, and scrolling them back to the top there throws away their place and
+   hides the box that just opened - which is the opposite of what the click was for. */
+var DREW=null;
 function toTop(){
+  if(DREW===cur) return;
+  DREW=cur;
   try{window.scrollTo(0,0)}catch(e){}
   if(document.scrollingElement) document.scrollingElement.scrollTop=0;
   if(document.documentElement) document.documentElement.scrollTop=0;
@@ -3740,7 +4134,10 @@ function go(to){ if(!N[to])return; if(armed)disarm(); hist.push(cur); redo=[]; c
 function back(){ if(armed)disarm(); if(!hist.length)return; redo.push(cur); cur=hist.pop(); render(); }
 function fwd(){
   if(redo.length){ hist.push(cur); cur=redo.pop(); render(); return; }
-  var b=N[cur].b[0];
+  var bl=(N[cur].b||[]).filter(function(b){
+    if(b.allOf) return b.allOf.every(function(pr){ return condHit(pVal(pr[0]),pr[1]); });
+    return !b.when || whenHit(b.when); });
+  var b=bl[0]||N[cur].b[0];
   if(b){ hist.push(cur); cur=b.to; startTimer(); render(); }
 }
 var armed=false, armTimer=null;
@@ -3820,7 +4217,7 @@ var PF_SPEC=[
  {k:"inplace_notes",l:"Notes on their existing coverage",type:"area",w:2,showIf:["inplace","Yes"]},
 
  {sec:"Why",id:"why"},
- {k:"goal",l:"Goal / why &mdash; in their words",type:"area",w:2},
+ {k:"goal",l:"Goal / why &mdash; in their words",type:"area",w:2},{k:"why_note",l:"Why they need this coverage",hint:"in general / now / what changed",type:"area",w:3},{k:"losing",drives:true,l:"Losing coverage — done deal?",w:1,opt:["","Yes","No"]},{k:"last_day",l:"Last day of cover",w:1,showIf:["losing","Yes"]},{k:"start_when",l:"When they want it to start",w:1},
  {k:"burial",l:"Burial, cremation or unsure",w:1,opt:["","Burial","Cremation","Unsure"]},{k:"arrangement_cost",l:"Cost they expect",w:1,money:"plain"},
  {k:"ben",l:"Beneficiary",w:1},
 
@@ -3834,7 +4231,7 @@ var PF_SPEC=[
  {k:"covid",l:"COVID in last 2 yrs",w:1,opt:["","No","Not hospitalised","Hospitalised"]},{k:"health_notes",l:"Anything else",w:2},
 
  {sec:"Income",id:"income"},
- {k:"occupation",l:"Occupation",w:1},{k:"sp_works",drives:true,l:"Do they work?",w:1,opt:["","Yes","No"],showIf:["married",["Married","Partnered"]]},
+ {k:"occupation",l:"Occupation",w:1},{k:"occ_years",l:"How long",w:1},{k:"occ_note",l:"What the work involves",type:"area",w:3},{k:"sp_works",drives:true,l:"Do they work?",w:1,opt:["","Yes","No"],showIf:["married",["Married","Partnered"]]},
  {k:"sp_income",l:"Their monthly income",w:1,money:"plain",showIf:["sp_works","Yes"]},
  {k:"hh_income",l:"Household income",w:1,money:"plain",showIf:["hh_income","*"]},
  {k:"inc_kind",l:"Source",w:2,multi:true,opt:["","Working","Retired","Social Security","Disability","Pension"]},
@@ -3849,7 +4246,7 @@ var PF_SPEC=[
 
  {sec:"Retirement &amp; money &mdash; ask if it comes up",id:"retirement"},
  {k:"i_contrib",l:"Monthly contribution",money:"plain",w:1},{k:"i_401k",l:"401k / TSP",w:1},{k:"i_roth",l:"Roth / IRA",w:1},
- {k:"i_liquid",l:"Liquid savings",money:"plain",w:1},{k:"i_debt",l:"Debt",money:"plain",w:1},{k:"i_retire",l:"Retire timeline",w:1},
+ {k:"i_liquid",l:"Liquid savings",money:"plain",w:1,showIf:["has_liquid","Yes"]},{k:"i_debt",l:"Debt",money:"plain",w:1},{k:"i_retire",l:"Retire timeline",w:1},
 
  {sec:"Mortgage &mdash; ask if it comes up",id:"mortgage"},
  {k:"own_rent",drives:true,l:"Own or rent",w:1,opt:["","Own","Rent"]},{k:"rent",l:"Monthly rent",w:1,money:"plain",showIf:["own_rent","Rent"]},
@@ -3898,7 +4295,101 @@ function pLabel(f){
   var k=(typeof curScript!=="undefined"&&curScript)||"veteran";
   return (f && f["l_"+k]) || (f && f.l) || "";
 }
-function pSpecOf(k){ for(var i=0;i<PF_SPEC.length;i++){ if(PF_SPEC[i].k===k) return PF_SPEC[i]; } return null; }
+
+/* ---- the health profile ------------------------------------------------------------
+   A separate spec, not a superset. The health discovery call captures a different set of
+   facts from a life call, and bolting them onto PF_SPEC would put doctors and subsidy
+   income on the veteran profile. pSpec() picks by script; nothing here touches the others. */
+PF_SPEC_HEALTH=[
+ {sec:"Who you're calling",id:"who"},
+ {k:"first",l:"First name",w:1},{k:"last",l:"Last name",w:1},
+ {k:"dob",l:"DOB",w:1},{k:"age",l:"Age",w:1},
+ {k:"sex",l:"Gender",w:1,opt:["","Male","Female"]},
+ {k:"phone",l:"Phone",w:1},{k:"email",l:"Email",w:1},
+ {k:"zip",l:"ZIP",w:1},{k:"state",l:"State",w:1},
+ {k:"address",l:"Address",w:2},{k:"city",l:"City",w:1},
+ {k:"married",drives:true,l:"Married?",w:1,opt:["","Married","Partnered","Single","Widowed","Divorced"]},
+ {k:"kids",drives:true,l:"Children",w:1,opt:["","1","2","3","4+"]},   /* no zero - nobody clicks it */
+ {k:"lead",l:"Lead",w:1,ro:true},
+
+ {sec:"Household on the plan",id:"household"},
+ {k:"sp_name",l:"Spouse first name",w:1,showIf:["married",["Married","Partnered"]]},{k:"sp_last",l:"Spouse last name",w:1,showIf:["married",["Married","Partnered"]]},
+ {k:"sp_dob",l:"Their DOB",w:1,showIf:["married",["Married","Partnered"]]},
+ {k:"sp_age",l:"Age",w:1,showIf:["married",["Married","Partnered"]]},
+ {k:"sp_sex",l:"Gender",w:1,opt:["","Male","Female"],showIf:["married",["Married","Partnered"]]},
+ {k:"sp_height",l:"Height",w:1,showIf:["married",["Married","Partnered"]]},
+ {k:"sp_weight",l:"Weight",w:1,showIf:["married",["Married","Partnered"]]},
+ {k:"sp_tobacco",l:"Tobacco",w:1,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
+ {k:"deps",type:"deps"},
+
+ {sec:"Why they're looking",id:"why"},
+ {k:"why_note",l:"Why they need this coverage",hint:"in general / now / what changed",type:"area",w:3},
+ {k:"losing",drives:true,l:"Losing coverage \u2014 done deal?",w:1,opt:["","Yes","No"]},
+ {k:"last_day",l:"Last day of cover",w:1,showIf:["losing",["Yes","No"]]},
+ {k:"start_when",l:"Wants cover to start",w:1},
+
+ {sec:"Work",id:"work"},
+ {k:"occupation",l:"What they do",w:2},{k:"occ_years",l:"How long",w:1},
+
+ {sec:"Qualify",id:"build"},
+ {k:"height",l:"Height",w:1},{k:"weight",l:"Weight",w:1},
+ {k:"tobacco",l:"Tobacco",w:1,opt:["","No","Yes"]},
+
+ {sec:"Health",id:"health"},
+ {k:"conds",type:"conds"},
+ {k:"meds",type:"meds"},
+ {k:"recent_stay",drives:true,l:"Surgery or overnight stay, last 5 yrs",w:1,opt:["","No","Yes"]},
+ {k:"recent_what",l:"What for",w:2,showIf:["recent_stay","Yes"]},
+ {k:"hosp_stay",drives:true,l:"Hospital stay, last 2 yrs",w:1,opt:["","No","Yes"]},
+ {k:"stay_what",l:"What for",w:2,showIf:["hosp_stay","Yes"]},
+ {k:"keep_docs",drives:true,l:"Doctors they want to keep?",w:1,opt:["","No","Yes"]},
+ {k:"health_other",l:"Anything else about their health",type:"area",w:3},
+ {k:"docs",type:"docs"},
+
+ {sec:"Money",id:"income"},
+ {k:"income_this",l:"Income this year",money:"plain",w:1},
+ {k:"next_same",drives:true,l:"Next year",w:1,opt:["","Same","Different"]},{k:"income_next",l:"Income next year",money:"plain",w:1,showIf:["next_same","Different"]},{k:"sp_income_next",l:"Spouse income next year",money:"plain",w:1,showIf:["next_same","Different"]},{k:"hh_income_next",l:"Household next year",money:"plain",w:1,showIf:["next_same","Different"]},
+ {k:"sp_income",l:"Spouse income",money:"plain",w:1,showIf:["married",["Married","Partnered"]]},
+ {k:"hh_income",l:"Household income",money:"plain",w:1},
+ {k:"i_retire",l:"Target retirement age",w:1},{k:"sp_retire",l:"Spouse retirement age",w:1,showIf:["married",["Married","Partnered"]]},
+ {k:"has_liquid",drives:true,l:"Liquid savings?",w:1,opt:["","No","Yes"]},
+ {k:"i_liquid",l:"Liquid savings",money:"plain",w:1},
+ {k:"has_assets",drives:true,l:"Anything that acts like insurance?",w:1,opt:["","No","Yes"]},
+ {k:"asset_where",l:"Where is it",w:1,showIf:["has_assets","Yes"]},
+ {k:"asset_amt",l:"Roughly how much",money:"plain",w:1,showIf:["has_assets","Yes"]},
+ {k:"asset_employer",drives:true,l:"Where is it held",w:1,opt:["","Current employer","Previous employer","They hold it themselves","Mixed"],needsAll:true,showIf:[["has_assets","Yes"],["occupation","*"]]},
+ {k:"asset_prot",l:"Protectable?",w:1,opt:["","Yes","No"],showIf:["has_assets","Yes"]},
+ {k:"asset_notes",l:"Notes on their money / details",w:2},
+
+ {sec:"Budget",id:"budget"},
+ {k:"budget_comfort",l:"Comfortable at",money:"plain",w:1},
+ {k:"budget_max",l:"Their max",money:"plain",w:1},
+
+ {sec:"The appointment",id:"book"},
+ {k:"appt_when",l:"Booked for",w:1},{k:"appt_date",l:"Appointment date",w:1},{k:"appt_time",l:"Appointment time",w:1},
+ {k:"appt_who",l:"Who else is on it",w:2},
+ {k:"appt_notes",l:"Notes",type:"area",w:3}
+];
+/* Which profile the panel shows. Health has its own; everything else shares the original. */
+function pSpec(){ return (typeof curScript!=="undefined" && curScript==="health") ? PF_SPEC_HEALTH : PF_SPEC; }
+/* What kind of lead this is, taken from the script rather than typed. The Vet/FEX script is
+   the only one that can be two things, so it reads its own switch. */
+function pLeadLabel(){
+  if(typeof curScript==="undefined") return "";
+  if(curScript==="health")   return "Health";
+  if(curScript==="iul")      return "IUL";
+  if(curScript==="mortgage") return "Mortgage Protection";
+  if(curScript==="veteran")  return (pVal("lead_type")==="FEX") ? "FEX" : "Vet";
+  return "";
+}
+
+/* The paper copy goes in a client file next to other paper. It has to say what it is
+   without anyone having to read the questions to work it out. */
+var PROFILE_KIND={ health:"Private Health Client Profile" };
+function pKind(){ return PROFILE_KIND[(typeof curScript!=="undefined"&&curScript)||""] || "Client Profile"; }
+function pSpecTitle(){ return (typeof curScript!=="undefined" && curScript==="health") ? "Health client profile" : "Client profile"; }
+
+function pSpecOf(k){ var S=pSpec(); for(var i=0;i<S.length;i++){ if(S[i].k===k) return S[i]; } return null; }
 
 
 /* conditions, in the order the script asks them, worded the way the Product Wizard words them */
@@ -3935,7 +4426,19 @@ var PF_FOLLOW={
  "Liver disease":[{k:"liv_what",l:"What kind",drv:true,opt:["","Fatty liver","Hepatitis","Cirrhosis","Other"]}]
 };
 
+var DATEKEYS={dob:1,last_day:1,start_when:1,sp_dob:1,appt_when:1};
+
 var BLANKMAP={
+ "last name":"last","zip":"zip","their zip":"zip","height":"height","weight":"weight",
+ "last day of cover":"last_day","start date":"start_when","booked for":"appt_when","spouse or partner":"sp_name","time A":"","time B":"","age":"age","their age":"age","spouse age":"sp_age","approximate savings":"i_liquid","comfortable budget":"budget_comfort","max":"budget_max","your income":"income_this","hospital stay":"stay_what","doctor":"doc_name","practice":"doc_practice","your retirement age":"i_retire","spouse retirement age":"sp_retire",
+ "type of work":"occupation","how long":"occ_years",
+ "income this year":"income_this","income next year":"income_next","spouse income":"sp_income",
+ "household income":"hh_income","retirement age":"i_retire","liquid savings":"i_liquid",
+ "where is it":"asset_where","how much":"asset_amt",
+ "comfortable":"budget_comfort","their max":"budget_max",
+ "anything else":"health_other","what for":"recent_what",
+ "spouse first name":"sp_name","spouse last name":"sp_last","spouse DOB":"sp_dob",
+ "spouse height":"sp_height","spouse weight":"sp_weight",
  "first name":"first","their first name":"first","name":"first","spouse 1":"first",
  "the name":"ben","their name":"ben","beneficiary / the kids":"ben","beneficiary / your family":"ben",
  "beneficiary / their specific situation":"ben","beneficiary / the surviving spouse":"ben",
@@ -3950,6 +4453,10 @@ var BLANKMAP={
  "address":"address","balance":"m_balance","monthly payment":"m_payment","equity":"m_equity",
  
  "your name":"a_name","your full name":"a_full","agent name":"a_name","your NPN":"a_npn",
+ /* 2.1 says "this is ___(your name) with ___(your agency)". Without this line that second
+    blank had nothing behind it, so the one field Set up asks for and never used was the
+    one the agent had to say out loud. It is also the name that goes over to MyPOP Pro. */
+ "your agency":"a_agency","agency":"a_agency","your agency name":"a_agency",
  "your phone":"a_phone","your phone number":"a_phone","agent phone":"a_phone",
  "agent email":"a_email",};
 function pAgeHint(){
@@ -3974,7 +4481,7 @@ function pBlank(lab){
   var k=BLANKMAP[lab]; if(!k) return ""; if(k==="a_full") k="a_name"; return pVal(k); }
 
 var AGENT_SPEC=[
- {k:"a_name",l:"Your full name",w:1},{k:"a_npn",l:"Your NPN",w:1},
+ {k:"a_name",l:"Your full name",w:1},{k:"a_agency",l:"Your agency",w:1},{k:"a_npn",l:"Your NPN",w:1},
  {k:"a_phone",l:"Your direct number",w:1},{k:"a_email",l:"Your email",w:1}
 ];
 var PROFILE_ON=false;
@@ -4020,13 +4527,16 @@ function pField(f){
 function pRender(){
   var cur=(typeof curScript!=="undefined"&&curScript)||"veteran", o=[], row=[], skip=false;
   function flush(){ if(row.length){o.push('<div class="prow">'+row.join("")+'</div>'); row=[];} }
-  PF_SPEC.forEach(function(f){
+  P.lead = pLeadLabel();
+  pSpec().forEach(function(f){
     if(f.sec){ flush();
       skip = !!(f.only && f.only!==cur);               /* hidden on screen, still printed */
       if(skip) return;
       o.push('<div class="profsec" id="ps_'+(f.id||'')+'">'+f.sec+'</div>'); return; }
     if(skip) return;
     if(f.type==="bens"){ flush(); o.push(pBensHTML()); return; }
+    if(f.type==="deps"){ flush(); o.push(pDepsHTML()); return; }
+    if(f.type==="docs"){ flush(); o.push(pDocsHTML()); return; }
     if(f.type==="refs"){ flush(); o.push(pRefsHTML()); return; }
     if(f.type==="meds"){ flush(); o.push(pMedsHTML()); return; }
     if(f.type==="conds"){ flush();
@@ -4153,11 +4663,16 @@ document.addEventListener("click",function(e){
   if(a){ var c=a.getAttribute("data-cond-add"); var arr=(P.conds||[]).slice();
          if(arr.indexOf(c)<0) arr.push(c); P.conds=arr; pStore();
          if(document.getElementById("profbody")) pRender();
+         /* The card carries the follow-up questions for this condition. Accepting the
+            suggestion without redrawing left them on the profile panel only, which is the
+            one place a working agent is not looking. */
+         if(typeof render==="function" && $("script")) render();
          var fw=document.getElementById("medflagwrap"); if(fw) fw.innerHTML=medFlagHTML();
          pFlash(); return; }
   var n=e.target.closest && e.target.closest("[data-cond-skip]");
   if(n){ var k=n.getAttribute("data-cond-skip"); var sk=(P.med_skip||[]).slice();
          if(sk.indexOf(k)<0) sk.push(k); P.med_skip=sk; bpSync(); pStore();
+         if(typeof render==="function" && $("script")) render();
          var fw2=document.getElementById("medflagwrap"); if(fw2) fw2.innerHTML=medFlagHTML(); return; }
 });
 
@@ -4194,6 +4709,102 @@ function medAdd(name,from,typed){
   if(from) from.focus();
 }
 
+
+/* A date of birth is only useful next to the age it implies - the agent reads the age, not
+   the arithmetic. Same for the spouse. Heights tidy themselves the way they do everywhere else. */
+function ageOf(v){ var r=pAge(v); return (r && r.exact!=null) ? String(r.exact) : ""; }
+function syncAges(){
+  [["dob","age"],["sp_dob","sp_age"]].forEach(function(p){
+    var a=ageOf(P[p[0]]); if(a && String(P[p[1]]||"")!==a){
+      P[p[1]]=a;
+      document.querySelectorAll('[data-pk="'+p[1]+'"],[data-pf="'+p[1]+'"]').forEach(function(el){ el.value=a; });
+    }
+  });
+  (P.deps||[]).forEach(function(d,i){
+    var a=ageOf(d.dob); if(a && String(d.age||"")!==a){
+      d.age=a;
+      document.querySelectorAll('[data-dep="'+i+'"][data-depk="age"]').forEach(function(el){ el.value=a; });
+    }
+  });
+}
+document.addEventListener("input",function(e){
+  var t=e.target; if(!t.getAttribute) return;
+  var k=t.getAttribute("data-pk")||t.getAttribute("data-pf");
+  if(k==="dob"||k==="sp_dob"||t.hasAttribute("data-dep")) syncAges();
+});
+document.addEventListener("change",function(e){
+  var t=e.target; if(!t.getAttribute) return;
+  var k=t.getAttribute("data-pk")||t.getAttribute("data-pf");
+  if(k==="sp_dob"){ var sr=pAge(t.value); if(sr && sr.pretty && t.value!==sr.pretty){ t.value=sr.pretty; P.sp_dob=sr.pretty; }
+                    syncAges(); pStore(); }
+  /* Heights tidy when the agent leaves the box. Doing it per keystroke turned a typed "5"
+     into 5'0" before they could reach the inches. */
+  if(k==="sp_height"){ var sh=pHeight(t.value); if(sh && t.value!==sh){ t.value=sh; P.sp_height=sh; pStore(); } }
+  /* household income follows from the parts, unless it has been typed over */
+  /* The agent can always type a household number themselves - a rental, a pension, a
+     second job. Once they do it is theirs, and the parts stop writing over it. */
+  if(k==="hh_income"){ P.hh_manual=t.value.trim()?"1":""; }
+  if(k==="hh_income_next"){ P.hh_next_manual=t.value.trim()?"1":""; }
+  if(k==="income_this"||k==="sp_income") hhSync();
+  if(k==="income_next"||k==="sp_income_next") hhNextSync();
+});
+
+/* ZIP fills the state, the date fields normalise themselves, and a DOB without a year is
+   left exactly as typed rather than quietly turned into a guess. */
+document.addEventListener("input", function(e){
+  var t=e.target; if(!t.getAttribute) return;
+  var k=t.getAttribute("data-pk")||t.getAttribute("data-pf");
+  if(!k) return;
+  if(k==="zip"){
+    var st=stateFromZip(t.value);
+    if(st){ P.state=st; var el=document.querySelector('[data-pk="state"],[data-pf="state"]');
+      if(el && el!==t && !el.dataset.touched) el.value=st; }
+  }
+  if(k==="state") t.dataset.touched="1";
+});
+document.addEventListener("change", function(e){
+  var t=e.target; if(!t.getAttribute) return;
+  var k=t.getAttribute("data-pk")||t.getAttribute("data-pf");
+  if(k==="last_day"||k==="start_when"||k==="appt_when"){
+    var v=pFutureDate(t.value); if(v){ t.value=v; P[k]=v; pStore(); }
+  }
+});
+
+
+/* repeater edits - dependants and doctors */
+document.addEventListener("input",function(e){
+  var t=e.target, i;
+  if(t.hasAttribute && t.hasAttribute("data-dep")){
+    i=+t.getAttribute("data-dep"); P.deps=P.deps||[]; P.deps[i]=P.deps[i]||{};
+    P.deps[i][t.getAttribute("data-depk")]=t.value;
+    if(t.getAttribute("data-depk")==="dob"){ var a=ageOf(t.value); if(a){ P.deps[i].age=a;
+      document.querySelectorAll('[data-dep="'+i+'"][data-depk="age"]').forEach(function(ai){ ai.value=a; }); } }
+    pStore();
+  }
+  if(t.hasAttribute && t.hasAttribute("data-doc")){
+    i=+t.getAttribute("data-doc"); P.docs=P.docs||[]; P.docs[i]=P.docs[i]||{};
+    P.docs[i][t.getAttribute("data-dock")]=t.value; pStore();
+  }
+});
+document.addEventListener("change",function(e){
+  var t=e.target;
+  if(t.hasAttribute && t.hasAttribute("data-dep") && t.getAttribute("data-depk")==="dob"){
+    var r=pAge(t.value); if(r && r.pretty) t.value=r.pretty;   /* 9214 and 9/2/14 both land as 09/02/2014 */
+  }
+  if(t.hasAttribute && (t.hasAttribute("data-dep")||t.hasAttribute("data-doc"))) t.dispatchEvent(new Event("input",{bubbles:true}));
+});
+document.addEventListener("click",function(e){
+  var dx=e.target.closest && e.target.closest("[data-depdel]");
+  if(dx){ var di=+dx.getAttribute("data-depdel"); var dl=(P.deps||[]).slice(); dl.splice(di,1);
+          P.deps=dl; P.deps_manual="1"; pStore(); pRender(); render(); return; }
+  var cx=e.target.closest && e.target.closest("[data-docdel]");
+  if(cx){ var ci=+cx.getAttribute("data-docdel"); var cl=(P.docs||[]).slice(); cl.splice(ci,1);
+          P.docs=cl; pStore(); pRender(); render(); return; }
+  if(e.target && e.target.classList && e.target.classList.contains("depadd")){ P.deps=(P.deps||[{}]).concat([{}]); P.deps_manual="1"; pStore(); pRender(); render(); }
+  if(e.target && e.target.classList && e.target.classList.contains("docadd")){ P.docs=(P.docs||[{}]).concat([{}]); pStore(); pRender(); render(); }
+});
+
+
 document.addEventListener("input",function(e){
   if(!e.target.classList || !e.target.classList.contains("medinput")) return;
   var sg=e.target.parentNode.querySelector(".medsug"); if(!sg) return;
@@ -4208,6 +4819,12 @@ document.addEventListener("keydown",function(e){
   }
 });
 document.addEventListener("click",function(e){
+  var h=e.target.closest && e.target.closest("[data-handoff]");
+  if(h){ var w=h.getAttribute("data-handoff");
+         if(w==="save") pSaveFile();
+         else if(w==="print") pPrint();
+         else { if(!PROFILE_ON) pOpen(); popOpen(); }
+         return; }
   var a=e.target.closest && e.target.closest("[data-medadd]");
   if(a){ var box=a.closest(".medbox"), inp=box&&box.querySelector(".medinput");
          medAdd(a.getAttribute("data-medadd"), inp, inp&&inp.value); return; }
@@ -4218,6 +4835,79 @@ document.addEventListener("click",function(e){
 
 var BEN_COLS=[["role","Primary / contingent"],["n","Name"],["rel","Relationship"],
                ["pct","%"],["ph","Phone"],["dob","DOB"]];
+/* Dependants going on the plan. No height, weight or tobacco - those only matter for the
+   adults being rated. Age is shown because it is what decides whether a child is even
+   eligible on the plan, and it should be visible next to the date rather than worked out. */
+var DEP_COLS=[["n","Name"],["dob","DOB"],["age","Age"],["sex","Gender"]];
+/* The appointment is a date and a time, so it is picked rather than typed. Typed, it arrived
+   as "tues afternoon", "2:30" and "10/2 @ 2.30" on three different calls - none of which can be
+   sorted, reminded on, or read back at a glance. The composed line is what lands on the profile
+   and the printout, so the agent still sees it in words. */
+function apptPretty(d,t){
+  var out="";
+  var md=String(d||"").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(md) out=md[2]+"/"+md[3]+"/"+md[1];
+  var mt=String(t||"").match(/^(\d{1,2}):(\d{2})$/);
+  if(mt){ var h=+mt[1], ap=h<12?"AM":"PM", h12=(h%12)||12;
+          out=(out?out+" ":"")+h12+":"+mt[2]+" "+ap; }
+  return out;
+}
+function apptHTML(){
+  var d=pVal("appt_date")||"", t=pVal("appt_time")||"", w=pVal("appt_when")||"";
+  return '<span class="pfi"><i>Date</i><input type="date" data-appt="date" value="'+esc(d)+'"></span>'+
+         '<span class="pfi"><i>Time</i><input type="time" data-appt="time" value="'+esc(t)+'"></span>'+
+         '<span class="apptshow"'+(w?'':' hidden')+'>Booked for <b>'+esc(w)+'</b></span>';
+}
+document.addEventListener("change",function(e){
+  var t=e.target; if(!t.getAttribute || !t.getAttribute("data-appt")) return;
+  pSet("appt_"+t.getAttribute("data-appt"), t.value, true);
+  var w=apptPretty(pVal("appt_date"),pVal("appt_time"));
+  pSet("appt_when", w, true);
+  document.querySelectorAll('[data-pk="appt_when"],[data-pf="appt_when"]').forEach(function(el){ el.value=w; });
+  var sh=document.querySelector(".apptshow");
+  if(sh){ sh.innerHTML='Booked for <b>'+esc(w)+'</b>'; if(w) sh.removeAttribute("hidden"); else sh.setAttribute("hidden",""); }
+  if(document.getElementById("profbody")) pRender();
+});
+function pDepsHTML(){
+  var list=P.deps||[];
+  /* Give them the number of rows they said they had, rather than one and a button they
+     have to find. 4+ starts at four; the button adds more. */
+  var want=parseInt(String(P.kids||"").replace(/[^0-9]/g,""),10)||0;
+  /* Once the agent has deleted a row by hand, stop topping the list back up to the number
+     they picked at 3.1 - otherwise the row they just removed reappears under their cursor. */
+  if(!P.deps_manual) while(list.length<want) list=list.concat([{}]);
+  if(!list.length) list=[{}];
+  return '<div class="depswrap">'+list.map(function(d,i){
+    return '<div class="prow refrow">'+DEP_COLS.map(function(c){
+      var v=d[c[0]]||"";
+      if(c[0]==="sex") return '<span class="pfi"><i>'+c[1]+'</i><select data-dep="'+i+'" data-depk="sex">'+
+        ["","Male","Female"].map(function(o){return '<option'+(o===v?" selected":"")+'>'+o+'</option>';}).join("")+'</select></span>';
+      return '<span class="pfi"><i>'+c[1]+'</i><input data-dep="'+i+'" data-depk="'+c[0]+'" value="'+esc(v).replace(/"/g,"&quot;")+'"></span>';
+    }).join("")+'<button type="button" class="rowx" data-depdel="'+i+'" title="Remove this dependant" aria-label="Remove this dependant">&times;</button></div>';
+  }).join("")+'<button type="button" class="pbtn depadd">+ Add another dependant</button></div>';
+}
+
+/* Doctors they want to keep. The point is not the name - it is whether keeping them is a
+   hard requirement, because that decides whether a network plan is even on the table. */
+var DOC_COLS=[["n","Doctor"],["prac","Practice"]];
+function pDocsHTML(){
+  var list=P.docs||[]; if(!list.length) list=[{}];
+  return '<div class="docswrap">'+list.map(function(d,i){
+    return '<div class="prow refrow">'+DOC_COLS.map(function(c){
+      return '<span class="pfi"><i>'+c[1]+'</i><input data-doc="'+i+'" data-dock="'+c[0]+'" value="'+esc(d[c[0]]||"").replace(/"/g,"&quot;")+'"></span>';
+    }).join("")+
+    '<span class="pfi"><i>On their ACA plan?</i><select data-doc="'+i+'" data-dock="aca">'+
+      ["","Yes","No","Not checked"].map(function(o){return '<option'+(o===(d.aca||"")?" selected":"")+'>'+o+'</option>';}).join("")+'</select></span>'+
+    '<span class="pfi"><i>Must keep</i><select data-doc="'+i+'" data-dock="keep">'+
+      ["","Yes","Would like to","Not important"].map(function(o){return '<option'+(o===(d.keep||"")?" selected":"")+'>'+o+'</option>';}).join("")+'</select></span>'+
+    '<span class="pfi wide"><i>Notes</i><input data-doc="'+i+'" data-dock="note" value="'+esc(d.note||"").replace(/"/g,"&quot;")+'"></span>'+
+    /* The first row is the question itself and stays. The ones after it were added on
+       purpose, so they can be taken away the same way. */
+    (i>0 ? '<button type="button" class="rowx" data-docdel="'+i+'" title="Remove this doctor" aria-label="Remove this doctor">&times;</button>' : '')+
+    '</div>';
+  }).join("")+'<button type="button" class="pbtn docadd">+ Add another doctor</button></div>';
+}
+
 function pBensHTML(){
   var list=P.bens||[];
   if(!list.length) list=[{role:"Primary"}];
@@ -4442,6 +5132,69 @@ function pHeight(v){
   return ft+"'"+inch+'"';
 }
 
+
+/* ---- ZIP -> state, and a state box you can type into -------------------------------
+   55 prefix ranges, about 1.5KB. The first three digits of a ZIP decide the state, so the
+   whole country fits in this table. The state field stays editable: the ZIP fills it, the
+   agent can overrule it, and typing "ma" offers Maine, Maryland and Massachusetts. */
+var ZIP3=[[5,5,"NY"],[6,9,"PR"],[10,27,"MA"],[28,29,"RI"],[30,38,"NH"],[39,49,"ME"],[50,59,"VT"],
+[60,69,"CT"],[70,89,"NJ"],[100,149,"NY"],[150,196,"PA"],[197,199,"DE"],[200,200,"DC"],[201,201,"VA"],
+[202,205,"DC"],[206,219,"MD"],[220,246,"VA"],[247,268,"WV"],[270,289,"NC"],[290,299,"SC"],[300,319,"GA"],
+[320,349,"FL"],[350,369,"AL"],[370,385,"TN"],[386,397,"MS"],[398,399,"GA"],[400,427,"KY"],[430,459,"OH"],
+[460,479,"IN"],[480,499,"MI"],[500,528,"IA"],[530,549,"WI"],[550,567,"MN"],[570,577,"SD"],[580,588,"ND"],
+[590,599,"MT"],[600,629,"IL"],[630,658,"MO"],[660,679,"KS"],[680,693,"NE"],[700,714,"LA"],[716,729,"AR"],
+[730,732,"OK"],[733,733,"TX"],[734,749,"OK"],[750,799,"TX"],[800,816,"CO"],[820,831,"WY"],[832,838,"ID"],
+[840,847,"UT"],[850,865,"AZ"],[870,884,"NM"],[889,898,"NV"],[900,961,"CA"],[967,968,"HI"],[970,979,"OR"],
+[980,994,"WA"],[995,999,"AK"]];
+var STATES={AL:"Alabama",AK:"Alaska",AZ:"Arizona",AR:"Arkansas",CA:"California",CO:"Colorado",CT:"Connecticut",
+DE:"Delaware",DC:"District of Columbia",FL:"Florida",GA:"Georgia",HI:"Hawaii",ID:"Idaho",IL:"Illinois",
+IN:"Indiana",IA:"Iowa",KS:"Kansas",KY:"Kentucky",LA:"Louisiana",ME:"Maine",MD:"Maryland",MA:"Massachusetts",
+MI:"Michigan",MN:"Minnesota",MS:"Mississippi",MO:"Missouri",MT:"Montana",NE:"Nebraska",NV:"Nevada",
+NH:"New Hampshire",NJ:"New Jersey",NM:"New Mexico",NY:"New York",NC:"North Carolina",ND:"North Dakota",
+OH:"Ohio",OK:"Oklahoma",OR:"Oregon",PA:"Pennsylvania",PR:"Puerto Rico",RI:"Rhode Island",SC:"South Carolina",
+SD:"South Dakota",TN:"Tennessee",TX:"Texas",UT:"Utah",VT:"Vermont",VA:"Virginia",WA:"Washington",
+WV:"West Virginia",WI:"Wisconsin",WY:"Wyoming"};
+function stateFromZip(z){
+  var t=String(z||"").replace(/[^0-9]/g,""); if(t.length<3) return null;
+  var p=parseInt(t.slice(0,3),10);
+  for(var i=0;i<ZIP3.length;i++) if(p>=ZIP3[i][0] && p<=ZIP3[i][1]) return ZIP3[i][2];
+  return null;
+}
+function stateMatches(q){
+  var t=String(q||"").trim().toLowerCase(); if(!t) return [];
+  var out=[];
+  for(var ab in STATES){
+    if(ab.toLowerCase().indexOf(t)===0 || STATES[ab].toLowerCase().indexOf(t)===0) out.push(ab+" — "+STATES[ab]);
+  }
+  return out.sort();
+}
+
+/* ---- dates ------------------------------------------------------------------------
+   Two different jobs, so two different rules.
+   A FUTURE date (last day of cover, when they want it to start) may be typed without a
+   year: 630 or 6/30 means the next 30 June that has not happened yet. That is nearly
+   always what someone means about their own coverage.
+   A DATE OF BIRTH may not. A month and a day with no year is not a birthday, it is half
+   of one, and guessing a year on a date that sets the rate is not a saving worth making. */
+function pFutureDate(v){
+  var t=String(v||"").trim(); if(!t) return null;
+  if(/[A-Za-z]/.test(t)) return null;
+  var m,mo,d,y=null;
+  if((m=t.match(/^(\d{1,2})[\/\-. ](\d{1,2})(?:[\/\-. ](\d{2,4}))?$/))){ mo=+m[1]; d=+m[2]; if(m[3]) y=+m[3]; }
+  else if((m=t.match(/^(\d{2})(\d{2})(\d{2}|\d{4})$/))){ mo=+m[1]; d=+m[2]; y=+m[3]; }
+  else if((m=t.match(/^(\d{1,2})(\d{2})$/))){ mo=+m[1]; d=+m[2]; }
+  else return null;
+  if(mo<1||mo>12||d<1||d>31) return null;
+  var now=new Date();
+  if(y==null){
+    y=now.getFullYear();
+    var cand=new Date(y,mo-1,d);
+    if(cand < new Date(now.getFullYear(),now.getMonth(),now.getDate())) y++;   /* already gone - next year */
+  } else if(y<100){ y=2000+y; }
+  var p=function(n){return (n<10?"0":"")+n;};
+  return p(mo)+"/"+p(d)+"/"+y;
+}
+
 function pAge(dob){
   var t=String(dob||"").trim(); if(!t) return null;
   if(/[A-Za-z]/.test(t)) return null;   /* a month name is a guess, and a wrong DOB is worse than none */
@@ -4511,6 +5264,34 @@ function pSet(k,v,fromCard){
   if(k.indexOf("a_")===0){A[k]=v}else{P[k]=v} pStore(); pFlash();
   if(PF_DRIVERS.indexOf(k)>-1 && document.getElementById("profbody")) pRender();
   if(!fromCard && typeof render==="function"&&$("script")) render(); }
+/* Household income is the two incomes added together. WHICH key holds "your income" depends
+   on the script - mortgage and IUL call it i_income, the health discovery calls it income_this -
+   so resolve it rather than assuming. Assuming was the bug: on the health script i_income is
+   always empty, so this ran on a timeout and blanked a household total that had just been
+   worked out correctly. A figure the agent typed themselves is theirs and is left alone. */
+/* pSet is told this came from the card, which stops it rebuilding the card mid-keystroke -
+   so the box it just worked out has to be filled in by hand, or the agent watches a total
+   they can see is right sit there blank until something else happens to redraw. */
+function hhPaint(k){
+  var v=pVal(k)||"";
+  document.querySelectorAll('[data-pk="'+k+'"],[data-pf="'+k+'"]').forEach(function(el){
+    if(el.value!==v){ el.value=v; if(el.classList && el.classList.contains("iblank")) pFit(el); }
+  });
+}
+function hhSync(){
+  if(P.hh_manual) return;
+  var mine=num(pVal("income_this"))||num(pVal("i_income"))||0, sp=num(pVal("sp_income"))||0;
+  var v=(mine||sp) ? money(mine+sp) : "";
+  if(String(pVal("hh_income")||"")!==v) pSet("hh_income", v, true);
+  hhPaint("hh_income");
+}
+function hhNextSync(){
+  if(P.hh_next_manual) return;
+  var mine=num(pVal("income_next"))||0, sp=num(pVal("sp_income_next"))||0;
+  var v=(mine||sp) ? money(mine+sp) : "";
+  if(String(pVal("hh_income_next")||"")!==v) pSet("hh_income_next", v, true);
+  hhPaint("hh_income_next");
+}
 function pFlash(){ var h=document.getElementById("psaved"); if(!h)return; h.textContent="saved"; clearTimeout(PSAVE); PSAVE=setTimeout(function(){h.textContent=""},1100); }
 
 document.addEventListener("input",function(e){
@@ -4570,12 +5351,11 @@ document.addEventListener("change",function(e){
     var da=pAge(P.dob);
     if(!da || String(da.exact)!==String(t.value).trim()) pSet("age_nearest","",true);
   }
-  if(t.getAttribute&&/^(m_value|m_balance|i_income|sp_income)$/.test(t.getAttribute("data-pk"))){
+  if(t.getAttribute&&/^(m_value|m_balance|i_income|income_this|sp_income)$/.test(t.getAttribute("data-pk"))){
     setTimeout(function(){
       var val=num(pVal("m_value")), bal=num(pVal("m_balance"));
       pSet("m_equity", (val&&bal&&val>bal) ? money(val-bal) : "", true);
-      var mi=num(pVal("i_income")), si=num(pVal("sp_income"));
-      pSet("hh_income", (mi&&si) ? money(mi+si) : "", true);
+      hhSync();
       if(document.getElementById("profbody")) pRender();
     },0);
   }
@@ -4604,7 +5384,11 @@ document.addEventListener("change",function(e){
     [].forEach.call(document.querySelectorAll('[data-cond]'),function(el){
       if(el.getAttribute("data-cond")===c) el.checked=t.checked; });
     if(document.getElementById("profbody")) pRender();
-    if(t.classList && t.classList.contains("cinline") && typeof render==="function") render();
+    /* Redraw wherever the tick came from. It used to redraw only for the checkbox embedded
+       in the card, on the assumption that a card only ever shows its own conditions - but a
+       cfollow block can cover every condition on the case, so a tick on the profile panel
+       changes the card just as much, and un-ticking there left the questions on screen. */
+    if(typeof render==="function" && $("script")) render();
     pFlash(); return;
   }
   if(t.getAttribute&&t.getAttribute("data-pk")) pSet(t.getAttribute("data-pk"),t.value,inCard);
@@ -4624,14 +5408,16 @@ function pSetup(){
 }
 
 function pOpen(){
-  $("drawertitle").textContent="Client profile";
+  $("drawertitle").textContent=pSpecTitle();
   $("drawerbody").innerHTML=
     '<div class="ptools">'+
       '<button type="button" class="pbtn" id="profprint">Print profile</button>'+
       '<button type="button" class="pbtn" id="profsave">Save profile</button>'+
       '<button type="button" class="pbtn" id="profopen">Load profile</button>'+
-      '<button type="button" class="pbtn pwiz" id="profwiz">Product Wizard <span>&#8599;</span></button>'+
-      '<span class="psaved" id="psaved"></span></div>'+
+      (curScript==="health" ? "" :
+        '<button type="button" class="pbtn pwiz" id="profwiz">Product Wizard <span>&#8599;</span></button>')+
+      '<span class="psaved" id="psaved"></span>'+
+      (curScript==="health" ? popPromoHTML() : "")+'</div>'+
     '<div class="profnotes"><label for="pnotes">Notes</label>'+
       '<textarea id="pnotes" placeholder="Anything off script &mdash; what they said, what to remember, what to follow up on."></textarea>'+
       '<p class="pnote">Stays in this browser. Nothing is sent anywhere. Don\'t put social security, licence or account numbers here.</p></div>'+
@@ -4663,9 +5449,190 @@ function pWire(){
   var pr=document.getElementById("profprint"); if(pr) pr.onclick=pPrint;
   var sv=document.getElementById("profsave");  if(sv) sv.onclick=pSaveFile;
   var op=document.getElementById("profopen");  if(op) op.onclick=function(){ $("proffile").click(); };
+  var pp=document.getElementById("poppro");    if(pp) pp.onclick=popOpen;
 }
 
-var SCRIPT_CODE={veteran:"VET",mortgage:"MP",iul:"IUL"};
+
+/* ---------------------------------------------------------------------------
+   MyPOP Pro handoff.
+
+   The Product Wizard rates LIFE carriers against conditions - it has nothing to say
+   about a private health plan, so on the health profile it is replaced by this.
+
+   Transport: the same postMessage contract the Wizard uses, because these are four
+   separate origins and nothing is shared between them - not storage, not cookies.
+   POP Pro does not listen for that message yet. Until it does, this falls back to
+   writing the quote file POP Pro's own "Load Quote" reads, which works today.
+   --------------------------------------------------------------------------- */
+var POP_URL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname)
+  ? "http://localhost:8851/tool/" : "https://mypoppro.com/tool/";
+var POP_WIN=null, POP_TRY=null, POP_DONE=false;
+
+function popPromoHTML(){
+  return '<button type="button" class="poppro" id="poppro">'+
+    '<span style="display:block"><b>Push client to <em>MyPOP&nbsp;Pro</em></b>'+
+    '<span>Build the private health presentation from this profile &mdash; good, better and best, '+
+    'the subsidy cliff, and the Package of Protection.</span></span>'+
+    '<span class="arr">&#8599;</span></button>'+
+    '<p class="popnote" id="popnote">Save the profile first. It keeps a copy on record and it is what you reload next time.</p>';
+}
+
+/* The suite's client object is the shared vocabulary (see the CRM repo's FIELDS.md),
+   so this sends the same canonical keys the Product Wizard gets - dob, age, meds,
+   conds - rather than a second private dialect. Everything the wizard has no use for
+   but the health presentation does rides under `health`. POP Pro's own misleading
+   field names (`date` for the date of birth, `page` for the age) stay inside POP Pro,
+   where normClient() already reconciles them. */
+function popClient(){
+  var yn=function(v){ var t=String(v||""); return t==="Yes"?true:(t==="No"?false:null); };
+  /* Zero-padded, always. POP Pro formats what it is handed, and 7/3/1971 comes out of its
+     formatter as 73/19/71 - a silently wrong date is worse than an empty box. pAge already
+     parses everything the agent might have typed, so use the date it worked out. */
+  var dt=function(v){ var r=pAge(v); return (r && r.pretty) ? r.pretty : (v||""); };
+  /* Height goes over as total inches as well as the words, because POP Pro's box is a
+     dropdown of inches and a string like 5'11" simply does not select anything. */
+  var inches=function(v){ var m=String(v||"").match(/(\d+)\s*'\s*(\d+)?/);
+    return m ? (+m[1])*12+(+(m[2]||0)) : null; };
+  var wc=wizClient();                     /* meds, medSkip and conds, already in suite shape */
+  var docs=(P.docs||[]).filter(function(d){ return d && (d.n||d.prac); });
+  var kids=(P.deps||[]).filter(function(d){ return d && (d.n||d.dob); });
+
+  var c={
+    first:P.first||"", last:P.last||"",
+    /* as the agent typed it. The wizard needs ISO for its date box; POP Pro does not,
+       and converting twice is how a date ends up blank in one of the two. */
+    dob:dt(P.dob), age:P.age||"",
+    state:P.state||"", zip:P.zip||"",
+    height:P.height||"", heightIn:inches(P.height), weight:P.weight||"",
+    sex:P.sex||"", tobacco:yn(P.tobacco),
+    meds:wc.meds||[], medSkip:wc.medSkip||[], conds:wc.conds||[],
+    spouse:{
+      first:P.sp_name||"", last:P.sp_last||"", dob:dt(P.sp_dob), age:P.sp_age||"",
+      height:P.sp_height||"", heightIn:inches(P.sp_height), weight:P.sp_weight||"", sex:P.sp_sex||"",
+      tobacco:yn(P.sp_tobacco)
+    },
+    kids:kids.map(function(d){ return {name:d.n||"", dob:dt(d.dob), age:d.age||"", sex:d.sex||""}; }),
+    health:{
+      incomeThis:P.income_this||"", incomeSpouse:P.sp_income||"", incomeHousehold:P.hh_income||"",
+      retireAge:P.i_retire||"", spRetireAge:P.sp_retire||"",
+      liquid:P.i_liquid||"", invest:P.asset_amt||"",
+      invprot:yn(P.asset_prot), invnote:P.asset_notes||"",
+      budgetComfort:P.budget_comfort||"", budgetMax:P.budget_max||"",
+      healthNotes:P.health_notes||"", whyShop:P.why_note||"", effDate:dt(P.start_when),
+      surgery:yn(P.recent_stay), surgeryWhat:P.recent_what||"",
+      hospStay:P.stay_what||"",
+      notes:P.notes||"",
+      doctors:docs.map(function(d){
+        return {name:d.n||"", practice:d.prac||"", keep:d.keep||"", aca:d.aca||""}; })
+    }
+  };
+  return c;
+}
+/* The same mapping POP Pro's own listener does, for the case where it is an older
+   copy that cannot listen yet. Kept deliberately thin - POP Pro deep-merges this onto
+   a blank state, so anything left out keeps its default. */
+function popStateFile(){
+  var c=popClient(), h=c.health||{}, sp=c.spouse||{};
+  var n=function(v){ var x=parseFloat(String(v||"").replace(/[^0-9.\-]/g,"")); return isFinite(x)?x:0; };
+  var full=function(a,b){ return ((a||"")+" "+(b||"")).replace(/\s+/g," ").trim(); };
+  var ag=popAgent();
+  var o={
+    agency:ag.agency||undefined, agentPhone:ag.phone||undefined, agentEmail:ag.email||undefined,
+    client:{ agent:ag.name||"", pname:full(c.first,c.last), sname:full(sp.first,sp.last),
+             date:c.dob, dob:c.dob, page:String(c.age||""), age:String(c.age||""),
+             sdob:sp.dob||"", sage:String(sp.age||""), state:c.state, zip:c.zip },
+    intake:{
+      who:{app:true, spouse:!!(sp.first||sp.dob), kids:(c.kids||[]).length>0},
+      pheight:c.heightIn?String(c.heightIn):'', pweight:c.weight,
+      psex:(c.sex==='Male'?'M':(c.sex==='Female'?'F':'')), tobaccoP:c.tobacco===true,
+      sheight:sp.heightIn?String(sp.heightIn):'', sweight:sp.weight,
+      ssex:(sp.sex==='Male'?'M':(sp.sex==='Female'?'F':'')), tobaccoS:sp.tobacco===true,
+      kidsNote:(c.kids||[]).map(function(k){
+        return [k.name,k.age?k.age+"y":"",k.sex].filter(Boolean).join(" ");}).join("; "),
+      pincome:n(h.incomeThis), sincome:n(h.incomeSpouse), income:n(h.incomeHousehold),
+      retage:h.retireAge||"", savings:n(h.liquid), invest:n(h.invest),
+      invprot:h.invprot===true, invnote:h.invnote||"",
+      budget:n(h.budgetComfort), whyShop:h.whyShop||"",
+      effDate:h.effDate||"", surg2yrP:h.surgery===true,
+      conds:(c.conds||[]).map(function(x){ return {name:x.name, yr:x.yr||"", mo:x.mo||""}; }),
+      medSkip:(c.medSkip||[]).slice(),
+      medList:(c.meds||[]).map(function(m){
+        return {name:m, cost:0, aca:0, disc:0, forP:true, forS:false}; }),
+      docs1:((h.doctors||[])[0]||{}).name||"",
+      docs2:((h.doctors||[])[1]||{}).name||"",
+      docs3:((h.doctors||[])[2]||{}).name||"",
+      docnote:(h.doctors||[]).map(function(d){
+        return [d.name,d.practice,d.keep?("must keep: "+d.keep):"",d.aca?("on ACA plan: "+d.aca):""]
+          .filter(Boolean).join(" — ");}).join("; ")
+    }
+  };
+  /* An empty agency must not travel - POP Pro would take it literally and wipe its own. */
+  Object.keys(o).forEach(function(k){ if(o[k]===undefined) delete o[k]; });
+  return o;
+}
+/* The agent's own details live in their own store here (set once under Set up, and kept
+   when Start over clears the client). They are sent as a sibling of the client rather than
+   inside it, because they are not facts about this client - they are who is running the call.
+   POP Pro saves its whole state to its own storage, so one push is enough: these are there
+   the next time it opens. There is no shared cookie to lean on - four subdomains is four
+   origins, and nothing crosses between them except a message like this one. */
+function popAgent(){
+  var g=function(k){ return String(pVal(k)||"").trim(); };
+  return { name:g("a_name"), agency:g("a_agency"), npn:g("a_npn"),
+           phone:g("a_phone"), email:g("a_email") };
+}
+function popFile(){
+  var d=new Date(), pad=function(n){return (n<10?"0":"")+n};
+  var stamp=pad(d.getMonth()+1)+"."+pad(d.getDate())+"."+d.getFullYear();
+  var who=((P.first||"")+" "+(P.last||"")).replace(/\s+/g," ").trim()||"Client";
+  var name=(who+" - POP Pro - "+stamp).replace(/[\/\\:*?"<>|]/g,"");
+    /* Load Quote reads POP Pro's own state, not the suite client object, so the
+   fallback file has to be shaped that way rather than sent as-is. */
+  var blob=new Blob([JSON.stringify(popStateFile(),null,2)],{type:"application/json"});
+  var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download=name+".json"; a.style.display="none";
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);document.body.removeChild(a)},600);
+  return name+".json";
+}
+
+function popSay(msg){ var el=document.getElementById("popnote"); if(el) el.innerHTML=msg; }
+
+function popOpen(){
+  var b=document.getElementById("poppro");
+  POP_DONE=false;
+  POP_WIN=window.open(POP_URL,"myPopPro");
+  if(!POP_WIN){ popSay('<b>Allow pop-ups</b> for this site, then try again.'); return; }
+  try{ POP_WIN.focus(); }catch(e){}
+  if(b) b.classList.add("busy");
+  var n=0;
+  clearInterval(POP_TRY);
+  POP_TRY=setInterval(function(){
+    if(POP_DONE || !POP_WIN || POP_WIN.closed){ clearInterval(POP_TRY); popRest(); return; }
+    if(++n>16){   /* ~5s with no acknowledgement - POP Pro is not listening yet */
+      clearInterval(POP_TRY);
+      var f=popFile();
+      popSay('POP Pro cannot take the profile straight across yet, so it has been saved as '+
+             '<b>'+esc(f)+'</b>. In POP Pro, use <b>Load Quote</b> and pick that file.');
+      popRest(); return;
+    }
+    try{ POP_WIN.postMessage({source:"optimum-suite",type:"client",v:1,tool:"poppro",
+                              client:popClient(), agent:popAgent()},"*"); }catch(e){}
+  },300);
+}
+function popRest(){ var b=document.getElementById("poppro"); if(b) b.classList.remove("busy"); }
+
+window.addEventListener("message",function(e){
+  var d=e.data;
+  if(d && d.source==="optimum-poppro" && d.type==="applied"){
+    POP_DONE=true; clearInterval(POP_TRY); popRest();
+    popSay(d.ok===false
+      ? 'MyPOP Pro kept the case it already had open. Nothing was changed there.'
+      : 'Sent to MyPOP Pro &mdash; it opened on the intake with this profile in it. Save the profile too; that is the copy you reload next time.');
+  }
+});
+
+var SCRIPT_CODE={veteran:"VET",mortgage:"MP",iul:"IUL",health:"HEALTH"};
 function pSaveFile(){
   var d=new Date(), pad=function(n){return (n<10?"0":"")+n};
   var stamp=pad(d.getMonth()+1)+"."+pad(d.getDate())+"."+d.getFullYear();
@@ -4804,9 +5771,109 @@ function pPrint(){
   var rl=(P.refs||[]).filter(function(r){return r.n||r.p||r.r||r.s});
 
   // ---- header
-  a('<div class="page"><div class="band"><div class="bl"><span class="ttl">Client Profile</span>'+
+  a('<div class="page"><div class="band"><div class="bl"><span class="ttl">'+esc(pKind())+'</span>'+
     '<span class="by">Brought to you by Optimum</span></div>'+
     '<div class="br">'+esc(title)+'</div></div>');
+
+  /* ---------------------------------------------------------------------------
+     THE HEALTH PROFILE PRINTS ITSELF FROM ITS OWN SPEC.
+
+     The block below this one is the life/FEX sheet: a hand-built layout that names
+     every field it prints. That is fine for a form that changes twice a year, and
+     wrong for this one - a field added to the health panel would simply be missing
+     from the paper copy, and nobody would notice until a client file was short.
+
+     So this walks PF_SPEC_HEALTH, the same list that draws the panel, and prints
+     what it finds. Add a field to the panel and it appears here on its own.
+     --------------------------------------------------------------------------- */
+  if(cur==="health"){
+    var spec=pSpec(), secs=[], curSec=null;
+    spec.forEach(function(fd){
+      if(fd.sec){ curSec={name:fd.sec, items:[]}; secs.push(curSec); return; }
+      if(!curSec){ curSec={name:"Client", items:[]}; secs.push(curSec); }
+      curSec.items.push(fd);
+    });
+
+    /* Rows of three, unless a field asks for the whole width. */
+    function fieldsHTML(items){
+      var out=[], buf=[];
+      var flush=function(){
+        if(!buf.length) return;
+        out.push(row(buf.map(function(){return "1fr";}).join(" "), buf.join("")));
+        buf=[];
+      };
+      items.forEach(function(fd){
+        var val=pVal(fd.k), wide=(fd.w>=3)||fd.type==="area";
+        if(wide){ flush(); out.push(row("1fr", f(pLabel(fd), val?esc(val):"", "note"))); return; }
+        buf.push(f(pLabel(fd), val?esc(val):""));
+        if(buf.length===3) flush();
+      });
+      flush();
+      return out.join("");
+    }
+
+    function condsHTML(){
+      var on=(P.conds||[]);
+      if(!on.length) return row("1fr", f("Conditions","None recorded"));
+      var lines=on.map(function(c){
+        var parts=(condFollow(c)||[]).map(function(x){
+          return P[x.k] ? String(x.l).replace(/\s*\([^)]*\)\s*$/,"")+" "+esc(P[x.k]) : null;
+        }).filter(Boolean);
+        return "<b>"+esc(c)+"</b>"+(parts.length? " &mdash; "+parts.join(", ") : "");
+      });
+      return row("1fr", f("Conditions and what was asked about each", lines.join("<br>"), "note"));
+    }
+
+    function medsHTML(){
+      var m=(P.meds_list||[]);
+      return row("1fr", f("Medications", m.length? esc(m.join(", ")) : "None recorded", "note"));
+    }
+
+    function depsHTML(){
+      var l=(P.deps||[]).filter(function(d){ return d && (d.n||d.dob||d.sex); });
+      if(!l.length) return "";
+      return '<table><tr><th style="width:40%">Name</th><th style="width:22%">Date of birth</th>'+
+        '<th style="width:12%">Age</th><th style="width:26%">Gender</th></tr>'+
+        l.map(function(d){ return '<tr><td>'+esc(d.n||"")+'</td><td>'+esc(d.dob||"")+'</td><td>'+
+          esc(d.age||"")+'</td><td>'+esc(d.sex||"")+'</td></tr>'; }).join("")+'</table>';
+    }
+
+    function docsHTML(){
+      var l=(P.docs||[]).filter(function(d){ return d && (d.n||d.prac); });
+      if(!l.length) return "";
+      return '<table><tr><th style="width:26%">Doctor</th><th style="width:26%">Practice</th>'+
+        '<th style="width:16%">On their plan</th><th style="width:14%">Must keep</th>'+
+        '<th style="width:18%">Notes</th></tr>'+
+        l.map(function(d){ return '<tr><td>'+esc(d.n||"")+'</td><td>'+esc(d.prac||"")+'</td><td>'+
+          esc(d.aca||"")+'</td><td>'+esc(d.keep||"")+'</td><td>'+esc(d.note||"")+'</td></tr>'; }).join("")+'</table>';
+    }
+
+    secs.forEach(function(sc){
+      var plain=sc.items.filter(function(fd){ return !fd.type || ["area","money"].indexOf(fd.type)>-1; });
+      var body=fieldsHTML(plain);
+      sc.items.forEach(function(fd){
+        if(fd.type==="conds") body+=condsHTML();
+        if(fd.type==="meds")  body+=medsHTML();
+        if(fd.type==="deps")  body+=depsHTML();
+        if(fd.type==="docs")  body+=docsHTML();
+      });
+      if(body.replace(/\s/g,"")) a(card(esc(sc.name), body, "margin-top:8px"));
+    });
+
+    if(P.notes) a(card("Notes from the call", row("1fr", f("", esc(P.notes).replace(/\n/g,"<br>"), "note")), "margin-top:8px"));
+    a(card("Next steps", row("1fr 1fr",
+      f("Profile saved / pushed to MyPOP Pro","")+f("Presentation booked for", v("appt_when"))), "margin-top:8px"));
+
+    a('</div>');
+    a('<div class="foot"><span class="g">Confidential &mdash; protected health information. '+
+      'For authorized agency use only.</span><span>'+
+      join([esc(pVal("a_name")), pVal("a_npn")?"NPN "+esc(pVal("a_npn")):""],"&nbsp; &middot; &nbsp;")+
+      '</span></div></div>');
+    w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>'+esc(pName()+" — "+pKind())+
+      '</title><style>'+PRINT_CSS+'</style></head><body>'+o.join("")+'</body></html>');
+    w.document.close(); setTimeout(function(){w.focus();w.print();},350);
+    return;
+  }
 
   a('<div class="strip">'+
     f("Client",join([v("first"),v("last")]," "))+
@@ -4912,7 +5979,7 @@ function pPrint(){
     '<span>'+join([esc(pVal("a_name")),pVal("a_npn")?"NPN "+esc(pVal("a_npn")):""],"&nbsp; &middot; &nbsp;")+
     '</span></div></div>');
 
-  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>'+esc(pName())+
+  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>'+esc(pName()+" \u2014 "+pKind())+
     '</title><style>'+PRINT_CSS+'</style></head><body>'+o.join("")+'</body></html>');
   w.document.close(); setTimeout(function(){w.focus();w.print();},350);
 }
@@ -5232,7 +6299,21 @@ function buildLauncher(){
 }
 
 function openScript(k){
-  if(!P.lead_type) P.lead_type="Vet";   /* the switch reads Vet until the agent moves it */
+  if(!P.lead_type) P.lead_type="Vet";
+  /* The health call is far more capture-heavy than the others, and the inline boxes and
+     condition ticks only render once the profile is on. Opening it for them removes the one
+     way to run this script and quietly record nothing. */
+  if(k==="health" && typeof PROFILE_ON!=="undefined" && !PROFILE_ON) setTimeout(function(){ pOpen(); },0);
+  /* Health has its own profile. If the panel is open when the script changes, re-title and
+     re-render it - otherwise you carry the previous script's fields into this one. */
+  setTimeout(function(){
+    var d=document.getElementById("drawer");
+    if(d && d.classList.contains("open") && typeof pRender==="function"){
+      var t=document.getElementById("drawertitle");
+      if(t && /profile/i.test(t.textContent)) t.textContent=pSpecTitle();
+      pRender();
+    }
+  },0);   /* the switch reads Vet until the agent moves it */
   var x=SCRIPTS.filter(function(a){return a.k===k})[0];
   if(!x||!x.ready||!LIB[k])return;
   if(curScript!==k){
