@@ -5499,6 +5499,8 @@ function popClient(){
 
   var c={
     first:P.first||"", last:P.last||"",
+    phone:P.phone||"", email:P.email||"",
+    address:[P.address||"",P.city||""].filter(Boolean).join(", "),
     /* as the agent typed it. The wizard needs ISO for its date box; POP Pro does not,
        and converting twice is how a date ends up blank in one of the two. */
     dob:dt(P.dob), age:P.age||"",
@@ -5516,9 +5518,16 @@ function popClient(){
       incomeThis:P.income_this||"", incomeSpouse:P.sp_income||"", incomeHousehold:P.hh_income||"",
       retireAge:P.i_retire||"", spRetireAge:P.sp_retire||"",
       liquid:P.i_liquid||"", invest:P.asset_amt||"",
-      invprot:yn(P.asset_prot), invnote:P.asset_notes||"",
+      protectable:P.asset_prot||"", invnote:P.asset_notes||"",
       budgetComfort:P.budget_comfort||"", budgetMax:P.budget_max||"",
-      healthNotes:P.health_notes||"", whyShop:P.why_note||"", effDate:dt(P.start_when),
+      healthNotes:P.health_notes||"", healthOther:P.health_other||"",
+      whyShop:P.why_note||"", effDate:dt(P.start_when), lastDay:dt(P.last_day),
+      /* The booked presentation. POP Pro has a follow-up notes box that is exactly where an
+         agent looks for "when am I seeing this person again". */
+      apptWhen:P.appt_when||"", apptWho:P.appt_who||"", apptNotes:P.appt_notes||"",
+      occupation:P.occupation||"",
+      incomeNext:P.income_next||"", spIncomeNext:P.sp_income_next||"", hhIncomeNext:P.hh_income_next||"",
+      assetWhere:P.asset_where||"", assetEmployer:P.asset_employer||"",
       surgery:yn(P.recent_stay), surgeryWhat:P.recent_what||"",
       hospStay:P.stay_what||"",
       notes:P.notes||"",
