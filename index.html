@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Insurance Script Navigator — Optimum</title>
-<meta name="description" content="Card-by-card call scripts for insurance agents. Veteran life, indexed universal life, and mortgage protection — with objection handling, reference panels, and printable versions. Free from Optimum.">
+<meta name="description" content="Know what to say, know what to ask, and write more business off every call. Card-by-card scripts for vet/FEX, IUL, mortgage protection and health discovery — each one builds a client profile you can save, print, or send to the Product Wizard or MyPOP Pro. Free from Optimum.">
 <meta name="theme-color" content="#16203C">
 <meta name="author" content="Optimum">
 <link rel="canonical" href="https://script.ffloptimum.com/">
@@ -15,15 +15,15 @@
 <meta property="og:site_name" content="Optimum">
 <meta property="og:url" content="https://script.ffloptimum.com/">
 <meta property="og:title" content="Insurance Script Navigator">
-<meta property="og:description" content="Card-by-card call scripts for insurance agents. Veteran life, IUL, and mortgage protection — free from Optimum.">
-<meta property="og:image" content="https://script.ffloptimum.com/og.png?v=2">
+<meta property="og:description" content="Know what to say, know what to ask, and write more business off every call. Vet/FEX, IUL, mortgage protection and health discovery — free from Optimum.">
+<meta property="og:image" content="https://script.ffloptimum.com/og.png?v=3">
 <meta property="og:image:width" content="2400">
 <meta property="og:image:height" content="1260">
-<meta property="og:image:alt" content="Insurance Script Navigator — pick the call, read card by card, handle the pushback. Veterans Life, Indexed Universal Life, Mortgage Protection. Free from Optimum.">
+<meta property="og:image:alt" content="Insurance Script Navigator — pick the call, read card by card, build the profile. Vet/FEX, Indexed Universal Life, Mortgage Protection, Health Discovery. Save it, print it, send it to the Product Wizard or MyPOP Pro. Free from Optimum.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://script.ffloptimum.com/og.png?v=2">
+<meta name="twitter:image" content="https://script.ffloptimum.com/og.png?v=3">
 <meta name="twitter:title" content="Insurance Script Navigator">
-<meta name="twitter:description" content="Card-by-card call scripts for insurance agents. Free from Optimum.">
+<meta name="twitter:description" content="Know what to say, know what to ask, and write more business off every call. Free from Optimum.">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -82,6 +82,12 @@ body.embed .scrim{position:absolute}
 @media(min-width:701px){.gshort{display:none}}
 .lbody{flex:1;padding:34px 20px 40px}
 .lwrap{max-width:820px;margin:0 auto}
+.ltail{display:block;margin-top:10px;padding-top:9px;border-top:1px solid var(--goldline);
+  font-family:var(--sans);font-size:11.5px;color:var(--muted);letter-spacing:.01em}
+.ltail b{color:var(--golddk);font-weight:700}
+.lpromise{font-family:var(--serif);font-weight:600;font-size:26px;line-height:1.35;
+  color:var(--navy);margin:0 0 14px;letter-spacing:-.005em}
+@media(max-width:640px){.lpromise{font-size:20px}.wideonly{display:none}}
 .ltitle{font-family:var(--serif);font-size:30px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
 .lsub{font-family:var(--serif);font-style:italic;font-size:15.5px;color:var(--muted);margin-bottom:26px}
 .lgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:13px}
@@ -710,10 +716,11 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   <div class="recstrip">Free for every agent, period.<button type="button" class="recopen" aria-haspopup="dialog">Not a Family First Life agent?</button></div>
   <div class="lbody">
     <div class="lwrap">
+      <div class="lpromise">Know what to say, know what to ask,<br class="wideonly"> and write more business off every call.</div>
       <div class="ltitle">Choose your script</div>
       <div class="lsub">Pick the call you're about to run.</div>
       <div class="lgrid" id="lgrid"></div>
-      <div class="lfoot">Each script opens as a card-by-card navigator with its own reference panels. You can jump back here any time from the top of the screen.</div>
+      <div class="lfoot"><b>Every script builds a client profile while you talk</b> &mdash; save it, reload it before the next call, print it for the file, or send it straight to the Product Wizard or MyPOP Pro. Each script opens as a card-by-card navigator with its own reference panels, and you can jump back here any time from the top of the screen.</div>
       <div class="promo">
         <div class="peyebrow">Free for agents</div>
         <h3>Everything you need to look like a professional</h3>
@@ -954,13 +961,13 @@ var OPTIMUM_URL = "https://www.ffloptimum.com/";
 
 var SCRIPTS=[
  {k:"veteran", ready:true,  title:"Veterans / FEX Life Script",
-  desc:"Outbound to veteran and final expense life leads. Fresh and aged openers, full discovery, three-tier quote, application and wrap."},
+  desc:"Outbound to veteran and final expense leads. Fresh and aged openers, objection handling through banking and closing, three-tier quote and application.", tail:"Builds a client profile &rarr; <b>Product Wizard</b>"},
  {k:"iul",     ready:true,  title:"Indexed Universal Life",
-  desc:"Warm or scheduled IUL calls. Goal discovery, eligibility, then a fork into IUL, a Zoom for larger cases, or a whole life pivot."},
+  desc:"Warm or scheduled IUL calls. Goal discovery, eligibility, then a fork into IUL, a Zoom for larger cases, or a whole life pivot.", tail:"Builds a client profile &rarr; <b>Product Wizard</b>"},
  {k:"mortgage",ready:true,  title:"Mortgage Protection",
-  desc:"Homeowner leads. Reframes payoff into protecting equity and buying time, then forks into IUL, whole life, or term."},
+  desc:"Homeowner leads. Reframes payoff into protecting equity and buying time, then forks into IUL, whole life or term.", tail:"Builds a client profile &rarr; <b>Product Wizard</b>"},
  {k:"health",   ready:true,  title:"Health — Discovery Call",
-  desc:"Private health discovery. Appointment or warm call, the qualifying open, household and health, the subsidy cliff, then book the presentation."}
+  desc:"Private health discovery. Appointment or warm call, household and health for both spouses, the subsidy cliff, then book the presentation.", tail:"Builds a private health profile &rarr; <b>MyPOP&nbsp;Pro</b>"}
 ];
 
 var LIB={
@@ -5781,12 +5788,14 @@ function popStateFile(){
       pincome:n(h.incomeThis), sincome:n(h.incomeSpouse), income:n(h.incomeHousehold),
       retage:h.retireAge||"", savings:n(h.liquid), invest:n(h.invest),
       invprot:h.invprot===true, invnote:h.invnote||"",
-      budget:n(h.budgetComfort), whyShop:h.whyShop||"",
+      budget:n(h.budgetMax)||n(h.budgetComfort), whyShop:h.whyShop||"",
       effDate:h.effDate||"", surg2yrP:h.surgery===true,
       conds:(c.conds||[]).map(function(x){ return {name:x.name, yr:x.yr||"", mo:x.mo||""}; }),
       medSkip:(c.medSkip||[]).slice(),
       medList:(c.meds||[]).map(function(m){
-        return {name:m, cost:0, aca:0, disc:0, forP:true, forS:false}; }),
+        return {name:m, cost:0, aca:0, disc:0, forP:true, forS:false}; })
+        .concat((c.spMeds||[]).map(function(m){
+        return {name:m, cost:0, aca:0, disc:0, forP:false, forS:true}; })),
       docs1:((h.doctors||[])[0]||{}).name||"",
       docs2:((h.doctors||[])[1]||{}).name||"",
       docs3:((h.doctors||[])[2]||{}).name||"",
@@ -5821,6 +5830,53 @@ function condLines(){
   if(["Married","Partnered"].indexOf(String(P.married||""))>-1) out.spouse=who(true);
   return out;
 }
+/* POP Pro -> this profile. The mirror of popClient(). Only the client travels back;
+   products, pricing and the quote stay in POP Pro where they belong. */
+function fromPopPro(o){
+  var c=o.client||{}, I=o.intake||{}, out={};
+  var put=function(k,v){ if(v!==undefined && v!==null && v!=="" && v!==0) out[k]=String(v); };
+  var split=function(full){
+    var t=String(full||"").trim(); if(!t) return ["",""];
+    var i=t.lastIndexOf(" "); return i<0?[t,""]:[t.slice(0,i),t.slice(i+1)];
+  };
+  var n=split(c.pname); put("first",n[0]); put("last",n[1]);
+  var sn=split(c.sname); put("sp_name",sn[0]); put("sp_last",sn[1]);
+  put("dob", c.dob||c.date); put("age", c.age||c.page);
+  put("sp_dob", c.sdob); put("sp_age", c.sage);
+  put("state", c.state); put("zip", c.zip); put("address", c.address);
+  put("phone", I.phone); put("email", I.email);
+  var ft=function(v){ var x=parseInt(v,10); return (x>=48&&x<=84) ? Math.floor(x/12)+"'"+(x%12)+'"' : ""; };
+  put("height", ft(I.pheight)); put("weight", I.pweight);
+  put("sp_height", ft(I.sheight)); put("sp_weight", I.sweight);
+  put("sex", I.psex==="M"?"Male":I.psex==="F"?"Female":"");
+  put("sp_sex", I.ssex==="M"?"Male":I.ssex==="F"?"Female":"");
+  put("tobacco", I.tobaccoP?"Yes":""); put("sp_tobacco", I.tobaccoS?"Yes":"");
+  var w=I.who||{};
+  if(w.spouse || c.sname) out.married = out.married || "Married";
+  put("income_this", I.pincome); put("sp_income", I.sincome); put("hh_income", I.income);
+  put("i_retire", I.retage); put("i_liquid", I.savings); put("asset_amt", I.invest);
+  put("asset_prot", I.invsra?"Yes":""); put("asset_notes", I.invnote);
+  put("budget_max", I.budget);
+  put("cur_carrier", I.carrier); put("cur_plan", I.plan);
+  put("fh_cancer", I.famcancerP?"Yes":""); put("sp_fh_cancer", I.famcancerS?"Yes":"");
+  put("fh_heart", I.famheartP?"Yes":"");  put("sp_fh_heart", I.famheartS?"Yes":"");
+  put("mh_needs", I.mentalP?"Yes":"");    put("sp_mh_needs", I.mentalS?"Yes":"");
+  put("mat_needs", I.maternityP?"Yes":"");put("sp_mat_needs", I.maternityS?"Yes":"");
+  put("recent_stay", I.surg2yrP?"Yes":"");put("sp_recent_stay", I.surg2yrS?"Yes":"");
+  put("notes", I.notes); put("why_note", I.whyShop); put("start_when", I.effDate);
+  put("kids_health", I.kidsNote);
+  /* medications come back to the person they were ticked against */
+  var ml=(I.medList||[]).filter(function(m){ return m && m.name; });
+  var mine=ml.filter(function(m){ return m.forS!==true; }).map(function(m){ return m.name; });
+  var theirs=ml.filter(function(m){ return m.forS===true; }).map(function(m){ return m.name; });
+  if(mine.length){ out.meds_list=mine; out.meds=mine.join(", "); }
+  if(theirs.length) out.sp_meds_list=theirs;
+  var cs=(I.conds||[]).map(function(x){ return x && x.name; }).filter(Boolean);
+  if(cs.length) out.conds=cs;
+  var docs=[I.docs1,I.docs2,I.docs3].filter(Boolean);
+  if(docs.length){ out.keep_docs="Yes"; out.docs=docs.map(function(d){ return {n:d}; }); }
+  return out;
+}
 function popAgent(){
   var g=function(k){ return String(pVal(k)||"").trim(); };
   return { name:g("a_name"), agency:g("a_agency"), npn:g("a_npn"),
@@ -5845,11 +5901,13 @@ function popSay(msg){ var el=document.getElementById("popnote"); if(el) el.inner
 
 function popOpen(){
   var b=document.getElementById("poppro");
+  var saved=pAutoSave("poppro");
   POP_DONE=false;
   POP_WIN=window.open(POP_URL,"myPopPro");
   if(!POP_WIN){ popSay('<b>Allow pop-ups</b> for this site, then try again.'); return; }
   try{ POP_WIN.focus(); }catch(e){}
   if(b) b.classList.add("busy");
+  if(saved) popSay('Saved a copy first &mdash; <b>'+esc(saved)+'</b> is in your downloads.');
   var n=0;
   clearInterval(POP_TRY);
   POP_TRY=setInterval(function(){
@@ -5878,7 +5936,19 @@ window.addEventListener("message",function(e){
 });
 
 var SCRIPT_CODE={veteran:"VET",mortgage:"MP",iul:"IUL",health:"HEALTH"};
-function pSaveFile(){
+/* A handoff is the moment the profile is worth most and the moment it is most likely to be
+   lost - the agent opens another tab, closes this one, or hits Start over for the next call
+   and the whole thing is gone. So pushing anywhere takes a snapshot first, once per set of
+   changes, rather than asking the agent to remember. */
+var AUTOSAVED="";
+function pAutoSave(reason){
+  if(!P.first && !P.last) return "";            /* nothing worth saving yet */
+  var sig=JSON.stringify(P);
+  if(sig===AUTOSAVED) return "";                 /* already saved this exact state */
+  AUTOSAVED=sig;
+  return pSaveFile(true) || "";
+}
+function pSaveFile(quiet){
   var d=new Date(), pad=function(n){return (n<10?"0":"")+n};
   var stamp=pad(d.getMonth()+1)+"."+pad(d.getDate())+"."+d.getFullYear();
   var who=((P.first||"")+" "+(P.last||"")).replace(/\s+/g," ").trim() || "Client";
@@ -5889,16 +5959,23 @@ function pSaveFile(){
   a.download=name+".json"; a.style.display="none";
   document.body.appendChild(a); a.click();
   setTimeout(function(){URL.revokeObjectURL(a.href);document.body.removeChild(a)},600);
+  if(!quiet) pFlash();
+  return a.download;
 }
 
 $("proffile").onchange=function(){
   var f=this.files&&this.files[0]; if(!f)return;
   var r=new FileReader();
-  r.onload=function(){ try{ P=JSON.parse(r.result)||{};
-                       if(P.married==="Yes") P.married="Married";
-                       else if(P.married==="No") P.married="Single";
-                       pStore(); pOpen(); if(typeof render==="function") render(); }
-                       catch(e){ alert("That file could not be read as a profile."); } };
+  r.onload=function(){ try{
+      var o=JSON.parse(r.result)||{};
+      /* A POP Pro quote is a different shape entirely - its own state, not this profile.
+         Rather than tell the agent it is the wrong file, read what is in it and carry it
+         back across. Its own fields stay in the file; this only takes the client. */
+      P = (o && o.intake && (o.packages||o.aca||o.client)) ? fromPopPro(o) : o;
+      if(P.married==="Yes") P.married="Married";
+      else if(P.married==="No") P.married="Single";
+      pStore(); pOpen(); if(typeof render==="function") render(); }
+      catch(e){ alert("That file could not be read as a profile."); } };
   r.readAsText(f); this.value="";
 };
 
@@ -6434,6 +6511,7 @@ function wizCardHTML(){
 var WIZ_WIN=null, WIZ_TRY=null, WIZ_DONE=false;
 function wizOpen(){
   var b=document.getElementById("wizbtn");
+  pAutoSave("wizard");
   WIZ_DONE=false;
   WIZ_WIN=window.open(WIZ_URL,"optimumWizard");
   if(!WIZ_WIN){ if(b){b.classList.add("bad"); b.innerHTML='Allow pop-ups to open the Wizard';} return; }
@@ -6530,7 +6608,7 @@ function buildLauncher(){
     return '<button type="button" class="lcard '+(x.ready?"ready":"soon")+'" data-script="'+x.k+'"'+
       (x.ready?'':' disabled')+'>'+
       '<span class="lbadge '+(x.ready?"on":"off")+'">'+(x.ready?"Ready":"In development")+'</span>'+
-      '<h2>'+x.title+'</h2><p>'+x.desc+'</p></button>';
+      '<h2>'+x.title+'</h2><p>'+x.desc+'</p>'+(x.tail?'<span class="ltail">'+x.tail+'</span>':'')+'</button>';
   }).join("") +
   '<a class="lcard vid" href="https://youtube.com/shorts/0rxtYeJYehM" target="_blank" rel="noopener noreferrer">'+
     '<span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17">'+
