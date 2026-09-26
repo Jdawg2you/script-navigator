@@ -1114,7 +1114,7 @@ appt_times:{s:"2",t:"Offer two times",l:[
 appt_lock:{s:"2",t:"Lock the appointment",l:[
 {t:"say",x:"My full name is ___(spell it). I have you down for ___(day and time)."},
 {t:"say",x:"Please block off about 15 minutes on either side, in case I'm early or running behind."},
-{t:"say",x:"This number receives texts, right? I'll send you the details &mdash; reply with &ldquo;C&rdquo; to confirm."},
+{t:"say",x:"This number receives texts, right? ___(phone) I'll send you the details &mdash; reply with &ldquo;C&rdquo; to confirm."},
 {t:"do",x:"Send the text now, while they're on the phone."},
 {t:"say",x:"Are you pretty good about keeping appointments? Nothing else scheduled around that time?"},
 {t:"say",x:"And just so you know, we won't be committing to anything on that call. I'll break it all down so you're clear before you decide anything."},
@@ -1175,7 +1175,7 @@ creds:{s:"3",t:"Write this down",l:[
 {t:"say",x:"My name is ___(your full name) &mdash; let me spell that for you."},
 {t:"say",x:"My direct number is ___(your phone number). Write that down too &mdash; that's how you reach me, not a call center."},
 {t:"say",x:"And my license number, my NPN, is ___(your NPN). That's like my business social security number &mdash; it verifies I'm licensed in ___(client's state). You can look it up on the ___(client's state) Department of Insurance website."},
-{t:"ask",x:"Does this number receive text messages?"},
+{t:"ask",x:"Does this number receive text messages? ___(phone)"},
 {t:"say",x:"Great &mdash; I'm sending you my digital business card right now, from my direct line. It's got all my license information on it. Let me know when it comes through."},
 {t:"note",x:"<b>What the card does:</b> saves your information to their phone with one click, links to your free website, and verifies with NIPR so your client can see you're an active, licensed agent.<br><br><b>Don't have one yet?</b> One free GOAT account activates all three &mdash; your digital business card, your website, and calendar scheduling so clients book themselves. No cost, and nothing to cancel later.<br><a class=\"notelink\" href=\"" + GOAT_URL + "\" target=\"_blank\" rel=\"noopener noreferrer\">Set up my free GOAT account &rarr;</a>"},
 {t:"note",x:"<b>This is the real reason you're sending it.</b> You're finding out whether they can receive and open a text &mdash; because the application ends with a texted code they have to open and read back to you. Find that out now, at minute six, not at minute forty with a half-submitted app."},
@@ -1935,7 +1935,7 @@ i_rebook_time:{s:"2",t:"Book the next one",l:[
 
 i_appt_lock:{s:"2",t:"Lock the appointment",l:[
 {t:"say",x:"Perfect. Your appointment is set for ___(date and time). Please block off about 15 minutes on either side in case I'm early or running behind."},
-{t:"say",x:"This number receives texts, right? Great &mdash; I'll text you the details. Please reply with &ldquo;C&rdquo; to confirm."},
+{t:"say",x:"This number receives texts, right? ___(phone) Great &mdash; I'll text you the details. Please reply with &ldquo;C&rdquo; to confirm."},
 {t:"do",x:"Send the text now, while they're on the phone. Confirm they got it."},
 {t:"ask",x:"Real quick &mdash; what time do you have us down for?"},
 {t:"do",x:"Make them say the time back. That's what makes appointments hold."}
@@ -1967,7 +1967,7 @@ i_creds_pen:{s:"3",t:"Credentials by phone",l:[
 {t:"say",x:"Do me a favor &mdash; grab a pen and paper real quick so I can give you my information."},
 {t:"do",x:"Wait for them to actually get it. They'll need that pen again when you present the numbers."},
 {t:"say",x:"My name is ___(your full name) &mdash; let me spell that. My direct number is ___(your phone). And my National Producer Number, my NPN, is ___(your NPN) &mdash; that's like my business social security number, and you can look it up on the ___(client's state) Department of Insurance website."},
-{t:"ask",x:"Does this number receive text messages? I'll send you my digital business card right now from my direct line."},
+{t:"ask",x:"Does this number receive text messages? ___(phone) I'll send you my digital business card right now from my direct line."},
 {t:"warn",x:"<b>This is also a capability test.</b> The application ends with a texted code they have to open and read back to you. Confirm they can actually open the text now, not at minute forty."},
 {t:"note",x:"<b>What the card does:</b> saves your information to their phone with one click, links to your free website, and verifies with NIPR so your client can see you're an active, licensed agent.<br><br><b>Don't have one yet?</b> One free GOAT account activates all three &mdash; your digital business card, your website, and calendar scheduling so clients book themselves. No cost, and nothing to cancel later.<br><a class=\"notelink\" href=\"" + GOAT_URL + "\" target=\"_blank\" rel=\"noopener noreferrer\">Set up my free GOAT account &rarr;</a>"}
 ],b:[{k:"Confirmed &mdash; continue",to:"i_why",c:"go"}]},
@@ -2775,7 +2775,7 @@ hs_book_who:{s:"1",pf:"who",t:"Who else needs to be on it",l:[
 hs_book_lock:{s:"1",t:"Lock it in",l:[
 {t:"say",x:"I just want to make sure you have my full name &mdash; ___(your name)."},
 {t:"say",x:"Please block off about 15 minutes on either side, in case I'm running early or behind."},
-{t:"say",x:"I'm going to send you a text message confirmation. When that comes through, if you can just reply with a yes or a thumbs up, so I know you received it."},
+{t:"say",x:"I'm going to send you a text message confirmation &mdash; is ___(phone) the best number? When that comes through, if you can just reply with a yes or a thumbs up, so I know you received it."},
 {t:"do",x:"Send the text now, while they're still on the phone. Not after."},
 {t:"say",x:"Now, I do have one request that I'd like to make."},
 {t:"do",x:"Micro-pause. Let them say &ldquo;sure&rdquo;. The pause is what turns this from a throwaway line into a commitment."},
@@ -3862,26 +3862,39 @@ var MEDS=[
 ["Sertraline","Zoloft"],["Escitalopram","Lexapro"],["Fluoxetine","Prozac"],["Citalopram","Celexa"],
 ["Bupropion","Wellbutrin"],["Venlafaxine","Effexor"],["Trazodone"],["Mirtazapine","Remeron"],
 ["Alprazolam","Xanax"],["Lorazepam","Ativan"],["Clonazepam","Klonopin"],["Diazepam","Valium"],
-["Buspirone","Buspar"],["Lithium"],["Lamotrigine","Lamictal"],["Quetiapine","Seroquel"],
+["Buspirone","Buspar"],["Lithium"],["Lamotrigine","Lamictal"],["Quetiapine","Seroquel","Latuda","lurasidone"],
 ["Aripiprazole","Abilify"],["Risperidone","Risperdal"],["Olanzapine","Zyprexa"],["Haloperidol","Haldol"],
-["Donepezil","Aricept"],["Memantine","Namenda"],["Levodopa","Sinemet","carbidopa"],["Ropinirole"],
-["Phenytoin","Dilantin"],["Levetiracetam","Keppra"],["Topiramate","Topamax"],["Valproate","Depakote"],
+["Donepezil","Aricept"],["Memantine","Namenda","Exelon","rivastigmine"],["Levodopa","Sinemet","carbidopa"],["Ropinirole"],
+["Phenytoin","Dilantin"],["Levetiracetam","Keppra"],["Topiramate","Topamax"],["Valproate","Depakote","Carbamazepine","Tegretol"],
 ["Oxycodone","Percocet","OxyContin"],["Hydrocodone","Norco","Vicodin"],["Tramadol","Ultram"],
-["Morphine","MS Contin"],["Fentanyl"],["Methadone"],["Suboxone","buprenorphine"],["Naltrexone"],
+["Morphine","MS Contin"],["Fentanyl"],["Methadone"],["Suboxone","buprenorphine"],["Naltrexone","Vivitrol"],
 ["Meloxicam","Mobic"],["Ibuprofen","Motrin","Advil"],["Naproxen","Aleve"],["Celecoxib","Celebrex"],
 ["Omeprazole","Prilosec"],["Pantoprazole","Protonix"],["Famotidine","Pepcid"],
 ["Allopurinol","Zyloprim"],["Colchicine"],["Tamsulosin","Flomax"],["Finasteride","Proscar"],
-["Sildenafil","Viagra"],["Tadalafil","Cialis"],["Alendronate","Fosamax"],["Vitamin D"],
-["Furosemide"],["Potassium","K-Dur"],["Amoxicillin"],["Azithromycin","Z-Pak"],["Doxycycline"],
+["Sildenafil","Viagra"],["Tadalafil","Cialis"],["Alendronate","Fosamax"],["Vitamin D"],["Potassium","K-Dur"],["Amoxicillin"],["Azithromycin","Z-Pak"],["Doxycycline"],
 ["Tamoxifen"],["Anastrozole","Arimidex"],["Letrozole","Femara"],["Keytruda","pembrolizumab"],
 ["Revlimid","lenalidomide"],["Imbruvica","ibrutinib"],["Gleevec","imatinib"],
-["Entecavir"],["Epclusa"],["Harvoni"],["Truvada"],["Biktarvy"],["Descovy"],
-["Dialysis"],["Sevelamer","Renvela"],["Epogen","epoetin"],["Tacrolimus","Prograf"],["Cyclosporine"],
-["Mycophenolate","CellCept"],["Hydroxyurea"],["Eliquis"]
+["Entecavir"],["Epclusa"],["Harvoni"],["Truvada","Descovy"],["Biktarvy","Tivicay","Genvoya","Atripla"],["Descovy"],
+["Dialysis"],["Sevelamer","Renvela"],["Epogen","epoetin"],["Tacrolimus","Prograf"],["Cyclosporine","Sirolimus","Rapamune"],
+["Mycophenolate","CellCept"],["Hydroxyurea"]
 ];
 
 /* unpadded soundex, so "elikwis" and "Eliquis" collapse to the same key */
 var MED_FOR={
+ /* Added 2026-09-26 after an audit found these drugs recognised but inert - the name was in
+    the list, nothing was pointed at a condition, so typing them raised no flag at all.
+    Every target below is an existing grid row; no new cells were needed.
+    Levothyroxine was REMOVED from Autoimmune disorder in the same pass: hypothyroidism is
+    not the disease that decline is written for (Sjogren's, lupus, myasthenia gravis), and
+    deriving nothing is the correct behaviour for it, the same as aspirin. */
+ "Suboxone":["Alcohol / drug abuse or treatment"],
+ "Methadone":["Alcohol / drug abuse or treatment","Chronic pain (narcotic prescriptions)"],
+ "Naltrexone":["Alcohol / drug abuse or treatment"],
+ "Memantine":["Alzheimer's / dementia"],
+ "Haloperidol":["Schizophrenia / psychosis"],
+ "Valproate":["Epilepsy / seizures","Bipolar"],
+ "Imuran":["Autoimmune disorder"],
+
  "Eliquis":["Arrhythmia / AFib","Blood clots / DVT"],"Xarelto":["Arrhythmia / AFib","Blood clots / DVT"],
  "Warfarin":["Arrhythmia / AFib","Blood clots / DVT"],"Plavix":["Heart attack","Stent"],
  "Brilinta":["Heart attack","Stent"],"Pradaxa":["Arrhythmia / AFib"],
@@ -3899,7 +3912,7 @@ var MED_FOR={
  "Nitroglycerin":["Angina (chest pain)"],"Isosorbide":["Angina (chest pain)"],
  "Albuterol":["Asthma (chronic)","COPD"],"Symbicort":["COPD","Asthma (chronic)"],"Advair":["COPD","Asthma (chronic)"],
  "Trelegy":["COPD"],"Spiriva":["COPD"],"Breo":["COPD"],"Singulair":["Asthma (chronic)"],
- "Levothyroxine":["Autoimmune disorder"],"Methotrexate":["Rheumatoid arthritis","Autoimmune disorder"],
+ "Methotrexate":["Rheumatoid arthritis","Autoimmune disorder"],
  "Humira":["Autoimmune disorder"],"Enbrel":["Rheumatoid arthritis"],"Plaquenil":["Lupus","Rheumatoid arthritis"],
  "Sertraline":["Depression"],"Escitalopram":["Anxiety","Depression"],"Fluoxetine":["Depression"],
  "Bupropion":["Depression"],"Venlafaxine":["Depression"],"Mirtazapine":["Depression"],
@@ -4536,6 +4549,8 @@ var PF_CONDS=[
  "Anxiety","Depression","PTSD","Bipolar","Schizophrenia / psychosis",
  "Alzheimer's / dementia","Lupus","Rheumatoid arthritis","Autoimmune disorder",
  "Neuropathy","Blood clots / DVT","Hepatitis B","Hepatitis C","Terminal illness","Hospice",
+ "Chronic pain (narcotic prescriptions)","Alcohol / drug abuse or treatment",
+ "Heart disease / disorder","Parkinson's disease","Transplant",
  "DUI","Felony"
 ];
 
@@ -4590,6 +4605,8 @@ var BLANKMAP={
     blank had nothing behind it, so the one field Set up asks for and never used was the
     one the agent had to say out loud. It is also the name that goes over to MyPOP Pro. */
  "your agency":"a_agency","agency":"a_agency","your agency name":"a_agency",
+ "phone":"phone","their phone":"phone","phone number":"phone","best number":"phone",
+ "their number":"phone","client phone":"phone","email":"email","their email":"email",
  "current carrier":"cur_carrier","plan name":"cur_plan","they pay":"cur_prem",
  "employer pays":"cur_emp_prem","total cost":"cur_total","deductible":"cur_ded",
  "visits a year":"cur_visits","copay":"cur_copay","what was missing":"cov_gap",
@@ -5317,6 +5334,15 @@ function pDraft(v){
   }
   return null;
 }
+/* A number worth having is a number worth dialling. Ten digits land as (216) 555-0142;
+   eleven starting with a 1 lose it; anything else is left exactly as typed, because a
+   half-typed number should not be rearranged under the agent's cursor. */
+function pPhone(v){
+  var d=String(v||"").replace(/[^0-9]/g,"");
+  if(d.length===11 && d[0]==="1") d=d.slice(1);
+  if(d.length!==10) return null;
+  return "("+d.slice(0,3)+") "+d.slice(3,6)+"-"+d.slice(6);
+}
 function pHeight(v){
   var t=String(v||"").trim(); if(!t) return null;
   var ft=null, inch=null, m;
@@ -5579,6 +5605,11 @@ document.addEventListener("change",function(e){
       else if(t.value.trim()){ t.classList.add("bad");
         t.title="That is not a date I can read. Try 6/25/26, or just 62526."; }
       else { t.classList.remove("bad"); t.removeAttribute("title"); } }
+  if(t.getAttribute&&/^(phone|a_phone)$/.test(t.getAttribute("data-pk")||"")){
+    var ph=pPhone(t.value); if(ph && t.value!==ph){ var pk=t.getAttribute("data-pk");
+      t.value=ph; pSet(pk,ph,inCard);
+      [].forEach.call(document.querySelectorAll('[data-pk="'+pk+'"]'),function(el){ el.value=ph;
+        if(el.classList.contains("iblank")) pFit(el); }); } }
   if(t.getAttribute&&t.getAttribute("data-pk")==="height"){ var h=pHeight(t.value); if(h){ t.value=h; pSet("height",h,inCard);
       [].forEach.call(document.querySelectorAll('[data-pk="height"]'),function(el){ el.value=h; if(el.classList.contains("iblank")) pFit(el); }); } }
   if(t.getAttribute&&t.getAttribute("data-cond")){
