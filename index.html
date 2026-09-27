@@ -89,7 +89,11 @@ body.embed .scrim{position:absolute}
   color:var(--navy);margin:0 0 14px;letter-spacing:-.005em}
 @media(max-width:640px){.lpromise{font-size:20px}.wideonly{display:none}}
 .ltitle{font-family:var(--serif);font-size:30px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
-.lsub{font-family:var(--serif);font-style:italic;font-size:15.5px;color:var(--muted);margin-bottom:26px}
+.lsub{font-family:var(--serif);font-style:italic;font-size:15.5px;color:var(--muted);margin-bottom:14px}
+.howrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.howbtn{display:inline-block;border:1.5px solid var(--gold);color:var(--golddk);background:transparent;font:700 13.5px var(--sans,inherit);text-decoration:none;padding:9px 16px;border-radius:9px}
+.howbtn:hover{background:var(--goldsoft)}
+.hownote{font-size:12.5px;color:var(--muted)}
 .lgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:13px}
 .lcard{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--rule);
   border-radius:0 10px 10px 0;padding:19px 21px;text-align:left;width:100%;
@@ -732,6 +736,10 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
       <div class="lpromise">Know what to say, know what to ask,<br class="wideonly"> and write more business off every call.</div>
       <div class="ltitle">Choose your script</div>
       <div class="lsub">Pick the call you're about to run.</div>
+      <div class="howrow">
+        <a class="howbtn" href="https://portal.ffloptimum.com/script-navigator-how-to.html" target="_blank" rel="noopener">How to use the Script Navigator &#8599;</a>
+        <span class="hownote">First time here? The walkthrough runs a full call, start to finish.</span>
+      </div>
       <div class="lgrid" id="lgrid"></div>
       <div class="lfoot"><b>Every script builds a client profile while you talk</b> &mdash; save it, reload it before the next call, print it for the file, or send it straight to the Product Wizard or MyPOP Pro. Each script opens as a card-by-card navigator with its own reference panels, and you can jump back here any time from the top of the screen.</div>
       <div class="promo">
