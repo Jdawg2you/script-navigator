@@ -90,6 +90,32 @@ if [ "$FAIL" -eq 0 ]; then
   fi
 fi
 
+# ---- 4. does any ___(label) map to two different profile fields? --------------------
+# BLANKMAP is one flat object shared by all four scripts, so a label added twice silently keeps
+# only the last one. That is how the burial figure on the veteran script started writing into the
+# client's phone number: a later phone block re-mapped "their number". Nothing surfaced it.
+if [ "$FAIL" -eq 0 ]; then
+  OUT=$(python3 - "$FILE" <<'PY'
+import re,sys,collections
+h=open(sys.argv[1]).read()
+i=h.index('var BLANKMAP={'); j=h.index('"agent email":"a_email",};', i)
+pairs=re.findall(r'"((?:[^"\\]|\\.)*)"\s*:\s*"((?:[^"\\]|\\.)*)"', h[i:j])
+seen=collections.defaultdict(list)
+for k,v in pairs: seen[k].append(v)
+bad=[(k,vs) for k,vs in seen.items() if len(set(vs))>1]
+if bad:
+    for k,vs in bad: print('%s -> %s (uses %s)' % (k, " then ".join(vs), vs[-1]))
+else:
+    print('BLANKMAP OK')
+PY
+)
+  case "$OUT" in
+    "BLANKMAP OK") echo "ok    no ___(label) maps to two different profile fields" ;;
+    *) echo "FAIL  a ___(label) maps to two different fields — only the last one takes effect:"
+       echo "$OUT" | sed 's/^/        /'; FAIL=1 ;;
+  esac
+fi
+
 echo
 if [ "$FAIL" -eq 0 ]; then
   echo "PASS  $N script block(s) parse; every branch and section entry resolves."

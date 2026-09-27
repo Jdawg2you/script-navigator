@@ -2959,7 +2959,7 @@ hs_history:{s:"5",pf:"health",t:"Health history",l:[
 {t:"cfollow",all:true},
 {t:"do",x:"The medications tell you the conditions. Answer the follow-ups they raise &mdash; you do not need to read a list of illnesses at someone."},
 {t:"warn",x:"<b>Spell them, per person.</b> &ldquo;Alma Sartin&rdquo; turned out to be olmesartan and cost a follow-up call on the Cosgriff case."},
-{t:"ask",x:"And aside from what we've covered already &mdash; are there any other health conditions I should know about? ___(anything else)"}
+{t:"ask",x:"And aside from what we've covered already &mdash; are there any other health conditions I should know about? ___(anything else about their health)"}
 ],b:[{k:"Next",to:"hs_conds",c:"go"}]},
 
 
@@ -4615,7 +4615,7 @@ var BLANKMAP={
  "household income":"hh_income","retirement age":"i_retire","liquid savings":"i_liquid",
  "where is it":"asset_where","how much":"asset_amt",
  "comfortable":"budget_comfort","their max":"budget_max",
- "anything else":"health_other","what for":"recent_what",
+ "anything else about their health":"health_other","what for":"recent_what",
  "spouse first name":"sp_name","spouse last name":"sp_last","spouse DOB":"sp_dob",
  "spouse height":"sp_height","spouse weight":"sp_weight",
  "first name":"first","their first name":"first","name":"first","spouse 1":"first",
@@ -4637,7 +4637,7 @@ var BLANKMAP={
     one the agent had to say out loud. It is also the name that goes over to MyPOP Pro. */
  "your agency":"a_agency","agency":"a_agency","your agency name":"a_agency",
  "phone":"phone","their phone":"phone","phone number":"phone","best number":"phone",
- "their number":"phone","client phone":"phone","email":"email","their email":"email",
+ "client phone":"phone",   /* NB: "their number" belongs to arrangement_cost above - do not map it here */"email":"email","their email":"email",
  "current carrier":"cur_carrier","plan name":"cur_plan","they pay":"cur_prem",
  "employer pays":"cur_emp_prem","total cost":"cur_total","deductible":"cur_ded",
  "visits a year":"cur_visits","copay":"cur_copay","what was missing":"cov_gap",
