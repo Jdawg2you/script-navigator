@@ -504,7 +504,7 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .wizfine{display:block;font-size:11px;color:var(--muted);margin-top:7px;line-height:1.5}
 .wizbtn.bad{border-color:var(--rust);color:var(--rust)}
 .line.do .iblank,.note .iblank{font-family:var(--sans);font-size:12.5px}
-.pfline{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:9px 12px;margin:0 0 12px;
+.pfline{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:9px 12px;margin:0 0 12px;
   background:var(--fill);border:1px dashed var(--goldline);border-radius:8px}
 .pfi{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:12.5px}
 .pfi i{font-style:normal;color:var(--muted);font-weight:600}
@@ -512,6 +512,12 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   border-radius:5px;padding:3px 7px;width:96px}
 .pfi select{font-family:var(--sans);font-size:13px;color:var(--ink);background:#fff;
   border:1px solid var(--rule);border-radius:5px;padding:3px 6px;height:26px;width:100%}
+/* in a capture bar the row is one line, so a select sizes to its content instead of filling */
+.pfline .pfi select{width:auto;min-width:88px}
+/* and the boxes take the width their content needs, so name + DOB + age + sex stay on one row.
+   pfInline gives every field a deterministic id, which is what these hang off. */
+.pfline #in_age{width:52px}
+.pfline #in_dob{width:104px}
 .pfi input:focus,.pfi select:focus{outline:2px solid var(--goldline);border-color:var(--gold)}
 .chip{appearance:none;cursor:pointer;font-family:var(--sans);font-size:12px;font-weight:600;color:var(--slate);
   background:#fff;border:1px solid var(--rule);border-radius:20px;padding:3px 11px}
@@ -1046,7 +1052,8 @@ start:{s:"1",t:"Which lead is this?",l:[
 fresh:{s:"1",pf:"who",t:"Fresh opener",l:[
 {t:"tip",x:"<b>Open the client profile before you dial.</b> Type what they tell you straight into it &mdash; name, beneficiary, coverage &mdash; and it fills into the script as you go. At the end you save it, print it, or pull it back up any time."},
 {t:"do",x:"No apology, no permission-asking. They did it days ago. Act like it."},
-{t:"say",x:"Hey ___(their first name)&hellip; ___(last name) ___(DOB) ___(age) {{sex}}"},
+{t:"pf",ks:["first","last","dob","age","sex"]},
+{t:"say",x:"Hey ___(their first name)&hellip;"},
 {t:"do",x:"Pause. Get confirmation it's them before you keep going."},
 {t:"say",when:["lead_type","Vet"],dflt:true,x:"This is ___(your name) &mdash; the veteran benefits consultant assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance programs for veterans, so I'm getting right back to you on that."},{t:"say",when:["lead_type","FEX"],x:"This is ___(your name) &mdash; the benefits advisor assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance program, so I'm getting right back to you on that."},
 {t:"do",x:"Say the real timeframe. Five days, a week, ten days &mdash; whatever the lead actually says."},
@@ -1063,7 +1070,8 @@ fresh:{s:"1",pf:"who",t:"Fresh opener",l:[
 
 aged:{s:"1",pf:"who",t:"Aged opener",l:[
 {t:"do",x:"Deliberately lowers your status. You're asking them for help, not selling them."},
-{t:"say",x:"Hey ___(their first name)&hellip; ___(last name) ___(DOB) ___(age) {{sex}}"},
+{t:"pf",ks:["first","last","dob","age","sex"]},
+{t:"say",x:"Hey ___(their first name)&hellip;"},
 {t:"do",x:"Pause. Get confirmation it's them before you keep going."},
 {t:"say",x:"This is ___(your name). I'm a veteran consultant, licensed here in ___(client's state) &mdash; I'm trying to get our file updated on my end, and I'm hoping you can help me out real quick."},
 {t:"ask",x:"I've got you down as ___(branch of service) &mdash; is that right?"},
@@ -1134,7 +1142,7 @@ sit_inplace:{s:"3",pf:"have",t:"Anything in place?",l:[
    getting the client to stay on the phone and often has no time to type; by 3.1 the objections
    are handled, the client is talking, and this is the first moment there is room to fill it in.
    Same profile keys, so whatever was captured at the opener is already sitting here. */
-{t:"pf",ks:["first","last","dob","age"]},
+{t:"pf",ks:["first","last","dob","age","sex"]},
 {t:"ask",x:"Do you have anything in place right now, or nothing at all?"}
 ],b:[{k:"Nothing at all",to:"sit_trigger",c:"go",set:{inplace:"No"}},{k:"They have coverage",to:"sit_what",set:{inplace:"Yes"}}]},
 
@@ -4036,6 +4044,11 @@ function pfInline(ks){
     var f=pSpecOf(k); if(!f) return "";
     var v=pVal(k), id="in_"+k;
     if(f.opt){
+      /* inlineSel fields are the ones marked to read as a single compact control rather than a
+         row of buttons - gender on a capture bar that is meant to stay on one line. */
+      if(f.inlineSel)
+        return '<span class="pfi"><i>'+pLabel(f)+'</i><select data-pk="'+k+'">'+
+          f.opt.map(function(oo){ return '<option'+(v===oo?" selected":"")+'>'+oo+'</option>'; }).join("")+'</select></span>';
       /* short option lists render as clickable chips */
       var opts=f.opt.filter(function(x){return x!==""});
       return '<span class="pfi"><i>'+pLabel(f)+'</i>'+opts.map(function(oo){
@@ -4911,9 +4924,20 @@ function syncAges(){
     }
   });
 }
+/* The same field can be on screen more than once - the capture bar above the greeting and the
+   ___ blank inside it are both `first`, and the profile panel holds a third copy. Editing from a
+   card deliberately does not re-render (that rebuilt the line mid-keystroke and lost the caret),
+   so the other copies have to be told directly. Only the ones the agent is not typing in. */
+function mirrorField(k,v,src){
+  if(!k) return;
+  document.querySelectorAll('[data-pk="'+k+'"],[data-pf="'+k+'"]').forEach(function(el){
+    if(el!==src && el.value!==v) el.value=v;
+  });
+}
 document.addEventListener("input",function(e){
   var t=e.target; if(!t.getAttribute) return;
   var k=t.getAttribute("data-pk")||t.getAttribute("data-pf");
+  if(k && !t.hasAttribute("data-dep")) mirrorField(k,t.value,t);
   if(k==="dob"||k==="sp_dob"||t.hasAttribute("data-dep")) syncAges();
 });
 document.addEventListener("change",function(e){
@@ -4953,6 +4977,9 @@ document.addEventListener("change", function(e){
   if(k==="last_day"||k==="start_when"||k==="appt_when"){
     var v=pFutureDate(t.value); if(v){ t.value=v; P[k]=v; pStore(); }
   }
+  /* Runs last, after the handlers above have tidied a date or a height, so the other copies of
+     the field get the tidied value rather than the raw thing the agent typed. */
+  if(k && !t.hasAttribute("data-dep")) mirrorField(k,t.value,t);
 });
 
 
