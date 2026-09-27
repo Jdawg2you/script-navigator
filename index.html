@@ -1044,6 +1044,7 @@ start:{s:"1",t:"Which lead is this?",l:[
 fresh:{s:"1",pf:"who",t:"Fresh opener",l:[
 {t:"tip",x:"<b>Open the client profile before you dial.</b> Type what they tell you straight into it &mdash; name, beneficiary, coverage &mdash; and it fills into the script as you go. At the end you save it, print it, or pull it back up any time."},
 {t:"do",x:"No apology, no permission-asking. They did it days ago. Act like it."},
+{t:"pf",ks:["first","last","dob","age"]},
 {t:"say",x:"Hey ___(their first name)&hellip;"},
 {t:"do",x:"Pause. Get confirmation it's them before you keep going."},
 {t:"say",when:["lead_type","Vet"],dflt:true,x:"This is ___(your name) &mdash; the veteran benefits consultant assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance programs for veterans, so I'm getting right back to you on that."},{t:"say",when:["lead_type","FEX"],x:"This is ___(your name) &mdash; the benefits advisor assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance program, so I'm getting right back to you on that."},
@@ -1061,6 +1062,7 @@ fresh:{s:"1",pf:"who",t:"Fresh opener",l:[
 
 aged:{s:"1",pf:"who",t:"Aged opener",l:[
 {t:"do",x:"Deliberately lowers your status. You're asking them for help, not selling them."},
+{t:"pf",ks:["first","last","dob","age"]},
 {t:"say",x:"Hey ___(their first name)&hellip;"},
 {t:"do",x:"Pause. Get confirmation it's them before you keep going."},
 {t:"say",x:"This is ___(your name). I'm a veteran consultant, licensed here in ___(client's state) &mdash; I'm trying to get our file updated on my end, and I'm hoping you can help me out real quick."},
