@@ -5001,7 +5001,9 @@ document.addEventListener("input",function(e){
 document.addEventListener("change",function(e){
   var t=e.target;
   if(t.hasAttribute && t.hasAttribute("data-dep") && t.getAttribute("data-depk")==="dob"){
-    var r=pAge(t.value); if(r && r.pretty) t.value=r.pretty;   /* 9214 and 9/2/14 both land as 09/02/2014 */
+    /* 90214, 9/2/14 and 09022014 all land as 09/02/2014. A bare 9214 does not - four digits
+       splits two ways (9/2/14 or 9/21/04) and pAge refuses rather than guess a birth date. */
+    var r=pAge(t.value); if(r && r.pretty) t.value=r.pretty;
   }
   if(t.hasAttribute && (t.hasAttribute("data-dep")||t.hasAttribute("data-doc"))) t.dispatchEvent(new Event("input",{bubbles:true}));
 });
@@ -5201,6 +5203,40 @@ document.addEventListener("input",function(e){
 document.addEventListener("change",function(e){
   var rk=e.target.getAttribute && e.target.getAttribute("data-ben");
   if(rk) benSet(rk,e.target.value);
+});
+
+/* ---------- EVERY DATE FIELD IS A SMART DATE FIELD ----------
+   Dates are keyed four different ways - data-pk / data-pf on a profile field, data-depk on a
+   dependant, data-ben on a beneficiary - and each one used to tidy its own, or forget to. The
+   beneficiary date of birth never did, so 06271956 stayed 06271956: unreadable on the profile,
+   unsortable, and wrong on the application. One rule for all of them instead.
+
+   This is registered after the per-scheme handlers, so they store whatever was typed first and
+   this rewrites it with the tidied value. Prettifying an already-pretty date is a no-op, so the
+   fields that were already correct are untouched. */
+var FUTUREKEYS={last_day:1,start_when:1,appt_when:1};   /* parsed by pFutureDate, not pAge */
+function smartDateStore(t){
+  if(!t || !t.getAttribute) return null;
+  var pk=t.getAttribute("data-pk")||t.getAttribute("data-pf");
+  if(pk) return (DATEKEYS[pk] && !FUTUREKEYS[pk]) ? function(v){ pSet(pk,v,true); } : null;
+  var rk=t.getAttribute("data-ben");
+  if(rk && /:dob$/.test(rk)) return function(v){ benSet(rk,v);
+    document.querySelectorAll('[data-ben="'+rk+'"]').forEach(function(el){ if(el!==t) el.value=v; }); };
+  if(t.hasAttribute("data-dep") && t.getAttribute("data-depk")==="dob"){
+    var i=+t.getAttribute("data-dep");
+    return function(v){ P.deps=P.deps||[]; P.deps[i]=P.deps[i]||{}; P.deps[i].dob=v;
+      var a=ageOf(v); if(a){ P.deps[i].age=a;
+        document.querySelectorAll('[data-dep="'+i+'"][data-depk="age"]').forEach(function(ai){ ai.value=a; }); }
+      pStore(); };
+  }
+  return null;
+}
+document.addEventListener("change",function(e){
+  var t=e.target, store=smartDateStore(t); if(!store) return;
+  var r=pAge(t.value); if(!r || !r.pretty || t.value===r.pretty) return;
+  t.value=r.pretty; store(r.pretty);
+  mirrorField(t.getAttribute("data-pk")||t.getAttribute("data-pf"), r.pretty, t);
+  syncAges();
 });
 
 function refsCard(){ var el=document.getElementById("refscard"); if(el) el.innerHTML=pRefsHTML(); }
