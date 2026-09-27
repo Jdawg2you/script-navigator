@@ -514,10 +514,15 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   border:1px solid var(--rule);border-radius:5px;padding:3px 6px;height:26px;width:100%}
 /* in a capture bar the row is one line, so a select sizes to its content instead of filling */
 .pfline .pfi select{width:auto;min-width:88px}
+/* a wide field claims a whole row in the profile panel's grid, which is right there and wrong
+   in a capture box - an email does not need its own line next to five short fields */
+.pfline .pfi.wide{flex-basis:auto}
+.pfline .pfi.wide input{width:150px;min-width:0}
 /* and the boxes take the width their content needs, so name + DOB + age + sex stay on one row.
    pfInline gives every field a deterministic id, which is what these hang off. */
 .pfline #in_age{width:52px}
 .pfline #in_dob{width:104px}
+.pfline #in_phone,.pfline #in_spouse_phone{width:124px}   /* (216) 555-0142 clipped at 96px */
 .pfi input:focus,.pfi select:focus{outline:2px solid var(--goldline);border-color:var(--gold)}
 .chip{appearance:none;cursor:pointer;font-family:var(--sans);font-size:12px;font-weight:600;color:var(--slate);
   background:#fff;border:1px solid var(--rule);border-radius:20px;padding:3px 11px}
@@ -1167,7 +1172,7 @@ sit_trigger:{s:"3",pf:"why",t:"The trigger (why)",l:[
 
 sit_stakes:{s:"3",pf:"why",t:"The stakes question",l:[
 {t:"ask",x:"Let's say you didn't wake up yesterday. Who was the first person who was getting a call this morning? Who's handling the arrangements, paying the bills? Who does this all end up falling on? ___(beneficiary)"},
-{t:"pf",ks:["married","spouse","spouse_dob","spouse_wants"]},
+{t:"pf",ks:["married","spouse","spouse_last","spouse_dob","spouse_sex","spouse_wants"]},
 {t:"train",x:"You are not asking their marital status out of nowhere &mdash; you are asking who this lands on, and they will usually name the spouse themselves. Tick it as they say it. If they name someone who is not a spouse, that tells you more than the question would have."},
 {t:"note",x:"<b>Past tense on purpose.</b> A hypothetical invites a hypothetical answer &mdash; &ldquo;if I died someday&rdquo; can be held at arm's length forever. Something that already happened this morning cannot."},
 {t:"do",x:"You are not done until you have a name. If they say &ldquo;my family&rdquo; or &ldquo;the kids&rdquo; &mdash; push once: &ldquo;Which one of them, specifically?&rdquo;"},
@@ -1686,7 +1691,7 @@ w_legacy:{pf:"who",s:"12",t:"Legacy Safeguard",l:[
 {t:"say",x:"And you'll get a membership card in the mail for your wallet &mdash; with my information and theirs right there on it."},
 {t:"warn",x:"<b>You will need the mailing address and email for your client &mdash; and for their spouse, if they have one.</b><br>If you already have all of that, you can enroll them right after the call. If you don't, enroll them while you still have them on the phone."},
 {t:"note",x:"Full details and the enrollment link for Legacy Safeguard are linked at the bottom of this page."},
-{t:"pf",when:["married",["Married","Partnered"]],ks:["spouse_phone","spouse_email"]},{t:"note",x:"Legacy Safeguard enrols the spouse too. Their phone and email land on the client profile with the rest of this person, so it is all in one place when you fill the form in."}
+{t:"pf",when:["married",["Married","Partnered"]],ks:["spouse","spouse_last","spouse_dob","spouse_sex","spouse_phone","spouse_email"]},{t:"note",x:"Legacy Safeguard enrols the spouse too, and the form asks for all of this. Anything already captured earlier in the call is filled in here, so this is the one box to finish rather than a second place to start."}
 ],b:[{k:"Next",to:"w_referral",c:"go"}]},
 
 w_referral:{pf:"refs",s:"12",t:"Referral ask",l:[
@@ -2689,7 +2694,7 @@ i_wrap_legacy:{pf:"who",s:"16",t:"Legacy Safeguard",l:[
 {t:"say",x:"You'll also get a membership card in the mail for your wallet &mdash; with my information and theirs right there on it."},
 {t:"warn",x:"<b>You will need the mailing address and email for your client &mdash; and for their spouse, if they have one.</b><br>If you already have all of that, you can enroll them right after the call. If you don't, enroll them while you still have them on the phone."},
 {t:"note",x:"Full details and the enrollment link for Legacy Safeguard are linked at the bottom of this page."},
-{t:"pf",when:["married",["Married","Partnered"]],ks:["spouse_phone","spouse_email"]},{t:"note",x:"Legacy Safeguard enrols the spouse too. Their phone and email land on the client profile with the rest of this person, so it is all in one place when you fill the form in."}
+{t:"pf",when:["married",["Married","Partnered"]],ks:["spouse","spouse_last","spouse_dob","spouse_sex","spouse_phone","spouse_email"]},{t:"note",x:"Legacy Safeguard enrols the spouse too, and the form asks for all of this. Anything already captured earlier in the call is filled in here, so this is the one box to finish rather than a second place to start."}
 ],b:[{k:"Next",to:"i_wrap_referral",c:"go"}]},
 
 i_wrap_referral:{s:"16",pf:"refs",t:"Referral ask",l:[
@@ -3725,7 +3730,7 @@ m_wrap_legacy:{pf:"who",s:"14",t:"Legacy Safeguard",l:[
 {t:"say",x:"You'll also get a membership card in the mail for your wallet &mdash; with my information and theirs right there on it."},
 {t:"warn",x:"<b>You will need the mailing address and email for your client &mdash; and for their spouse, if they have one.</b><br>If you already have all of that, enroll them right after the call. If you don't, enroll them while you still have them on the phone."},
 {t:"note",x:"Full details and the enrollment link are linked at the bottom of this page."},
-{t:"pf",when:["married",["Married","Partnered"]],ks:["spouse_phone","spouse_email"]},{t:"note",x:"Legacy Safeguard enrols the spouse too. Their phone and email land on the client profile with the rest of this person, so it is all in one place when you fill the form in."}
+{t:"pf",when:["married",["Married","Partnered"]],ks:["spouse","spouse_last","spouse_dob","spouse_sex","spouse_phone","spouse_email"]},{t:"note",x:"Legacy Safeguard enrols the spouse too, and the form asks for all of this. Anything already captured earlier in the call is filled in here, so this is the one box to finish rather than a second place to start."}
 ],b:[{k:"Next",to:"m_wrap_referral",c:"go"}]},
 
 m_wrap_referral:{s:"14",t:"Referral ask",l:[
@@ -4039,6 +4044,10 @@ function pFit(el){
   el.style.width=n+"ch";
 }
 
+/* A capture box repeats its own context - every field in the Legacy Safeguard box is a spouse
+   field, sitting under a heading that says Legacy Safeguard - so a field can carry a shorter
+   label for use inside a box. The profile panel keeps the full one, where that context is gone. */
+function pfiLabel(f){ return f.sl || pLabel(f); }
 function pfInline(ks){
   return (ks||[]).map(function(k){
     var f=pSpecOf(k); if(!f) return "";
@@ -4047,19 +4056,19 @@ function pfInline(ks){
       /* inlineSel fields are the ones marked to read as a single compact control rather than a
          row of buttons - gender on a capture bar that is meant to stay on one line. */
       if(f.inlineSel)
-        return '<span class="pfi"><i>'+pLabel(f)+'</i><select data-pk="'+k+'">'+
+        return '<span class="pfi"><i>'+pfiLabel(f)+'</i><select data-pk="'+k+'">'+
           f.opt.map(function(oo){ return '<option'+(v===oo?" selected":"")+'>'+oo+'</option>'; }).join("")+'</select></span>';
       /* short option lists render as clickable chips */
       var opts=f.opt.filter(function(x){return x!==""});
-      return '<span class="pfi"><i>'+pLabel(f)+'</i>'+opts.map(function(oo){
+      return '<span class="pfi"><i>'+pfiLabel(f)+'</i>'+opts.map(function(oo){
         return '<button type="button" class="chip'+(v===oo?" on":"")+'" data-pfset="'+k+'" data-pfval="'+oo+'">'+oo+'</button>';
       }).join("")+'</span>';
     }
     var ph=PF_PLACEHOLDER[k]||"";
     if(f.type==="area")
-      return '<span class="pfi wide"><i>'+pLabel(f)+'</i><textarea id="'+id+'" data-pk="'+k+'" data-inline="1" rows="2"'+
+      return '<span class="pfi wide"><i>'+pfiLabel(f)+'</i><textarea id="'+id+'" data-pk="'+k+'" data-inline="1" rows="2"'+
              (ph?' placeholder="'+ph+'"':'')+'>'+esc(v)+'</textarea></span>';
-    return '<span class="pfi'+(f.w===2?' wide':'')+'"><i>'+pLabel(f)+'</i><input id="'+id+'" data-pk="'+k+'" data-inline="1"'+
+    return '<span class="pfi'+(f.w===2?' wide':'')+'"><i>'+pfiLabel(f)+'</i><input id="'+id+'" data-pk="'+k+'" data-inline="1"'+
            (ph?' placeholder="'+ph+'"':'')+' value="'+esc(v).replace(/"/g,"&quot;")+'"></span>';
   }).join("");
 }
@@ -4329,10 +4338,12 @@ var PF_SPEC=[
  {k:"age_nearest",l:"Age nearest birthday &mdash; one carrier, one product",w:2,showIf:["age_nearest","*"]},{k:"phone",l:"Phone",w:1},
  {k:"email",l:"Email",w:1},{k:"address",l:"Address",w:2},{k:"city",l:"City",w:1},{k:"zip",l:"ZIP",w:1},{k:"state",l:"State",w:1},
  {k:"lead_type",drives:true,l:"Lead",w:1,opt:["Vet","FEX"]},{k:"branch",l:"Branch of service",w:1},{k:"married",drives:true,l:"Married?",w:1,opt:["","Married","Partnered","Single","Widowed"]},
- {k:"spouse",l:"Spouse / partner",w:1,showIf:[["married","Married"],["married","Partnered"],["dm","With spouse / partner"]]},
+ {k:"spouse",l:"Spouse first name",w:1,showIf:[["married","Married"],["married","Partnered"],["dm","With spouse / partner"]]},
+ {k:"spouse_last",l:"Spouse last name",w:1,showIf:[["married","Married"],["married","Partnered"],["dm","With spouse / partner"]]},
+ {k:"spouse_sex",l:"Spouse gender",w:1,inlineSel:true,opt:["","Male","Female"],showIf:["married",["Married","Partnered"]]},
  {k:"spouse_dob",l:"Spouse DOB",w:1,showIf:["married",["Married","Partnered"]]},
- {k:"spouse_phone",l:"Spouse phone &mdash; Legacy Safeguard",w:1,showIf:["married",["Married","Partnered"]]},
- {k:"spouse_email",l:"Spouse email &mdash; Legacy Safeguard",w:2,showIf:["married",["Married","Partnered"]]},
+ {k:"spouse_phone",l:"Spouse phone &mdash; Legacy Safeguard",sl:"Spouse phone",w:1,showIf:["married",["Married","Partnered"]]},
+ {k:"spouse_email",l:"Spouse email &mdash; Legacy Safeguard",sl:"Spouse email",w:2,showIf:["married",["Married","Partnered"]]},
  {k:"spouse_wants",l:"Spouse wants coverage too?",w:2,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
  {k:"kids",l:"Children",w:1,opt:["","0","1","2","3","4+"]},{k:"kids_names",l:"Children &mdash; names and ages",w:2},
  {k:"dm",drives:true,l:"Who makes financial decisions",w:1,opt:["","Self","With spouse / partner","Someone else helps"]},
@@ -4594,7 +4605,7 @@ var PF_FOLLOW={
  "Liver disease":[{k:"liv_what",l:"What kind",drv:true,opt:["","Fatty liver","Hepatitis","Cirrhosis","Other"]}]
 };
 
-var DATEKEYS={dob:1,last_day:1,start_when:1,sp_dob:1,appt_when:1};
+var DATEKEYS={dob:1,last_day:1,start_when:1,sp_dob:1,spouse_dob:1,appt_when:1};
 
 var BLANKMAP={
  "last name":"last","zip":"zip","their zip":"zip","height":"height","weight":"weight",
