@@ -59,6 +59,15 @@ if [ "$FAIL" -eq 0 ]; then
         if(!L.N[L.first]) bad.push(k+' first card '+L.first+' does not exist');
         Object.keys(L.N).forEach(function(id){
           (L.N[id].b||[]).forEach(function(b){ if(!L.N[b.to]) bad.push(k+' '+id+' -> '+b.to); });
+          /* A stray comma in a card's line list leaves an undefined hole. [a,,b] is valid
+             JavaScript, so it parses clean and the navigator skips over it - but the readable
+             and printed scripts walk the same array and throw on the hole. One of these broke
+             the veteran print-out for four days without anything surfacing it. */
+          /* NB: forEach SKIPS holes, which is exactly why this is so easy to miss. Index it. */
+          var ll=L.N[id].l||[];
+          for(var li=0; li<ll.length; li++){
+            if(!ll[li] || typeof ll[li]!=='object') bad.push(k+' '+id+' line '+li+' is an empty slot - stray comma');
+          }
           /* A missing card number only shows as "?" on the badge — worth knowing, not worth
              blocking a commit for, and the number to use is an editorial choice. */
           if(!L.ID[id]) warn.push(k+' '+id+' (card number badge shows "?")');
