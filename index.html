@@ -454,8 +454,10 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .cinline:checked:after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;
   border:solid #fff;border-width:0 2px 2px 0;transform:rotate(42deg)}
 .ichips{display:inline-flex;gap:3px;vertical-align:baseline;margin:0 3px}
-.isel{font-family:var(--sans);font-size:13px;color:var(--ink);background:#fff;
-  border:1px solid var(--rule);border-radius:5px;padding:2px 6px;margin:0 3px;vertical-align:baseline}
+/* An inline dropdown sits on the same line as the ___ blanks, so it wears their border and
+   sits on their baseline - a lighter rule made it read as a different kind of control. */
+.isel{font-family:var(--serif);font-size:inherit;color:var(--navy);background:#fff;
+  border:1.5px solid var(--navy);border-radius:5px;padding:1px 7px;margin:0 2px;vertical-align:baseline}
 .isel:focus{outline:2px solid var(--goldline);border-color:var(--gold)}
 .ichip{appearance:none;cursor:pointer;font-family:var(--sans);font-size:11px;font-weight:700;
   color:var(--blue);background:#fff;border:1.5px solid var(--navy);border-radius:4px;padding:1px 6px;line-height:1.5}
@@ -1044,12 +1046,11 @@ start:{s:"1",t:"Which lead is this?",l:[
 fresh:{s:"1",pf:"who",t:"Fresh opener",l:[
 {t:"tip",x:"<b>Open the client profile before you dial.</b> Type what they tell you straight into it &mdash; name, beneficiary, coverage &mdash; and it fills into the script as you go. At the end you save it, print it, or pull it back up any time."},
 {t:"do",x:"No apology, no permission-asking. They did it days ago. Act like it."},
-{t:"pf",ks:["first","last","dob","age"]},
-{t:"say",x:"Hey ___(their first name)&hellip;"},
+{t:"say",x:"Hey ___(their first name)&hellip; ___(last name) ___(DOB) ___(age) {{sex}}"},
 {t:"do",x:"Pause. Get confirmation it's them before you keep going."},
 {t:"say",when:["lead_type","Vet"],dflt:true,x:"This is ___(your name) &mdash; the veteran benefits consultant assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance programs for veterans, so I'm getting right back to you on that."},{t:"say",when:["lead_type","FEX"],x:"This is ___(your name) &mdash; the benefits advisor assigned to your file. You put in a request ___(how long ago &mdash; be accurate) about the life insurance program, so I'm getting right back to you on that."},
 {t:"do",x:"Say the real timeframe. Five days, a week, ten days &mdash; whatever the lead actually says."},
-{t:"ask",when:["lead_type","Vet"],dflt:true,x:"I've got you down as ___(branch of service) &mdash; is that right?"},{t:"pf",when:["lead_type","Vet"],ks:["branch"]},{t:"ask",when:["lead_type","FEX"],x:"I've got your date of birth as ___ &mdash; is that right?"},{t:"pf",when:["lead_type","FEX"],ks:["dob"]},{t:"say",when:["lead_type","FEX"],x:"&hellip; <b>or</b> &mdash; I've got your beneficiary as ___ &mdash; is that right?"},{t:"pf",when:["lead_type","FEX"],ks:["ben"]},{t:"do",when:["lead_type","FEX"],x:"Whichever one the lead actually gave you. On an FEX lead it is sometimes the date of birth and sometimes the beneficiary &mdash; you only need one of them to confirm."},,
+{t:"ask",when:["lead_type","Vet"],dflt:true,x:"I've got you down as ___(branch of service) &mdash; is that right?"},{t:"ask",when:["lead_type","FEX"],x:"I've got your date of birth as ___ &mdash; is that right?"},{t:"say",when:["lead_type","FEX"],x:"&hellip; <b>or</b> &mdash; I've got your beneficiary as ___ &mdash; is that right?"},{t:"pf",when:["lead_type","FEX"],ks:["ben"]},{t:"do",when:["lead_type","FEX"],x:"Whichever one the lead actually gave you. On an FEX lead it is sometimes the date of birth and sometimes the beneficiary &mdash; you only need one of them to confirm."},,
 {t:"do",x:"Let them talk. If they offer years or where they served, take it. Don't rush past it."},
 {t:"note",x:"<b>Validate ONE thing. Purpose is trust, not data.</b> Branch of service first, because unlike a date of birth it opens a conversation. If branch isn't on the lead: <b>&ldquo;You listed ___ as your beneficiary &mdash; is that right?&rdquo;</b> then date of birth, then email."}
 ],b:[
@@ -1062,8 +1063,7 @@ fresh:{s:"1",pf:"who",t:"Fresh opener",l:[
 
 aged:{s:"1",pf:"who",t:"Aged opener",l:[
 {t:"do",x:"Deliberately lowers your status. You're asking them for help, not selling them."},
-{t:"pf",ks:["first","last","dob","age"]},
-{t:"say",x:"Hey ___(their first name)&hellip;"},
+{t:"say",x:"Hey ___(their first name)&hellip; ___(last name) ___(DOB) ___(age) {{sex}}"},
 {t:"do",x:"Pause. Get confirmation it's them before you keep going."},
 {t:"say",x:"This is ___(your name). I'm a veteran consultant, licensed here in ___(client's state) &mdash; I'm trying to get our file updated on my end, and I'm hoping you can help me out real quick."},
 {t:"ask",x:"I've got you down as ___(branch of service) &mdash; is that right?"},
@@ -1130,6 +1130,11 @@ end_appt:{s:"2",t:"Appointment set",l:[
 ],b:[{k:"Start a new call",to:"start",c:"go"}]},
 
 sit_inplace:{s:"3",pf:"have",t:"Anything in place?",l:[
+/* The same four fields as the opener, repeated here on purpose. On card 1.2 the agent is still
+   getting the client to stay on the phone and often has no time to type; by 3.1 the objections
+   are handled, the client is talking, and this is the first moment there is room to fill it in.
+   Same profile keys, so whatever was captured at the opener is already sitting here. */
+{t:"pf",ks:["first","last","dob","age"]},
 {t:"ask",x:"Do you have anything in place right now, or nothing at all?"}
 ],b:[{k:"Nothing at all",to:"sit_trigger",c:"go",set:{inplace:"No"}},{k:"They have coverage",to:"sit_what",set:{inplace:"Yes"}}]},
 
@@ -4339,7 +4344,7 @@ var PF_SPEC=[
  {k:"ben",l:"Beneficiary",w:1},
 
  {sec:"Health &amp; build",id:"health"},
- {k:"height",l:"Height",w:1},{k:"weight",l:"Weight",w:1},{k:"sex",l:"Sex",w:1,opt:["","Male","Female"]},
+ {k:"height",l:"Height",w:1},{k:"weight",l:"Weight",w:1},{k:"sex",l:"Sex",w:1,inlineSel:true,opt:["","Male","Female"]},
  {k:"smoker",l:"Tobacco",w:1,opt:["","No","Yes"]},{k:"conds",l:"Conditions",type:"conds"},{k:"meds",l:"Medications",type:"meds"},
  {k:"past_meds",drives:true,l:"Prescribed in the last 1&ndash;5 yrs, not on now",w:1,opt:["","No","Yes"]},
  {k:"past_meds_what",l:"What, and when",type:"area",w:2,showIf:["past_meds","Yes"]},
