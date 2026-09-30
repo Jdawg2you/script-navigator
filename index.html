@@ -2891,7 +2891,10 @@ hs_why_losing:{s:"2",pf:"current",t:"Losing coverage",l:[
 {t:"ask",x:"What are you paying for that out of pocket? ___(they pay)"},
 {t:"ask",x:"And do you know what your employer puts in on top of that? ___(employer pays) &mdash; so the real cost is ___(total cost)."},
 {t:"do",x:"The employer's share is the number that makes a private plan look reasonable later. Most people have never added the two together."},
-{t:"ask",x:"What's the deductible on it? ___(deductible)"},
+{t:"ask",x:"What's the deductible on it? ___(deductible) &mdash; and the most you could pay in a year, the out-of-pocket max? ___(out-of-pocket max)"},
+{t:"ask",x:"Is that a marketplace plan &mdash; through healthcare.gov? {{cur_is_aca}}"},
+{t:"pf",ks:["cur_subsidy"],when:["cur_is_aca","Yes"]},
+{t:"ask",x:"Do you have an HSA with it? {{has_hsa}}"},
 {t:"ask",x:"Roughly how many times a year do you end up at the doctor? ___(visits a year) &mdash; and is there a copay? ___(copay)"},
 {t:"train",x:"<b>You are building the comparison now, not at the presentation.</b> Deductible, visits and copay are what turn &ldquo;my premium is $420&rdquo; into what they actually spend in a year. Without them you are comparing your plan against a number they half remember."},{t:"ask",x:"And were you comfortable with that coverage, or were there pieces of it you still felt were missing? ___(what was missing)"},
 {t:"do",x:"Write it the way they say it. This is the one line you read back on the presentation when you show them what the new plan covers."},
@@ -2907,7 +2910,10 @@ hs_current:{s:"2",pf:"current",t:"What they have now",l:[
 {t:"ask",x:"What are you paying for that out of pocket? ___(they pay)"},
 {t:"ask",x:"And do you know what your employer puts in on top of that? ___(employer pays) &mdash; so the real cost is ___(total cost)."},
 {t:"do",x:"The employer's share is the number that makes a private plan look reasonable later. Most people have never added the two together."},
-{t:"ask",x:"What's the deductible on it? ___(deductible)"},
+{t:"ask",x:"What's the deductible on it? ___(deductible) &mdash; and the most you could pay in a year, the out-of-pocket max? ___(out-of-pocket max)"},
+{t:"ask",x:"Is that a marketplace plan &mdash; through healthcare.gov? {{cur_is_aca}}"},
+{t:"pf",ks:["cur_subsidy"],when:["cur_is_aca","Yes"]},
+{t:"ask",x:"Do you have an HSA with it? {{has_hsa}}"},
 {t:"ask",x:"Roughly how many times a year do you end up at the doctor? ___(visits a year) &mdash; and is there a copay? ___(copay)"},
 {t:"train",x:"<b>You are building the comparison now, not at the presentation.</b> Deductible, visits and copay are what turn &ldquo;my premium is $420&rdquo; into what they actually spend in a year. Without them you are comparing your plan against a number they half remember."},{t:"do",x:"If they don't know a number, write what they said and move on. You are not auditing them, and a guess you can check beats a silence."}
 ],b:[{k:"Next",to:"hs_diff",c:"go"}]},
@@ -2932,6 +2938,8 @@ hs_family:{s:"3",pf:"who",t:"Family",l:[
 hs_occupation:{s:"3",pf:"income",t:"Occupation",l:[
 {t:"ask",x:"What kind of work do you do? ___(type of work)"},
 {t:"ask",x:"And how long have you been doing that? ___(how long)"},
+{t:"ask",x:"Does your work &mdash; or your spouse's &mdash; offer health coverage? {{emp_offer}}"},
+{t:"do",when:["emp_offer","Yes"],x:"An affordable work plan can take away the marketplace subsidy, so note whose job it is and roughly what it would cost them."},
 {t:"train",x:"<b>This is not small talk.</b> What they do decides how much risk sits outside the health plan. An office job and a power-line job carry the same health premium and completely different exposure &mdash; accident cover, disability, workman's comp. You're listening for the gap you'll name on the presentation."},
 {t:"do",x:"If they're changing jobs or retiring, follow it. It moves the timeline and usually the income."}
 ],b:[{k:"Move to qualifying",to:"hs_qualify",c:"go"}]},
@@ -2984,6 +2992,8 @@ hs_famhist:{s:"5",pf:"famhist",t:"Family history and general",l:[
 {t:"say",x:"A few quick yes or no questions &mdash; these change which plans are worth quoting."},
 {t:"fhgrid"},
 {t:"do",x:"Family history, not their own diagnosis. Their own conditions you already have."},
+{t:"ask",x:"And is anyone pregnant right now? {{pregnant}}"},
+{t:"pf",ks:["sp_pregnant"],when:["married",["Married","Partnered"]]},
 {t:"train",x:"<b>Maternity is the expensive one.</b> A plan without it is materially cheaper, and putting someone on a plan that excludes it when they are planning a family is the single worst outcome here. Ask it plainly, of both of them."}
 ],b:[{k:"Next",to:"hs_recent",c:"go"}]},
 
@@ -2996,7 +3006,8 @@ hs_recent:{s:"5",pf:"health",t:"Doctors to keep \u2014 and coverage wanted",l:[
 {t:"ask",x:"Would you like me to look into dental coverage for you? {{want_dental}}"},
 {t:"ask",x:"Vision? {{want_vision}}"},
 {t:"ask",x:"And hearing? {{want_hearing}}"},
-{t:"do",x:"Three quick asks. They cost nothing here and they are the easiest thing to add to a package later."}
+{t:"do",x:"Three quick asks. They cost nothing here and they are the easiest thing to add to a package later."},
+{t:"ask",x:"Is anything planned in the next year &mdash; a surgery, a baby, a procedure? ___(planned next year)"}
 ],bh:"Is there a spouse or partner on the plan?",b:[
 {k:"Do their spouse\u2019s / partner\u2019s health history",to:"hs_sp_history",c:"go",when:["married",["Married","Partnered"]]},
 {k:"Skip spouse health \u2014 move to income",to:"hs_income",when:["married",["Married","Partnered"]]},
@@ -3039,6 +3050,7 @@ hs_income:{s:"6",pf:"income",t:"Income and the cliff",l:[
 {t:"ask",x:"And is there anything else that acts like an insurance policy for your finances? A 401(k), an IRA, savings? {{has_assets}}"},
 {t:"pf",ks:["asset_where","asset_amt"],when:["has_assets","Yes"]},
 {t:"pf",ks:["asset_employer"],when:["has_assets","Yes"]},
+{t:"ask",x:"Any life insurance in place right now &mdash; including through work? ___(life insurance now)"},
 {t:"pf",ks:["asset_prot","asset_notes"],when:["has_assets","Yes"]},
 {t:"train",x:"<b>You are not selling any of this today.</b> You are finding out whether a big medical bill would land on savings, on a retirement account, or on nothing at all. That answer is what the Package of Protection conversation is built from on the presentation call."}
 ],b:[{k:"Next",to:"hs_budget",c:"go"}]},
@@ -3047,6 +3059,9 @@ hs_budget:{s:"6",t:"Budget",l:[
 {t:"say",x:"Now &mdash; we all have a budget. With healthcare it can get expensive fast, and I'm going to work to get you the most protection for the least money."},
 {t:"say",x:"But it helps me to know roughly where you'd like to land, because when I put this together I'll show you a good, a better and a best option &mdash; and I'd rather build those around your number than guess at it."},
 {t:"ask",x:"So thinking about it that way: what would feel comfortable, and what's the top of what you'd want to spend? ___(comfortable budget) ___(max)"},
+{t:"ask",x:"And if a medical bill landed tomorrow, what could you pay without it hurting? ___(bill tomorrow)"},
+{t:"say",x:"The coverage is drafted from a checking or savings account &mdash; no cards."},
+{t:"ask",x:"What kind of bank is that with? {{bank_kind}}"},
 ],b:[{k:"Book the follow-up presentation",to:"hs_book",c:"go"}]},
 
 
@@ -4490,6 +4505,10 @@ PF_SPEC_HEALTH=[
  {k:"cur_total",l:"Total actual cost",money:"plain",w:1},
  {k:"cur_ded",l:"Deductible",money:"plain",w:1},
  {k:"cur_visits",l:"Doctor visits a year",w:1},{k:"cur_copay",l:"Copay",money:"plain",w:1},
+ {k:"cur_oop",l:"Out-of-pocket max",money:"plain",w:1},
+ {k:"cur_is_aca",drives:true,l:"Marketplace (ACA) plan?",w:1,opt:["","No","Yes"]},
+ {k:"cur_subsidy",l:"Subsidy they get now",money:"plain",w:1,showIf:["cur_is_aca","Yes"]},
+ {k:"has_hsa",l:"Have an HSA?",w:1,opt:["","No","Yes"]},
  {k:"cov_gap",l:"Comfortable with it, or pieces missing",type:"area",w:3},
  {sec:"Family history and general",id:"famhist"},
  {k:"fh_cancer",l:"Family history \u2014 cancer",w:1,opt:["","No","Yes"]},
@@ -4502,6 +4521,8 @@ PF_SPEC_HEALTH=[
  {k:"sp_mh_needs",l:"Spouse \u2014 mental health",w:1,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
  {k:"mat_needs",l:"Future maternity needs",w:1,opt:["","No","Yes"]},
  {k:"sp_mat_needs",l:"Spouse \u2014 maternity",w:1,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
+ {k:"pregnant",l:"Pregnant now",w:1,opt:["","No","Yes"]},
+ {k:"sp_pregnant",l:"Spouse \u2014 pregnant now",w:1,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
  {sec:"Coverage wanted",id:"wanted"},
  {k:"want_dental",l:"Dental",w:1,opt:["","No","Yes"]},
  {k:"want_vision",l:"Vision",w:1,opt:["","No","Yes"]},
@@ -4516,6 +4537,7 @@ PF_SPEC_HEALTH=[
  {k:"sp_health_notes",l:"Anything else about their health",type:"area",w:3},
  {sec:"Work",id:"work"},
  {k:"occupation",l:"What they do",w:2},{k:"occ_years",l:"How long",w:1},
+ {k:"emp_offer",l:"Health coverage offered through work (either of them)?",w:2,opt:["","No","Yes"]},
 
  {sec:"Qualify",id:"build"},
  {k:"height",l:"Height",w:1},{k:"weight",l:"Weight",w:1},
@@ -4530,6 +4552,7 @@ PF_SPEC_HEALTH=[
  {k:"stay_what",l:"What for",w:2,showIf:["hosp_stay","Yes"]},
  {k:"keep_docs",drives:true,l:"Doctors they want to keep?",w:1,opt:["","No","Yes"]},
  {k:"health_other",l:"Anything else about their health",type:"area",w:3},
+ {k:"planned",l:"Planned in the next 12 months",hint:"a surgery, a baby, a procedure",type:"area",w:3},
  {k:"docs",type:"docs"},
 
  {sec:"Money",id:"income"},
@@ -4546,10 +4569,13 @@ PF_SPEC_HEALTH=[
  {k:"asset_employer",drives:true,l:"Where is it held",w:1,opt:["","Current employer","Previous employer","They hold it themselves","Mixed"],needsAll:true,showIf:[["has_assets","Yes"],["occupation","*"]]},
  {k:"asset_prot",l:"Protectable?",w:1,opt:["","Yes","No"],showIf:["has_assets","Yes"]},
  {k:"asset_notes",l:"Notes on their money / details",w:2},
+ {k:"life_now",l:"Life insurance now (incl. through work)",w:2},
 
  {sec:"Budget",id:"budget"},
  {k:"budget_comfort",l:"Comfortable at",money:"plain",w:1},
  {k:"budget_max",l:"Their max",money:"plain",w:1},
+ {k:"bill_tomorrow",l:"Could pay tomorrow without stress",money:"plain",w:1},
+ {k:"bank_kind",l:"Premium drafts from",w:1,opt:["","Credit union","National bank","Direct Express","Online only (Chime, Cash App)"]},
 
  {sec:"The appointment",id:"book"},
  {k:"appt_when",l:"Booked for",w:1},{k:"appt_date",l:"Appointment date",w:1},{k:"appt_time",l:"Appointment time",w:1},
@@ -4650,6 +4676,7 @@ var BLANKMAP={
  "current carrier":"cur_carrier","plan name":"cur_plan","they pay":"cur_prem",
  "employer pays":"cur_emp_prem","total cost":"cur_total","deductible":"cur_ded",
  "visits a year":"cur_visits","copay":"cur_copay","what was missing":"cov_gap",
+ "out-of-pocket max":"cur_oop","planned next year":"planned","life insurance now":"life_now","bill tomorrow":"bill_tomorrow",
  "spouse what for":"sp_recent_what","spouse stay what":"sp_stay_what",
  "spouse anything else":"sp_health_notes","kids health":"kids_health",
  "your phone":"a_phone","your phone number":"a_phone","agent phone":"a_phone",
@@ -5862,7 +5889,7 @@ function popClient(){
       /* The booked presentation. POP Pro has a follow-up notes box that is exactly where an
          agent looks for "when am I seeing this person again". */
       apptWhen:P.appt_when||"", apptWho:P.appt_who||"", apptNotes:P.appt_notes||"",
-      occupation:P.occupation||"",
+      occupation:P.occupation||"", occYears:P.occ_years||"",
       kidsHealth:P.kids_health||"",
       wantDental:P.want_dental||"", wantVision:P.want_vision||"", wantHearing:P.want_hearing||"",
       curCarrier:P.cur_carrier||"", curPlan:P.cur_plan||"", curPrem:P.cur_prem||"",
@@ -5878,6 +5905,14 @@ function popClient(){
       assetWhere:P.asset_where||"", assetEmployer:P.asset_employer||"",
       surgery:yn(P.recent_stay), surgeryWhat:P.recent_what||"",
       hospStay:P.stay_what||"",
+      /* hospStay above is the "what for" text (older POP Pro reads it that way); these are the answers. */
+      hospStay2:yn(P.hosp_stay), spStayWhat:P.sp_stay_what||"",
+      married:P.married||"", kidsCount:P.kids||"",
+      losing:P.losing||"", nextSame:P.next_same||"",
+      curOop:P.cur_oop||"", curIsAca:P.cur_is_aca||"", curSubsidy:P.cur_subsidy||"", hasHsa:P.has_hsa||"",
+      pregnant:P.pregnant||"", spPregnant:P.sp_pregnant||"", planned:P.planned||"",
+      empOffer:P.emp_offer||"", lifeNow:P.life_now||"", billTomorrow:P.bill_tomorrow||"", bankKind:P.bank_kind||"",
+      apptDate:P.appt_date||"", apptTime:P.appt_time||"",
       notes:P.notes||"",
       doctors:docs.map(function(d){
         return {name:d.n||"", practice:d.prac||"", keep:d.keep||"", aca:d.aca||""}; })
