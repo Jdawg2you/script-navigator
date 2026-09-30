@@ -6020,7 +6020,18 @@ function fromPopPro(o){
   put("mat_needs", I.maternityP?"Yes":"");put("sp_mat_needs", I.maternityS?"Yes":"");
   put("recent_stay", I.surg2yrP?"Yes":"");put("sp_recent_stay", I.surg2yrS?"Yes":"");
   put("notes", I.notes); put("why_note", I.whyShop); put("start_when", I.effDate);
-  put("kids_health", I.kidsNote);
+  put("kids_health", I.kidsHealth||I.kidsNote);
+  put("budget_comfort", I.budgetComfort); put("occupation", I.occupation);
+  /* POP Pro B keeps the current plan in its own section (o.cur) and the children as rows. */
+  var Cu=o.cur||{};
+  put("cur_prem", Cu.prem); put("cur_emp_prem", Cu.emp); put("cur_ded", Cu.ded); put("cur_oop", Cu.oop);
+  put("cur_copay", Cu.copay); put("cur_visits", I.visits);
+  if(Cu.isAca===true){ out.cur_is_aca="Yes"; var sub=((o.acaIn||{}).ov||{}).subsidy; put("cur_subsidy", sub); }
+  else if(Cu.isAca===false && (Cu.prem||Cu.ded)) out.cur_is_aca="No";
+  if(I.dv) out.want_dental="Yes";
+  var ks=(I.kids||[]).filter(function(k){ return k && (k.n||k.dob||k.age); });
+  if((I.kids||[]).length){ out.deps=ks.map(function(k){ return {n:k.n||"",dob:k.dob||"",age:k.age||"",sex:k.sex||""}; });
+    var nk=(I.kids||[]).length; out.kids=nk>=4?"4+":String(nk); }
   /* medications come back to the person they were ticked against */
   var ml=(I.medList||[]).filter(function(m){ return m && m.name; });
   var mine=ml.filter(function(m){ return m.forS!==true; }).map(function(m){ return m.name; });
@@ -6030,7 +6041,8 @@ function fromPopPro(o){
   var cs=(I.conds||[]).map(function(x){ return x && x.name; }).filter(Boolean);
   if(cs.length) out.conds=cs;
   var docs=[I.docs1,I.docs2,I.docs3].filter(Boolean);
-  if(docs.length){ out.keep_docs="Yes"; out.docs=docs.map(function(d){ return {n:d}; }); }
+  var onAca=I.keepaca==="yes"?"Yes":(I.keepaca==="no"?"No":"");
+  if(docs.length){ out.keep_docs="Yes"; out.docs=docs.map(function(d){ return onAca?{n:d,aca:onAca}:{n:d}; }); }
   return out;
 }
 function popAgent(){
