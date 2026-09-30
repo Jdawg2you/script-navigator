@@ -4033,6 +4033,26 @@ var MED_INDEX=(function(){
     ix.push({n:n,label:row[0],k:medKey(n),k2:medKey2(n)}); }); });
   return ix;
 })();
+/* An option reads back the word the agent typed, with the other names after it. Typing PRIL and
+   being offered "Omeprazole" makes them think they typed something wrong, when Prilosec is in the
+   system - it just is not the name the row is filed under. medAdd already keeps the typed name on
+   what it stores; this is the same idea one step earlier, in the list. Jesse, 2026-09-30. */
+var MED_ALIASES=(function(){ var m={}; MEDS.forEach(function(r){ if(r.length>1) m[r[0]]=r.slice(1); }); return m; })();
+function medRow(label){ return [label].concat(MED_ALIASES[label]||[]); }
+function medTypedName(label,q){
+  var t=String(q||"").trim().toLowerCase(); if(!t) return label;
+  var best=label, bs=9;
+  medRow(label).forEach(function(n){
+    var ln=n.toLowerCase();
+    var s = ln===t ? 0 : ln.indexOf(t)===0 ? 1 : ln.indexOf(t)>0 ? 2 : 9;
+    if(s<bs){ bs=s; best=n; }
+  });
+  return best;
+}
+function medOption(label,q){
+  var lead=medTypedName(label,q), rest=medRow(label).filter(function(n){ return n!==lead; });
+  return rest.length ? lead+" ("+rest.join(", ")+")" : lead;
+}
 function medSuggest(q,limit){
   var t=String(q||"").trim(); if(t.length<2) return [];
   var lt=t.toLowerCase(), kt=medKey(t), k2=medKey2(t);
@@ -5070,7 +5090,7 @@ document.addEventListener("input",function(e){
   if(!e.target.classList || !e.target.classList.contains("medinput")) return;
   var sg=e.target.parentNode.querySelector(".medsug"); if(!sg) return;
   var hits=medSuggest(e.target.value,8);
-  sg.innerHTML=hits.map(function(h){return '<button type="button" data-medadd="'+esc(h).replace(/"/g,"&quot;")+'">'+esc(h)+'</button>';}).join("");
+  sg.innerHTML=hits.map(function(h){return '<button type="button" data-medadd="'+esc(h).replace(/"/g,"&quot;")+'">'+esc(medOption(h,e.target.value))+'</button>';}).join("");
 });
 document.addEventListener("keydown",function(e){
   if(!e.target.classList || !e.target.classList.contains("medinput")) return;
