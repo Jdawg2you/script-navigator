@@ -3458,7 +3458,7 @@ m_h_transition:{s:"9",t:"Why you asked",l:[
 
 /* ---------- 10 PRODUCT ---------- */
 m_product:{s:"10",t:"Pick the product",l:[
-{t:"note",x:"<b>New agents:</b> use the soft hold to get carrier direction. &ldquo;Ok ___, I'm going to put you on a very brief soft hold while I speak with one of our senior underwriters to make sure we're getting you the best coverage at the best price. I'll be right back.&rdquo; If nobody's available, use IntegrityConnect Quick Quote."},
+{t:"note",x:"<b>New agents:</b> use the soft hold to get carrier direction. &ldquo;Ok ___, I'm going to put you on a very brief soft hold while I speak with one of our senior underwriters to make sure we're getting you the best coverage at the best price. I'll be right back.&rdquo; If nobody's available, run it through the Product Wizard &mdash; the button at the bottom of this screen."},
 {t:"dobig",x:"Mortgage protection is a CONCEPT, not a product. The concept never changes &mdash; cover the payments, buy the time, save the equity. The product underneath it changes with their age, health, and budget."},
 {t:"note",x:"<b>Healthy, roughly 35 to 55, decent income &rarr; IUL.</b> Permanent, locked rate, living benefits, cash value growth, tax-free. The strongest play for the right client, especially if there's an old 401(k) in the picture."},
 {t:"note",x:"<b>Older, health-limited, or fixed income &rarr; whole life or final expense.</b> Get them approved, protect the home, keep it simple. Don't oversell &mdash; get coverage in place."},
@@ -7181,16 +7181,38 @@ function viewReadable(key){
   var meta=SCRIPTS.filter(function(x){return x.k===key})[0];
   $("readertitle").textContent=meta.title;
   $("readerframe").srcdoc=readableHTML(key);
+  var sl=readSlugOf(key);
+  if(sl && window.history && history.pushState){
+    try{ history.pushState({reader:key},"","/"+sl+"/script/"); }catch(e){}
+  }
   var os=$("readerobjsheet"), u=objSheetURL(key);
   if(u){ os.href=u; os.hidden=false; } else { os.removeAttribute("href"); os.hidden=true; }
   $("reader").classList.add("open");
 }
-function closeReader(){ $("reader").classList.remove("open"); readerKey=null; }
+function closeReader(){ $("reader").classList.remove("open"); readerKey=null;
+  if(window.history && history.replaceState && /\/script\/?$/.test(location.pathname)){
+    try{ history.replaceState({},"","/"); }catch(e){}
+  }
+}
+/* Back closes the reader rather than leaving the site. */
+window.addEventListener("popstate",function(){
+  var m=location.pathname.match(/^\/([a-z]+)\/script\/?$/);
+  var k=m?keyOfSlug(m[1]):null;
+  if(k){ if(readerKey!==k) viewReadable(k); }
+  else if(readerKey){ $("reader").classList.remove("open"); readerKey=null; }
+});
 
 /* Each script's objections live on one sheet in the portal, opening and closing together.
    Linked rather than copied, so editing the sheet updates every script at once. check.sh
    fails if one of these stops resolving. */
 var OBJ_SHEET={veteran:"vet",iul:"iul",mortgage:"mortgage"};
+/* The reader used to be unlinkable: opening it never touched the address bar, so the portal
+   had nothing to point at and was still sending agents to a Google Doc. Each script now has a
+   URL at /<slug>/script/, matching /<slug>/objections/. Opening the reader writes that URL,
+   closing it puts the plain address back, and Back closes the reader instead of leaving. */
+var READ_SLUG={veteran:"vet",iul:"iul",mortgage:"mortgage",health:"health"};
+function readSlugOf(key){ return READ_SLUG[key]||null; }
+function keyOfSlug(slug){ for(var k in READ_SLUG){ if(READ_SLUG[k]===slug) return k; } return null; }
 function objSheetURL(key){ var s=OBJ_SHEET[key]; return s ? "https://script.ffloptimum.com/"+s+"/objections/" : null; }
 
 /* Print one part, not the whole document. The class drives the @media print rules inside the
@@ -7299,9 +7321,13 @@ pLoad();
   dl.innerHTML=out;
   var bl=document.getElementById("branchlist");
   if(bl) bl.innerHTML=BRANCHES.map(function(b){return '<option value="'+b+'">'}).join(""); })();
+/* /vet/script/ redirects here carrying ?script=veteran&read=1; the pushState in viewReadable
+   then puts the pretty path back in the address bar, so a refresh or a copied link both work. */
+var READ_ON_LOAD = QS.get("read")==="1";
 var want = QS.get("script") || (location.hash || "").replace("#","");
 if(want && LIB[want]){
   openScript(want);
+  if(READ_ON_LOAD) setTimeout(function(){ viewReadable(want); },0);
 } else {
   postHeight();
 }
