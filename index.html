@@ -826,8 +826,6 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   <div class="readerbar">
     <span class="readertitle" id="readertitle"></span>
     <button class="readerbtn" id="readerprint">Print clean script</button>
-    <button class="readerbtn" id="readerprinttrain">Training version</button>
-    <button class="readerbtn" id="readerprintobj">Alternate paths</button>
     <a class="readerbtn" id="readerobjsheet" target="_blank" rel="noopener">Objections sheet &#8599;</a>
     <button class="readerbtn" id="readerdl">Download</button>
     <button class="readerbtn" id="readerclose">Close</button>
@@ -6896,6 +6894,21 @@ function orderedIds(L){
   });
 }
 
+/* What each text-free line type becomes on paper. Anything not named here prints nothing
+   rather than printing "undefined". */
+var PRINT_FILL={
+  meds:"Medications \u2014 name, dose, how long",
+  conds:"Conditions",
+  cfollow:"Follow-up answers for each condition named",
+  deps:"Dependants \u2014 name, date of birth, age, gender",
+  docs:"Doctors \u2014 name and practice",
+  bens:"Beneficiaries \u2014 name, relationship, %, phone, date of birth",
+  fhgrid:"Family history \u2014 them and their spouse",
+  appt:"Appointment \u2014 date and time",
+  refs:"References \u2014 name, relationship, phone",
+  handoff:"Handoff notes"
+};
+var PRINT_SKIP={pick:1,wiz:1,wizhow:1,alt:1,mmath:1,recmath:1,csize:1};
 function readableHTML(key){
   var L=LIB[key], meta=SCRIPTS.filter(function(x){return x.k===key})[0];
 
@@ -6925,7 +6938,18 @@ function readableHTML(key){
       else if(line.t==="train"){
         if(mode==="training") o.push('<div class="note">'+x+'</div>');
       }
-      else if(line.t==="tip"||line.t==="pf"){ /* navigator only, never printed */ }
+      /* A line type with no text used to fall through and print the word "undefined" - 35 times
+         on the veteran script alone. These are the capture widgets: on screen they are boxes the
+         agent fills in, so on paper they are a labelled space to write in. The rest are screen
+         furniture and print as nothing. */
+      else if(line.t==="tip"){ }
+      else if(line.t==="pf"){
+        var ks=(line.ks||[]).map(function(k){ var f=pSpecOf(k); return f?pLabel(f):k; });
+        if(ks.length) o.push('<p class="fill"><b>Collect:</b> '+ks.map(esc).join(" &middot; ")+'</p>');
+      }
+      else if(PRINT_FILL[line.t]){ o.push('<p class="fill"><b>'+PRINT_FILL[line.t]+'</b></p>'); }
+      else if(PRINT_SKIP[line.t]){ }
+      else if(line.x===undefined){ }
       else if(line.t==="paper"){ o.push('<div class="note">'+x+'</div>'); }
       else { /* note + warn */
         o.push('<div class="note'+(line.t==="warn"?" warn":"")+'">'+x+'</div>');
@@ -6998,6 +7022,7 @@ function readableHTML(key){
     ".toc h4{font-family:'Inter',sans-serif;font-size:12.5px;"+
     "color:#A8853A;margin:0 0 10px;font-weight:600}"+
     ".toc a{display:block;color:#2C4A7C;text-decoration:none;font-size:16px;padding:4px 0}"+
+    ".toc a.tocout{color:#A8853A;font-weight:600;border-top:1px solid #E3DFD4;margin-top:6px;padding-top:10px}"+
     ".toc a:hover{text-decoration:underline}"+
     ".key{font-family:'Inter',sans-serif;font-size:12.5px;color:#6E6E68;background:#fff;"+
     "border:1px solid #E3DFD4;border-radius:9px;padding:15px 18px;margin:0 0 8px;line-height:1.75}"+
@@ -7019,6 +7044,9 @@ function readableHTML(key){
     ".note.warn{border:1px solid #A8853A}"+
     "pre{font-family:'Inter',sans-serif;font-size:13px;background:#fff;border:1px solid #E3DFD4;"+
     "border-radius:7px;padding:15px;white-space:pre-wrap;line-height:1.65;margin:0 0 14px}"+
+    ".fill{font-family:'Inter',sans-serif;font-size:12.5px;color:#6E6E68;background:#FAF8F2;"+
+    "border:1px dashed #D8D2C4;border-radius:7px;padding:9px 13px;margin:0 0 12px}"+
+    ".fill b{color:#16203C}"+
     ".fork{font-family:'Inter',sans-serif;font-size:12.5px;color:#6E6E68;margin:14px 0 6px;"+
     "border-top:1px dashed #D8D2C4;padding-top:12px;line-height:1.75}"+
     ".fork b{color:#1B1B1B}"+
@@ -7052,10 +7080,10 @@ function readableHTML(key){
        lines go — they point at cards that are not in this printout. */
     "body.only-clean{font-size:13.5px;line-height:1.5}"+
     "body.only-clean .toc,body.only-clean .key,body.only-clean h1.part,body.only-clean .partsub,"+
+    "body.only-clean .note,"+
     "body.only-clean .fork,body.only-clean .nav{display:none}"+
     "body.only-clean h2{font-size:14.5px;margin:14px 0 7px;padding-top:8px}"+
     "body.only-clean .say,body.only-clean .ask{font-size:13.5px;margin:0 0 7px;padding-left:10px;border-left-width:2px}"+
-    "body.only-clean .note{font-size:11.5px;padding:8px 11px;margin:0 0 7px}"+
     "body.only-clean p,body.only-clean div{orphans:3;widows:3}"+
     ".obj{page-break-inside:avoid}.toc{display:none}.navbar{display:none}}"+
     '</style></head><body>');
@@ -7071,7 +7099,11 @@ function readableHTML(key){
   o.push('<div class="toc"><h4>In this document</h4>'+
     '<a href="#clean" data-jump="clean">Clean Script \u2014 the words, start to finish</a>'+
     '<a href="#training" data-jump="training">Training Version \u2014 same script with the reasoning and the coaching notes</a>'+
-    '<a href="#objections" data-jump="objections">Objections &amp; Alternate Paths \u2014 what to say when it goes sideways</a></div>');
+    '<a href="#objections" data-jump="objections">Objections &amp; Alternate Paths \u2014 what to say when it goes sideways</a>'+
+    /* The one-page sheet lives on its own URL and prints itself. Linked here as well as on the
+       reader toolbar, because this box is where someone looks for what else there is. */
+    (objSheetURL(key) ? '<a class="tocout" href="'+objSheetURL(key)+'" target="_blank" rel="noopener">Objections Cheat Sheet \u2014 one page, opening and closing, ready to print \u2197</a>' : '')+
+    '</div>');
 
   o.push('<div class="key"><b>Gold line</b> \u2014 say this out loud.<br>'+
     '<b>Blue line</b> \u2014 the question that does the work. Ask it, then stop talking.<br>'+
@@ -7095,6 +7127,9 @@ function readableHTML(key){
   o.push('</section>');
 
   o.push('<scr'+'ipt>'+
+    /* Clean by default. The buttons in the reader switch this, but an agent who just hits Cmd-P
+       or File > Print gets the clean script rather than all 56 pages of everything. */
+    'document.body.className="only-clean";'+
     'document.addEventListener("click",function(e){'+
       'var a=e.target.closest&&e.target.closest("[data-jump]");'+
       'if(!a)return;'+
@@ -7197,8 +7232,6 @@ function buildDownloads(){
 
 $("readerclose").onclick=closeReader;
 $("readerprint").onclick=function(){printPart("clean")};
-$("readerprinttrain").onclick=function(){printPart("training")};
-$("readerprintobj").onclick=function(){printPart("objections")};
 $("readerdl").onclick=function(){ if(readerKey) downloadReadable(readerKey); };
 
 ["optimumlink","optimumlink2","optimumlink3"].forEach(function(id){
