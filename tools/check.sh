@@ -125,6 +125,35 @@ PY
   esac
 fi
 
+# ---- 5. does every linked objections sheet exist in this repo? -----------------------
+# The sheets live here now, at <script>/objections/index.html, so the link and the page ship in
+# the same commit and cannot get out of step. The local file is the hard gate. The live URL is
+# checked too, but only as a warning: a page added in this commit is not on Pages yet.
+if [ "$FAIL" -eq 0 ]; then
+  SLUGS=$(node -e '
+    const h=require("fs").readFileSync(process.argv[1],"utf8");
+    const m=h.match(/var OBJ_SHEET=\{([^}]*)\}/);
+    if(!m){ console.error("OBJ_SHEET not found"); process.exit(3); }
+    [...m[1].matchAll(/:"([a-z-]+)"/g)].forEach(x=>console.log(x[1]));
+  ' "$FILE") || { echo "FAIL  could not read OBJ_SHEET from $FILE"; FAIL=1; }
+  MISSING=""
+  for s in $SLUGS; do
+    [ -f "$(dirname "$FILE")/$s/objections/index.html" ] || MISSING="$MISSING $s"
+  done
+  if [ -n "$MISSING" ]; then
+    echo "FAIL  the navigator links to an objections sheet that is not in this repo:$MISSING"
+    FAIL=1
+  else
+    echo "ok    every linked objections sheet is in the repo ($(echo $SLUGS | wc -w | tr -d ' ') checked)"
+    if curl -s -m 4 -o /dev/null https://script.ffloptimum.com/ 2>/dev/null; then
+      for s in $SLUGS; do
+        code=$(curl -s -m 6 -o /dev/null -w '%{http_code}' "https://script.ffloptimum.com/$s/objections/")
+        [ "$code" = "200" ] || echo "      note: /$s/objections/ is not live yet ($code) — expected until this commit deploys"
+      done
+    fi
+  fi
+fi
+
 echo
 if [ "$FAIL" -eq 0 ]; then
   echo "PASS  $N script block(s) parse; every branch and section entry resolves."

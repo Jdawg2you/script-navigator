@@ -825,7 +825,10 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 <div class="reader" id="reader">
   <div class="readerbar">
     <span class="readertitle" id="readertitle"></span>
-    <button class="readerbtn" id="readerprint">Print / Save as PDF</button>
+    <button class="readerbtn" id="readerprint">Print clean script</button>
+    <button class="readerbtn" id="readerprinttrain">Training version</button>
+    <button class="readerbtn" id="readerprintobj">Alternate paths</button>
+    <a class="readerbtn" id="readerobjsheet" target="_blank" rel="noopener">Objections sheet &#8599;</a>
     <button class="readerbtn" id="readerdl">Download</button>
     <button class="readerbtn" id="readerclose">Close</button>
   </div>
@@ -1741,7 +1744,7 @@ P:{
 "16":"Reinforce loyalty, reduce cancellations, and future-proof the relationship."
 },
 
-drawers:["carriers","health","iulobj","legacy"],
+drawers:["carriers","iulobj","legacy"],
 S:{"1":"The Opening","2":"Appointment","3":"Introduction & Credibility","4":"Build the Why",
 "5":"Set the Table","6":"Eligibility","7":"Client Profile","8":"Health & Lifestyle",
 "9":"Qualification","10":"How It Works","11":"Contribution & Path","12":"Present the Numbers",
@@ -3091,7 +3094,7 @@ P:{
 "14":"Reinforce loyalty, reduce cancellations, and future-proof the relationship."
 },
 
-drawers:["carriers","mmath","health","mobj","legacy"],
+drawers:["carriers","mmath","mobj","legacy"],
 S:{"1":"The Opening","2":"Appointment","3":"Credentials","4":"Framing Your Role",
 "5":"The Home & Mortgage","6":"Discover Their Why","7":"The Coverage Conversation",
 "8":"Budget & Discounts","9":"Health","10":"Plan Education","11":"The Quote",
@@ -6718,11 +6721,11 @@ function wizBtnRest(){
   var n=(P.conds||[]).length;
   b.innerHTML = WIZ_DONE
     ? 'Wizard updated <span>&#8599;</span>'
-    : 'Carriers <span>&#8599;</span>';
+    : 'Product Wizard <span>&#8599;</span>';
   var g=document.getElementById("wizgo");
   if(g && WIZ_DONE) g.innerHTML='Sent to the Wizard <span>&#8599;</span>';
   setTimeout(function(){ var x=document.getElementById("wizbtn");
-    if(x) x.innerHTML='Carriers <span>&#8599;</span>'; },2600);
+    if(x) x.innerHTML='Product Wizard <span>&#8599;</span>'; },2600);
 }
 var WIZ_T=null;
 function wizPush(){
@@ -6835,7 +6838,7 @@ function openScript(k){
     $("jump").innerHTML=Object.keys(S).map(function(a){
       return '<option value="'+a+'">'+a+' &middot; '+S[a]+'</option>';}).join("");
     $("drawerbar").innerHTML=L.drawers.map(function(d){
-      if(d==="carriers") return '<button class="drawerbtn wizbtn" id="wizbtn">Carriers <span>&#8599;</span></button>';
+      if(d==="carriers") return '<button class="drawerbtn wizbtn" id="wizbtn">Product Wizard <span>&#8599;</span></button>';
       return '<button class="drawerbtn" data-drawer="'+d+'">'+DRAWERS[d].title+'</button>';}).join("");
     Array.prototype.slice.call(document.querySelectorAll("[data-drawer]")).forEach(function(b){
       b.onclick=function(){openDrawer(b.getAttribute("data-drawer"))};});
@@ -7039,6 +7042,21 @@ function readableHTML(key){
     ".navbar .top:hover{background:#F0E4C8}"+
     "@media(max-width:520px){.navbar .here{display:none}.navbar select{max-width:none;flex:1}}"+
     "@media print{body{background:#fff;padding:0 0 40px}h2,h1.part{page-break-after:avoid}"+
+    /* Print one part at a time. Printing all three gave 56 pages on the veteran script, which
+       is why nobody printed it. The agent picks a part and gets only that part. */
+    "body.only-clean #sec-training,body.only-clean #sec-objections,"+
+    "body.only-training #sec-clean,body.only-training #sec-objections,"+
+    "body.only-objections #sec-clean,body.only-objections #sec-training{display:none}"+
+    /* The clean script is the one that goes on the desk, so it is set for paper rather than
+       for a screen: 20px body text and 44px section gaps become 13.5px and 14px. The fork
+       lines go — they point at cards that are not in this printout. */
+    "body.only-clean{font-size:13.5px;line-height:1.5}"+
+    "body.only-clean .toc,body.only-clean .key,body.only-clean h1.part,body.only-clean .partsub,"+
+    "body.only-clean .fork,body.only-clean .nav{display:none}"+
+    "body.only-clean h2{font-size:14.5px;margin:14px 0 7px;padding-top:8px}"+
+    "body.only-clean .say,body.only-clean .ask{font-size:13.5px;margin:0 0 7px;padding-left:10px;border-left-width:2px}"+
+    "body.only-clean .note{font-size:11.5px;padding:8px 11px;margin:0 0 7px}"+
+    "body.only-clean p,body.only-clean div{orphans:3;widows:3}"+
     ".obj{page-break-inside:avoid}.toc{display:none}.navbar{display:none}}"+
     '</style></head><body>');
 
@@ -7060,17 +7078,21 @@ function readableHTML(key){
     '<b>Tan block</b> \u2014 alternate wording and things worth knowing.<br>'+
     '<b>Arrow line</b> \u2014 do this, never read it aloud. Training version only.</div>');
 
+  o.push('<section id="sec-clean">');
   o.push('<h1 class="part" id="clean">Clean Script</h1>');
   o.push('<p class="partsub">The call end to end, without the coaching. Read this one on the phone.</p>');
   o.push(pass("clean"));
 
+  o.push('</section><section id="sec-training">');
   o.push('<h1 class="part" id="training">Training Version</h1>');
   o.push('<p class="partsub">The same script, with the purpose of every section and every note for the agent.</p>');
   o.push(pass("training"));
 
+  o.push('</section><section id="sec-objections">');
   o.push('<h1 class="part" id="objections">Objections &amp; Alternate Paths</h1>');
   o.push('<p class="partsub">Everything that sits off the main path \u2014 what they push back with, and where the call goes instead.</p>');
   o.push(backmatter());
+  o.push('</section>');
 
   o.push('<scr'+'ipt>'+
     'document.addEventListener("click",function(e){'+
@@ -7118,15 +7140,29 @@ function viewReadable(key){
   var meta=SCRIPTS.filter(function(x){return x.k===key})[0];
   $("readertitle").textContent=meta.title;
   $("readerframe").srcdoc=readableHTML(key);
+  var os=$("readerobjsheet"), u=objSheetURL(key);
+  if(u){ os.href=u; os.hidden=false; } else { os.removeAttribute("href"); os.hidden=true; }
   $("reader").classList.add("open");
 }
 function closeReader(){ $("reader").classList.remove("open"); readerKey=null; }
 
-function printReadable(){
+/* Each script's objections live on one sheet in the portal, opening and closing together.
+   Linked rather than copied, so editing the sheet updates every script at once. check.sh
+   fails if one of these stops resolving. */
+var OBJ_SHEET={veteran:"vet",iul:"iul",mortgage:"mortgage"};
+function objSheetURL(key){ var s=OBJ_SHEET[key]; return s ? "https://script.ffloptimum.com/"+s+"/objections/" : null; }
+
+/* Print one part, not the whole document. The class drives the @media print rules inside the
+   readable document itself, so what prints is exactly what the agent asked for. */
+function printPart(part){
   var fr=document.getElementById("readerframe");
-  try{ fr.contentWindow.focus(); fr.contentWindow.print(); }
-  catch(e){ window.print(); }
+  try{
+    var d=fr.contentDocument;
+    if(d&&d.body) d.body.className = part ? ("only-"+part) : "";
+    fr.contentWindow.focus(); fr.contentWindow.print();
+  }catch(e){ window.print(); }
 }
+function printReadable(){ printPart("clean"); }
 
 function downloadReadable(key){
   var meta=SCRIPTS.filter(function(x){return x.k===key})[0];
@@ -7160,7 +7196,9 @@ function buildDownloads(){
 }
 
 $("readerclose").onclick=closeReader;
-$("readerprint").onclick=printReadable;
+$("readerprint").onclick=function(){printPart("clean")};
+$("readerprinttrain").onclick=function(){printPart("training")};
+$("readerprintobj").onclick=function(){printPart("objections")};
 $("readerdl").onclick=function(){ if(readerKey) downloadReadable(readerKey); };
 
 ["optimumlink","optimumlink2","optimumlink3"].forEach(function(id){
