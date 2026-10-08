@@ -3100,7 +3100,7 @@ P:{
 "8":"Find the true premium ceiling and unlock any discounts.",
 "9":"Determine eligibility and which product direction is realistic.",
 "10":"Match the concept to the right product for their age, health, and budget.",
-"11":"Present three plans where every option protects the home.",
+"11":"Pick the track the budget already chose, then present three plans where every option protects the home.",
 "12":"Collect what underwriting needs with as little friction as possible.",
 "13":"Handle whatever comes back without losing the client.",
 "14":"Reinforce loyalty, reduce cancellations, and future-proof the relationship."
@@ -3136,7 +3136,7 @@ m_h_intro:"9.1", m_h_heart:"9.2a", m_h_stroke:"9.2b", m_h_diabetes:"9.2c",
 m_h_breathing:"9.2d", m_h_mental:"9.2e", m_h_rest:"9.2f", m_h_meds:"9.3", m_h_transition:"9.4",
 m_product:"10.1", m_ed_types:"10.2", m_ed_iul:"10.3a", m_ed_wl:"10.3b", m_ed_term:"10.3c",
 m_benefits:"10.4", m_promise:"10.5",
-m_quote:"11.1", m_quote_ask:"11.2",
+m_quote:"11.1", m_quote_work:"11.1a", m_quote_time:"11.1b", m_quote_ask:"11.2",
 m_obj_allornothing:"11.3a", m_obj_shop:"11.3b", m_obj_seen:"11.3c", m_obj_spouse:"11.3d", m_obj_high:"11.3e",
 m_app_intro:"12.1", m_app:"12.2", m_app_ssn:"12.3", m_app_ssn_obj:"12.3a", m_app_auth1:"12.3b", m_app_ben:"12.4",
 m_app_draft:"12.4a", m_app_bank:"12.5", m_app_routing:"12.6", m_app_bank_obj:"12.6a", m_app_esign:"12.6b",
@@ -3610,10 +3610,29 @@ m_promise:{s:"10",t:"The promise",l:[
 ],b:[{k:"Go to the quote",to:"m_quote",c:"go"}]},
 
 /* ---------- 11 QUOTE ---------- */
-m_quote:{s:"11",t:"The three plans",l:[
-{t:"say",x:"Nothing is guaranteed until underwriting signs off, but if I can get you approved at these numbers we'll just pick what fits best for your budget. Sound good?"},
+m_quote:{s:"11",t:"Which track are you presenting?",l:[
+{t:"say",x:"Nothing is guaranteed until underwriting signs off, but if I can get you approved at these numbers, we'll just pick the one that fits best. Sound good?"},
+{t:"dobig",x:"One decision before you say a single figure &mdash; and the budget worksheet already made it for you. Do not guess it here. Look at what 8.3 or 8.4 actually gave you."},
+{t:"warn",x:"<b>Working track.</b> You ran the full worksheet at 8.3, there is real margin left after the rainy-day money, and the health is clean enough to expect an approval. For this household the full payoff is genuinely affordable, and presenting it as a curiosity costs them the best outcome available to them &mdash; and costs you the bigger case.<br><br><b>Time track.</b> Fixed income, a tight bracket at 8.4, older, or health that is going to limit what you can get. Buying time and saving the equity is the right answer here, and the full payoff is the option you name once and move past."},
+{t:"note",x:"<b>Both tracks present the same three plans.</b> The only thing that changes is which one you say first and which one you recommend. There are still no losers in the lineup."}
+],bh:"Which track?",b:[
+{k:"Working &mdash; margin and clean health",to:"m_quote_work",c:"go"},
+{k:"Fixed income, tight, or health-limited",to:"m_quote_time",c:"go"}]},
+
+m_quote_work:{s:"11",t:"The three plans &mdash; working household",l:[
+{t:"say",x:"Here's how I want you to think about this. Every option protects your family the same way. The difference is whether it buys them time, or whether it ends the problem outright."},
+{t:"say",x:"<b>The Full Payoff.</b> ___(coverage) for ___(premium) a month. This is the one I'd put in front of you. If something happens to you, the mortgage is gone. Not covered for a while &mdash; gone. ___(beneficiary / spouse) owns this house outright, with no payment to make and nothing forcing a sale on anybody else's timetable."},
+{t:"say",x:"And at your age and your health, that's affordable &mdash; which is exactly why I asked about your budget the way I did. You have the room for it right now. In ten or fifteen years the same plan costs considerably more, and in twenty it may not be available to you at any price."},
+{t:"say",x:"<b>The Time Plan.</b> ___(coverage) for ___(premium) a month. If the full payoff is more than you want to commit to, this gives ___(beneficiary / spouse) a solid one to two years of payments covered plus final expenses. It buys them time rather than ending it, and the equity still stays with the family."},
+{t:"say",x:"<b>The Safety Net.</b> ___(coverage) for ___(premium) a month. That's the floor &mdash; final expenses and six months to a year of payments handled. No foreclosure and no lost equity, but your family is still selling the house."},
+{t:"dobig",x:"Recommend the full payoff out loud, and then stop talking. You worked their budget line by line, so you are not guessing that they can carry it &mdash; and an agent who recommends the smaller plan to a household that can obviously afford the bigger one reads as unsure of himself, not as considerate."},
+{t:"note",x:"<b>Still no losers.</b> If they step down to the Time Plan or the Safety Net, that is a good outcome and you treat it as one on the call. You led with the best option available to them. That is the job."},
+{t:"note",x:"Coverage math is in the <b>Coverage Math</b> panel at the bottom of this page. If they also told you they want the house paid off early, the <b>Cash-Back Option</b> panel is the other way to frame a full payoff for this exact profile."}
+],b:[{k:"Next",to:"m_quote_ask",c:"go"}]},
+
+m_quote_time:{s:"11",t:"The three plans &mdash; buying time",l:[
 {t:"say",x:"Here's how I want you to think about this. Every option we're going to look at protects your family the same way &mdash; it just buys them more or less time."},
-{t:"say",x:"<b>The Full Payoff.</b> ___(coverage) for ___(premium) a month. This wipes the mortgage out completely. You can absolutely do this if you want &mdash; but you and I both know, at your age, that's a mortgage payment all over again. Most clients don't go this route, but it's here as an option."},
+{t:"say",x:"<b>The Full Payoff.</b> ___(coverage) for ___(premium) a month. This wipes the mortgage out completely. You can absolutely do this if you want &mdash; but you and I both know, at your age, that's a mortgage payment all over again. Most clients in your position don't go this route, but it's here as an option."},
 {t:"say",x:"<b>The Time Plan.</b> ___(coverage) for ___(premium) a month. This is the one most clients pick. It gives ___(beneficiary / spouse) a full one to two years of mortgage payments completely covered, plus final expenses. That's enough time to grieve, figure out next steps, and sell or refinance without panic &mdash; and the equity stays in the family."},
 {t:"say",x:"<b>The Safety Net.</b> ___(coverage) for ___(premium) a month. This is the floor. Final expenses are covered and ___(beneficiary / spouse) has at least six months to a year of payments handled. No foreclosure, no losing the equity, and the family has time to figure things out."},
 {t:"note",x:"<b>There are no losers in this lineup.</b> Even the smallest option prevents the foreclosure and saves the equity. That's why you can present all three without any of them feeling like a consolation prize."},
@@ -3621,7 +3640,7 @@ m_quote:{s:"11",t:"The three plans",l:[
 ],b:[{k:"Next",to:"m_quote_ask",c:"go"}]},
 
 m_quote_ask:{s:"11",t:"The ask",l:[
-{t:"say",x:"Most of my clients pick The Time Plan &mdash; it gives the family real breathing room without breaking the budget. But honestly, all three protect what matters most: keeping ___(beneficiary / spouse) in this home on their terms, with the equity intact."},
+{t:"note",x:"<b>Use the line that matches the track you just presented.</b><br><br><b>Working:</b> &ldquo;I'd put the full payoff in front of you &mdash; you can carry it, and it ends the problem instead of postponing it. But all three of these protect ___(beneficiary / spouse) and the equity, so there's no wrong answer here.&rdquo;<br><br><b>Time:</b> &ldquo;Most of my clients pick the Time Plan &mdash; it gives the family real breathing room without breaking the budget. But honestly, all three protect what matters most: keeping ___(beneficiary / spouse) in this home on their terms, with the equity intact.&rdquo;"},
 {t:"ask",x:"Which of these feels right for what you want to leave behind for ___(beneficiary / spouse), and for your budget?"},
 {t:"do",x:"Wait. First to speak loses."},
 {t:"ask",x:"Is there any reason you don't see value in that?"},
@@ -3637,6 +3656,8 @@ m_quote_ask:{s:"11",t:"The ask",l:[
 {k:"That's too high",to:"m_obj_high",c:"alert"}]},
 
 m_obj_allornothing:{s:"11",t:"&ldquo;I want all or nothing&rdquo;",l:[
+{t:"warn",x:"<b>If you presented the working track at 11.1a, this is not an objection &mdash; it is agreement.</b> They just told you they want the full payoff, which is the plan you recommended. Do not talk them down from it. Write the application."},
+{t:"do",x:"Everything below is for the time track, where the full balance genuinely is not affordable on their income."},
 {t:"say",x:"I totally get that thinking, and you can absolutely cover the whole thing if you want &mdash; knock yourself out."},
 {t:"say",x:"But you and I both know, at your age, that's going to be a mortgage payment all over again. Nobody does that."},
 {t:"say",x:"What matters most is that ___(beneficiary / spouse) doesn't lose the house and doesn't lose the equity. Even six months of payments covered does that."},
