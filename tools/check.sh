@@ -64,6 +64,16 @@ if [ "$FAIL" -eq 0 ]; then
              and printed scripts walk the same array and throw on the hole. One of these broke
              the veteran print-out for four days without anything surfacing it. */
           /* NB: forEach SKIPS holes, which is exactly why this is so easy to miss. Index it. */
+          /* The branch renderer dedupes by target, so two buttons pointing at the same card
+             means only the first one is ever drawn and the rest vanish with no error. Four
+             branches on the mortgage decision-maker card silently collapsed to two this way. */
+          /* Conditional branches to one target are fine and deliberate - the condition picks
+             which of them is on screen. Only UNCONDITIONAL duplicates lose a button. */
+          var seenTo={}, dupTo=null;
+          (L.N[id].b||[]).forEach(function(b){
+            if(!b.to || b.when || b.allOf) return;
+            if(seenTo[b.to]&&!dupTo) dupTo=b.to; seenTo[b.to]=1; });
+          if(dupTo) bad.push(k+' '+id+' has two branches pointing at '+dupTo+' - only the first is drawn');
           var ll=L.N[id].l||[];
           for(var li=0; li<ll.length; li++){
             if(!ll[li] || typeof ll[li]!=='object') bad.push(k+' '+id+' line '+li+' is an empty slot - stray comma');
