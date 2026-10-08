@@ -3115,13 +3115,13 @@ m_appt:"2.1", m_appt_lock:"2.2", m_appt_end:"2.3",
 m_creds:"3.1", m_permission:"3.2",
 m_frame:"4.1",
 m_home:"5.1", m_equity:"5.2", m_existing:"5.3", m_policy_pull:"5.3a", m_workprivate:"5.3b",
-m_why:"6.1", m_why_single:"6.2a", m_why_couple:"6.2b", m_golden:"6.3", m_reality:"6.4",
+m_why:"6.1", m_why_single:"6.2a", m_why_couple:"6.2b", m_ben_deep:"6.2c", m_golden:"6.3", m_reality:"6.4",
 m_concept:"7.1", m_tiedown:"7.2",
-m_budget:"8.1", m_income:"8.2",
+m_budget:"8.1", m_income:"8.2", m_worksheet:"8.3", m_margin:"8.4",
 m_h_intro:"9.1", m_h_heart:"9.2a", m_h_stroke:"9.2b", m_h_diabetes:"9.2c",
 m_h_breathing:"9.2d", m_h_mental:"9.2e", m_h_rest:"9.2f", m_h_meds:"9.3", m_h_transition:"9.4",
 m_product:"10.1", m_ed_types:"10.2", m_ed_iul:"10.3a", m_ed_wl:"10.3b", m_ed_term:"10.3c",
-m_benefits:"10.4",
+m_benefits:"10.4", m_promise:"10.5",
 m_quote:"11.1", m_quote_ask:"11.2",
 m_obj_allornothing:"11.3a", m_obj_shop:"11.3b", m_obj_seen:"11.3c", m_obj_spouse:"11.3d", m_obj_high:"11.3e",
 m_app_intro:"12.1", m_app:"12.2", m_app_ssn:"12.3", m_app_ssn_obj:"12.3a", m_app_auth1:"12.3b", m_app_ben:"12.4",
@@ -3156,7 +3156,9 @@ m_concern:{s:"1",t:"Their biggest concern",l:[
 {t:"ask",x:"Now ___(name) &mdash; when you filled out the request, what was your biggest concern? Were you mostly thinking about protecting the home for your family if something happened to you?"},
 {t:"do",x:"Pause. Let them talk. Whatever they say here is the emotional currency you cash in at the quote. Write it down in their words."},
 {t:"say",x:"Like most homeowners, you just want to make sure your family doesn't lose the house if something happens to you, right?"},
-{t:"ask",x:"Were you also thinking about leaving a little extra behind, or really just focused on the home?"}
+{t:"ask",x:"Were you also thinking about leaving a little extra behind, or really just focused on the home?"},
+{t:"ask",x:"And one more while we're here, because it matters later &mdash; what happens if you simply can't qualify for this? Because not everybody does."},
+{t:"dobig",x:"This is the takeaway, planted in the first two minutes, and it costs you nothing to plant. You have now told them this is something a person can be turned down for, so the plan you come back with at 11.1 reads as an approval rather than a pitch. It also quietly kills &ldquo;let me think about it&rdquo; &mdash; thinking about it was never the gate, underwriting was."}
 ],b:[{k:"They answered",to:"m_pen",c:"go"}]},
 
 m_pen:{s:"1",t:"Pen and paper",l:[
@@ -3307,6 +3309,12 @@ m_policy_pull:{s:"5",t:"Get the policy in their hands",l:[
 {t:"dobig",x:"That reframe is the whole trick. Getting the policy benefits THEM by shortening the call. People who &ldquo;don't know where it is&rdquo; find it fast when they think you'll wrap up sooner."},
 {t:"do",x:"Wait for them to come back. Don't fill the silence."},
 {t:"say",x:"Great &mdash; let's take a quick look. I just want to make sure what you have actually does what you think it does. A lot of times policies are different than people were originally told, and we want to make sure there are no surprises later."},
+{t:"ask",x:"When did you take this one out? And if you don't mind me asking &mdash; who was able to get you approved for that coverage?"},
+{t:"do",x:"Ask it in exactly those words. &ldquo;What company is it with?&rdquo; sounds like you are sizing up a competitor, and people close up. &ldquo;Who was able to get you approved for that coverage?&rdquo; sounds like a professional reading a file, and it hands you the carrier and the agent in one answer."},
+{t:"ask",x:"And when they approved you, did they give you immediate coverage &mdash; or was it one of those two-year waiting period policies?"},
+{t:"dobig",x:"That answer is a free underwriting read, and you got it before asking a single health question. Immediate coverage means a carrier already took the risk on this person and paid for the records to prove it. A two-year wait means graded or guaranteed issue, so set your product expectations now rather than at the quote."},
+{t:"say",x:"That's a good company. I'm glad they got you some coverage."},
+{t:"do",x:"Edify it first, always. You are about to read this policy out loud and very likely find a gap, and the only way that lands as help instead of an attack is if you praised it before you opened it. Never discredit what they already own &mdash; you are adding to it, not replacing it."},
 {t:"warn",x:"<b>What you're looking for:</b><br>&mdash; Term length and expiration age &mdash; does it expire before the mortgage is paid off?<br>&mdash; Face amount &mdash; is it actually what they remember?<br>&mdash; Premium increases at age intervals<br>&mdash; Accidental death only, rather than all-cause<br>&mdash; Policy type: term, whole life, graded, accidental"},
 {t:"note",x:"<b>Roughly 7 out of 10 existing policies are not what the client thinks they are.</b> Common finds: term expiring at 70 when the mortgage runs past 80, $20K of coverage they remembered as $100K, accidental-only riders, and premiums scheduled to jump."},
 {t:"dobig",x:"Never argue with them about what their policy does. Show them, in writing, on the policy itself. That's the moment you stop being another agent."}
@@ -3339,9 +3347,10 @@ m_why_single:{s:"6",t:"The why &mdash; single homeowner",l:[
 {t:"ask",x:"If somebody's not paying that monthly payment, you understand they take the house, right?"},
 {t:"say",x:"And I'm guessing ___(their name) lives in their own place &mdash; they're not going to move in here. So they'd have to go through the process of selling this home. That takes time. Months, sometimes longer."},
 {t:"ask",x:"You mentioned you've got about ___(equity) in equity. I assume during that process you'd want that equity going to ___(their name) &mdash; not to the bank?"},
-{t:"say",x:"And you understand that if ___(their name) can't keep up with that monthly payment while they're trying to sell, the bank can foreclose. And the bank keeps that equity. They don't owe your family a dime of it."},
-{t:"dobig",x:"MOST PEOPLE DO NOT KNOW THIS. Stop talking. Let it land. This is the single most powerful realization in the entire call."}
-],b:[{k:"Next",to:"m_golden",c:"go"}]},
+{t:"say",x:"And you understand that if ___(their name) can't keep up with that monthly payment while they're trying to sell, the lender can start foreclosure. And a forced sale almost never brings what a home is actually worth. Between the discount, the legal costs and the fees, most of that ___(equity) can be gone before your family ever sees a cheque."},
+{t:"dobig",x:"MOST PEOPLE DO NOT KNOW THIS. Stop talking. Let it land. This is the single most powerful realization in the entire call."},
+{t:"warn",x:"<b>Do not say &ldquo;the bank keeps the equity.&rdquo;</b> It is a common line in this business and it is not true &mdash; when a foreclosure sale brings more than what is owed, the surplus goes to the estate, not to the lender. You do not need the false version, because the true one is stronger and nobody can take it apart: the family loses control of the timing, the house sells for less than it is worth, the costs come off their side, and they wait months for whatever is left. Say that."}
+],b:[{k:"Next",to:"m_ben_deep",c:"go"}]},
 
 m_why_couple:{s:"6",t:"The why &mdash; couple",l:[
 {t:"ask",x:"___(spouse 1), ___(spouse 2) &mdash; let me ask you both something important. God forbid one of you passed away tomorrow. ___(surviving spouse), realistically, could you stay in this home on just your income alone? Would you keep working at the same pace? Or would you have to sell, downsize, maybe move in with one of the kids?"},
@@ -3350,8 +3359,23 @@ m_why_couple:{s:"6",t:"The why &mdash; couple",l:[
 {t:"ask",x:"If that payment isn't made, you understand they take the house, right?"},
 {t:"say",x:"And ___(surviving spouse), you don't want to be running from the funeral home to the real estate office trying to panic-sell your home. After a loss like that, the experts will tell you &mdash; don't make any major financial decisions for at least a year. You need time to figure out what's right for you."},
 {t:"ask",x:"You mentioned you've got about ___(equity) in equity in this home. I assume you want that equity staying with the family &mdash; not with the bank?"},
-{t:"say",x:"And you understand that if the payments stop, the bank forecloses. And the bank keeps that equity. They don't owe your family a dime."},
-{t:"dobig",x:"Pause. Let it land. This is the realization the whole call turns on."}
+{t:"say",x:"And you understand that if the payments stop, the lender can start foreclosure. And a forced sale almost never brings what a home is actually worth. Between the discount, the legal costs and the fees, most of that equity can be gone before the family ever sees a cheque."},
+{t:"dobig",x:"Pause. Let it land. This is the realization the whole call turns on."},
+{t:"warn",x:"<b>Do not say &ldquo;the bank keeps the equity.&rdquo;</b> When a foreclosure sale brings more than what is owed, the surplus goes to the estate, not to the lender. The true version is stronger anyway: the family loses control of the timing, the home sells for less than it is worth, and the costs come off their side."},
+{t:"ask",x:"And God forbid you both passed away at the same time &mdash; who would be the caretaker for ___(children) beyond that point?"},
+{t:"do",x:"Ask it even though it is uncomfortable. For a couple with children at home, this is the question that moves mortgage protection from a good idea to the thing they will not postpone &mdash; and the name they give you is a name you use for the rest of the call."}
+],b:[{k:"Next",to:"m_ben_deep",c:"go"}]},
+
+m_ben_deep:{s:"6",t:"The beneficiary deep-dive",l:[
+{t:"warn",x:"<b>Most agents skip this card. Do not skip this card.</b> Spend real minutes here. You are not selling this client a policy &mdash; you are selling them the person they are protecting. If you have not built value for the one human being they care most about, every number you say later is just a price."},
+{t:"ask",x:"Tell me a little about ___(their name). Do they live with you, or on their own somewhere else?"},
+{t:"ask",x:"How old are they?"},
+{t:"ask",x:"Do they have children of their own?"},
+{t:"note",x:"<b>If there are children:</b> &ldquo;How old are they? &hellip; Do you get to spend much time with them? &hellip; What are they into right now?&rdquo; Then land it: &ldquo;So it's safe to say you're the favourite, right?&rdquo;"},
+{t:"ask",x:"And God forbid something happened to you tomorrow &mdash; what do you think ___(their name) would want to do with this house? Is it something they'd want to keep, or something they'd end up selling?"},
+{t:"do",x:"Both answers help you, so do not steer it. &ldquo;Keep it&rdquo; means they need the payment covered for years rather than months, which sizes the coverage up. &ldquo;Sell it&rdquo; means they need time and a clean title &mdash; which is precisely the equity conversation you just finished."},
+{t:"ask",x:"Is there anybody else who'd be affected by all this, or is ___(their name) really the one who'd be carrying it?"},
+{t:"dobig",x:"Before you move on, read it back by name: &ldquo;So this is really about ___(their name) &mdash; making sure none of this lands on them.&rdquo; That one sentence is what you repeat at the quote, and it is the reason they pick a plan instead of shopping a price."}
 ],b:[{k:"Next",to:"m_golden",c:"go"}]},
 
 m_golden:{s:"6",t:"The golden question",l:[
@@ -3375,7 +3399,8 @@ m_reality:{s:"6",t:"The reality check",l:[
 m_concept:{s:"7",t:"Sell the concept, not the number",l:[
 {t:"warn",x:"<b>This is the most important card in the script.</b> You must sell the concept of covering payments, buying time, and protecting equity BEFORE any dollar figure exists. Skip this and you will get hit with &ldquo;I want all or nothing&rdquo; every single time."},
 {t:"say",x:"Now ___(name), a lot of homeowners don't know this. Most people think mortgage protection means covering the entire mortgage balance &mdash; the whole ___(balance). And honestly, you can do that if you want."},
-{t:"say",x:"But you and I both know, at your age and with the size of this mortgage, that would basically be another mortgage payment every month. Nobody does that. None of my clients go that route, and honestly I wouldn't recommend it for most people."},
+{t:"say",x:"For a lot of homeowners, covering the whole balance would mean something close to a second mortgage payment every month &mdash; so most of my clients don't go that route."},
+{t:"warn",x:"<b>Check the budget before you say that line.</b> This card used to tell every client that nobody covers the full balance. For an older homeowner on a fixed income with a large balance, that is true. For a healthy working household in their thirties or forties with real margin on the worksheet at 8.3, it is not &mdash; full payoff is often genuinely affordable, and talking them out of it costs the client the best outcome and costs you the bigger case. If the margin is there and the health is clean, lead with the full payoff at 11.1 and use the time plans as the step down."},
 {t:"say",x:"Here's what most of my clients do instead. They make sure that if something happens, ___(beneficiary / spouse) has six months, a year, two years &mdash; sometimes more &mdash; of mortgage payments completely taken care of. That way they don't have to think about the mortgage at all."},
 {t:"say",x:"That gives them the time to figure out what to do &mdash; sell, refinance, stay, move in with family &mdash; without panicking, without losing the home, and without losing the equity."},
 {t:"ask",x:"Does that make sense? Is that something that would actually help your family?"},
@@ -3396,11 +3421,33 @@ m_budget:{s:"8",t:"Discount questions",l:[
 {t:"note",x:"<b>Why you ask:</b> carriers need a real routing and account number. Some online-only banks are incompatible, and a traditional bank opens up more carrier options."}
 ],b:[{k:"Next",to:"m_income",c:"go"}]},
 
-m_income:{s:"8",t:"Income and margin",l:[
-{t:"ask",x:"Roughly, what's your monthly income after taxes?"},
-{t:"ask",x:"Do you collect Social Security, retirement, work income, or disability income? Any other income coming in?"},
-{t:"ask",x:"Last budget question, so we don't put you in something that stresses you out &mdash; after the mortgage, the bills, gas and groceries, about how much is usually left over at the end of the month? No need to be exact. Are we talking closer to $50, $100 to $200, or $300 or more?"},
-{t:"dobig",x:"That last answer is your true premium ceiling. Write it down and do not quote above it."}
+m_income:{s:"8",t:"Income",l:[
+{t:"say",x:"Two things I have to get right before we go any further: whether you actually qualify for what we're looking at, and whether it fits a real budget. So I'm not guessing at either one &mdash;"},
+{t:"ask",x:"What do you currently do for a living? ___(type of work)"},
+{t:"ask",x:"And roughly, what's your monthly income after taxes? ___(monthly income)"},
+{t:"ask",x:"Any other income coming in &mdash; Social Security, retirement, disability, a second job, your spouse's paycheque?"},
+{t:"dobig",x:"Walk in knowing the money is there. Nobody is handed a mortgage without income, credit and a workable debt-to-income ratio &mdash; so the job of the next card is not to find out whether they can afford this. It is to find out exactly how much, so that you never have to ask &ldquo;is that comfortable for you?&rdquo; at the quote."}
+],bh:"Which household is this?",b:[
+{k:"Working &mdash; real paycheque",to:"m_worksheet",c:"go"},
+{k:"Retired or fixed income",to:"m_margin",c:"go"}]},
+
+m_worksheet:{s:"8",t:"The budget worksheet",l:[
+{t:"warn",x:"<b>Working households only.</b> Run it on paper, in this order, saying each number back as you go. It takes about ninety seconds and it replaces every &ldquo;can you really afford this&rdquo; conversation you have ever had at a quote."},
+{t:"say",x:"Let me build this out with you, so I'm working with your real numbers instead of guessing."},
+{t:"ask",x:"Take-home is ___(monthly income) a month, and the mortgage is ___(monthly payment). Any significant car payments, or other loans or cards you're paying on?"},
+{t:"ask",x:"And on average, what do the household expenses run &mdash; electric, water, phones, insurance, groceries, all of it together?"},
+{t:"ask",x:"So that leaves roughly ___(left over) at the end of the month. Does that sound about right?"},
+{t:"ask",x:"How much of that are you putting away for a rainy day? I'm asking because I'm not looking to take food off your table or raid your savings."},
+{t:"ask",x:"And how often do you get out &mdash; trips, events, things you actually enjoy?"},
+{t:"dobig",x:"Now edify them, and mean it: &ldquo;The reason I ask is that most people are spenders. It's good to see someone who's actually a saver. Your bills are paid, your ducks are in a row, and you've still got money at the end of the month &mdash; you're doing well for yourself.&rdquo;"},
+{t:"say",x:"And that matters, because it tells me you're not running a negative budget. If you were, I'd tell you to go fix that before you bought anything at all from me."},
+{t:"dobig",x:"You now have the ceiling and the floor without ever having asked for either. Quote inside the leftover, leave the rainy-day money alone, and do not ask whether the payment is comfortable &mdash; you already worked out that it is, and asking hands a ready client a reason to hesitate."}
+],b:[{k:"Next",to:"m_h_intro",c:"go"}]},
+
+m_margin:{s:"8",t:"The margin",l:[
+{t:"ask",x:"Last budget question, so we don't put you in something that stresses you out &mdash; after the mortgage, the bills, gas and groceries, about how much is usually left over at the end of the month? No need to be exact. Are we talking closer to $50, $100 to $200, or $300 or more? ___(left over)"},
+{t:"dobig",x:"That answer is your true premium ceiling. Write it down and do not quote above it."},
+{t:"note",x:"<b>Why the bracket here and the worksheet there.</b> On a fixed income the month is already known to them to the dollar, and walking a retiree line by line through a budget they cannot change reads as an audit rather than as help. The bracket gets you the same ceiling without that cost."}
 ],b:[{k:"Next",to:"m_h_intro",c:"go"}]},
 
 /* ---------- 9 HEALTH ---------- */
@@ -3453,6 +3500,8 @@ m_h_meds:{s:"9",pf:"health",t:"Medications",l:[
 m_h_transition:{s:"9",t:"Why you asked",l:[
 {t:"say",x:"Okay, so here's why I asked all that. With life insurance we don't just pick a plan and buy it like groceries. We first submit a request for coverage. The carriers then review your history &mdash; prescriptions, hospital visits, doctor records &mdash; using a system called the MIB, the Medical Information Bureau."},
 {t:"say",x:"So while we can't guarantee anything today, what we can do is submit the best possible request to underwriting. You still get to design the entire plan &mdash; I'm just here to help you look good on paper."},
+{t:"say",x:"One heads-up so nothing catches you off guard. The one thing the carriers might push back on is ___(anything else about their health). Don't panic if they do. I work with over 40 companies, which means when one says no I have somewhere else to go. Most agents have one company and one answer, and that's when people get turned down and give up on this altogether. I just don't want you disappointed if the first one isn't the one."},
+{t:"do",x:"Name the one thing out loud, specifically. Pre-framing the pushback costs you nothing and buys you the second attempt: a client who was warned treats a decline as part of the process, and a client who wasn't treats it as the end of the conversation."},
 {t:"ask",x:"Does that make sense?"}
 ],b:[{k:"Next",to:"m_product",c:"go"}]},
 
@@ -3482,7 +3531,8 @@ m_ed_types:{s:"10",t:"The three types",l:[
 m_ed_iul:{s:"10",t:"Explain the IUL",l:[
 {t:"say",x:"So this one builds cash value based on a market index, like the S&amp;P 500, without your money being directly invested in the market. When the market goes up, your policy participates. When it goes down, you cannot go down &mdash; so you never lose money."},
 {t:"say",x:"It's permanent, the rate is locked, and it carries living benefits. Write these three down: critical, chronic, and terminal."},
-{t:"say",x:"Critical means a stroke, a heart attack, or cancer. Chronic means you can't perform one of six activities of daily living &mdash; bathing, eating, dressing, moving, walking, toileting. Terminal means less than a year to live."},
+{t:"say",x:"Critical means a stroke, a heart attack, or cancer. Chronic means you can't perform two of the six activities of daily living &mdash; bathing, dressing, eating, getting in and out of a bed or a chair, using the toilet, and continence. Terminal means less than a year to live."},
+{t:"warn",x:"<b>It is two of six, not one.</b> Every chronic-illness rider we sell sets the trigger at the permanent inability to perform at least two of the six. If you tell a client one is enough, you have promised them access to their own death benefit at a threshold no carrier honours, and they find that out at the worst possible moment of their life. Say two."},
 {t:"do",x:"Slow down on the floor. &ldquo;When it goes down, you cannot go down&rdquo; is the line they remember."}
 ],b:[{k:"Next",to:"m_benefits",c:"go"}]},
 
@@ -3510,6 +3560,14 @@ m_benefits:{s:"10",t:"Policy benefits",l:[
 {t:"say",x:"Cash value &mdash; grows over time. Cash value is interest gifted to you by the insurance company. After a few years it begins to build, and you can withdraw it for expenses, though we don't recommend borrowing in the early years."},
 {t:"say",x:"And all of this is about putting the proper plan in place so ___(beneficiary / spouse) doesn't lose this home. Make sense?"},
 {t:"dobig",x:"Recap based on what mattered most to them: keeping the family in the home, protecting the equity, keeping the payment low, leaving a legacy. Use their words."}
+],b:[{k:"Next",to:"m_promise",c:"go"}]},
+
+m_promise:{s:"10",t:"The promise",l:[
+{t:"warn",x:"<b>Say this immediately before the first number, every single time.</b> It is the last thing they hear before they hear a price, and it reframes you from the person selling the policy into the person who will be standing there when it pays."},
+{t:"say",x:"Before I give you any numbers &mdash; the good news is I have options for you. The honest news is that I don't yet know which company is going to say yes first. We'll figure that out together."},
+{t:"say",x:"And here's the part I want you to actually hear. I'm not trying to make you insurance poor. I don't want you resenting this payment every month, because one day ___(their name) is going to be the one calling me &mdash; and they'll be calling to tell me you're gone and to ask what happens next. That's where I come in. My promise to your family is that I make sure the insurance company does their job."},
+{t:"say",x:"So that ___(their name) isn't passing a hat around the kitchen table, or putting your picture up on a fundraising page, while they're trying to bury you."},
+{t:"dobig",x:"Then stop. Do not soften it, do not add to it, and do not run straight into the quote. Let them sit in it for a second. Everything you present after this is heard as protection rather than as a product."}
 ],b:[{k:"Go to the quote",to:"m_quote",c:"go"}]},
 
 /* ---------- 11 QUOTE ---------- */
@@ -3527,7 +3585,10 @@ m_quote_ask:{s:"11",t:"The ask",l:[
 {t:"say",x:"Most of my clients pick The Time Plan &mdash; it gives the family real breathing room without breaking the budget. But honestly, all three protect what matters most: keeping ___(beneficiary / spouse) in this home on their terms, with the equity intact."},
 {t:"ask",x:"Which of these feels right for what you want to leave behind for ___(beneficiary / spouse), and for your budget?"},
 {t:"do",x:"Wait. First to speak loses."},
-{t:"ask",x:"Does that feel comfortable for your monthly budget?"}
+{t:"ask",x:"Is there any reason you don't see value in that?"},
+{t:"ask",x:"What would stop you from putting this in place today?"},
+{t:"do",x:"Both of those ask for the objection by name instead of waiting to be ambushed by it. And if you ran the worksheet at 8.3, do not ask whether the payment is comfortable &mdash; you already established that it is, and asking hands a client who was ready to say yes a reason to go find a no."},
+{t:"say",x:"All I need is about ten minutes to see whether we can get you qualified, and then we submit the request and find out whether they'll say yes. Is that fair?"}
 ],bh:"How did they respond?",b:[
 {k:"They picked one",to:"m_app_intro",c:"go"},
 {k:"I want to cover the whole mortgage",to:"m_obj_allornothing",c:"alert"},
@@ -3572,6 +3633,9 @@ m_obj_high:{s:"11",t:"&ldquo;That's too high&rdquo;",l:[
 m_app_intro:{s:"12",t:"What happens now",l:[
 {t:"say",x:"Okay, we're nearly there. Here's what happens now &mdash; I'm going to fill this out with you. It takes about five minutes, and then it goes to underwriting for their decision."},
 {t:"say",x:"It's your basic information, then your beneficiary, then a couple of verification steps. There's no medical exam on this &mdash; the way they verify everything instead is with your social, to confirm you're you and to check your records."},
+{t:"say",x:"Here's exactly what the insurance company wants to know, so none of it surprises you. One, who the insured is &mdash; your full legal name, date of birth, address, phone, email and social. All of it has to match, because one day it has to match a death certificate, and if it doesn't they can't pay the claim. Two, who the beneficiary is &mdash; their full legal name and date of birth to match their licence, and a good number to reach them on. And three, how the premium gets paid, checking or savings."},
+{t:"ask",x:"Any questions about any of that before we start?"},
+{t:"do",x:"Naming all three up front removes every ambush. The social and the bank details stop being surprises halfway down the form, because you already told them both were coming and why they are needed."},
 {t:"say",x:"Before we get into it, there's a piece I'm required to read you, because what we're talking about now is your medical information."},
 {t:"say",x:"The Health Insurance Portability and Accountability Act of 1996 &mdash; the Privacy Rule. This establishes national standards protecting your medical records and other individually identifiable health information.<br><br>Under this federal law, your protected health information cannot be released to the insurance company without your authorization. When you give that authorization, it allows the company you're applying to &mdash; and only that company &mdash; to obtain and review your records for one purpose: to verify your identity and assess your eligibility for coverage.<br><br>Misuse of protected health information is a federal offense, with penalties running as high as a $250,000 fine and ten years in prison."},
 {t:"ask",x:"___(first name), do you understand that the information you disclose is protected under the HIPAA Act of 1996?"},
