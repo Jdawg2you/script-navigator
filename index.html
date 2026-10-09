@@ -93,6 +93,27 @@ body.embed .scrim{position:absolute}
 .howrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:24px}
 .howbtn{display:inline-block;border:1.5px solid var(--gold);color:var(--golddk);background:transparent;font:700 13.5px var(--sans);line-height:20px;text-decoration:none;padding:9px 16px;border-radius:9px}
 .howbtn:hover{background:var(--goldsoft)}
+/* Set up used to be seven boxes at equal weight, so a new agent met "Your website" and "Your
+   booking link", could not fill them, and assumed they were behind. The links are their own
+   block now, with the free route to all three underneath. */
+.setsec{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+ color:var(--navy);margin:2px 0 9px;display:flex;align-items:center;gap:8px}
+.setsec:after{content:"";flex:1;height:1px;background:var(--rule-soft)}
+.setsec em{font-style:normal;font-weight:600;text-transform:none;letter-spacing:0;font-size:11.5px;color:var(--muted)}
+.linkbox{border:1px solid var(--goldline);background:#FEFCF7;border-radius:10px;padding:13px 14px;margin-top:4px}
+.linkbox .setsec{margin-top:0}
+.linknote{font-family:var(--sans);font-size:12px;color:var(--slate);line-height:1.6;
+ border-top:1px dashed var(--goldline);padding-top:11px;margin-top:2px}
+.linknote b{color:var(--navy)}
+.linknote p{margin:5px 0 0}
+.freetag{font-size:10.5px;font-weight:700;color:var(--golddk);letter-spacing:.06em}
+.gsteps{margin:8px 0 0;padding:0;list-style:none;counter-reset:gs}
+.drawerbody .gsteps li{counter-increment:gs;position:relative;background:none;border:0;border-radius:0;padding:0 0 0 23px;font-size:12px;color:var(--slate);line-height:1.5;margin-bottom:4px}
+.drawerbody .gsteps li:before{content:counter(gs);position:absolute;left:0;top:1px;width:16px;height:16px;border-radius:50%;
+ background:var(--gold);color:var(--navy);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.goatbtn{display:inline-block;margin-top:11px;background:var(--gold);border:1.5px solid var(--gold);color:var(--navy);
+ font-family:var(--sans);font-size:12.5px;font-weight:700;line-height:20px;padding:8px 14px;border-radius:9px;text-decoration:none}
+.goatbtn:hover{background:var(--golddk);border-color:var(--golddk);color:#fff}
 /* Same pill, filled. Setup was only reachable from inside a script, so a first-time agent met
    every "___(your name)" blank before they ever found it. Navy on gold, not white on gold: the
    white version measures 2.4:1 against this gold and is unreadable in daylight on a laptop. */
@@ -4954,7 +4975,7 @@ function pBlank(lab){
 var AGENT_SPEC=[
  {k:"a_name",l:"Your full name",w:1},{k:"a_agency",l:"Your agency",w:1},{k:"a_npn",l:"Your NPN",w:1},
  {k:"a_phone",l:"Your direct number",w:1},{k:"a_email",l:"Your email",w:1},
- {k:"a_web",l:"Your website",w:1},{k:"a_book",l:"Your booking link",w:1}
+ {k:"a_web",l:"Your website",w:1},{k:"a_card",l:"Your digital business card",w:1},{k:"a_book",l:"Your booking link",w:1}
 ];
 var PROFILE_ON=false;
 var PKEY="osn_profile_v1", AKEY="osn_agent_v1", P={}, A={}, PSAVE=null;
@@ -6060,7 +6081,20 @@ function pSetup(){
   $("drawerbody").innerHTML=
     '<p style="font-family:var(--sans);font-size:12.5px;color:var(--slate);line-height:1.6;margin:0 0 14px">'+
     'Type these once. They fill themselves into every script, on every call, on this device.</p>'+
-    '<div class="prow">'+AGENT_SPEC.map(pField).join("")+'</div>'+
+    '<div class="setsec">Your details <em>&mdash; the scripts say these out loud</em></div>'+
+    '<div class="prow">'+AGENT_SPEC.filter(function(f){return !/^a_(web|card|book)$/.test(f.k)}).map(pField).join("")+'</div>'+
+    '<div class="linkbox">'+
+      '<div class="setsec">Your links <em>&mdash; all three are free, see below</em></div>'+
+      '<div class="prow">'+AGENT_SPEC.filter(function(f){return /^a_(web|card|book)$/.test(f.k)}).map(function(f){
+          var g={}; for(var kk in f) g[kk]=f[kk]; g.w=2; return pField(g); }).join("")+'</div>'+
+      '<div class="linknote"><b>Don\'t have these yet? All three are free.</b> <span class="freetag">NO COST</span>'+
+      '<p>One GOAT account gives you an agent website, a digital business card, and a booking calendar '+
+      'clients can use to book themselves.</p>'+
+      '<ol class="gsteps"><li>Create your free account</li><li>Fill in your agent profile</li>'+
+      '<li>Open <b>Settings</b></li><li>Switch on your <b>website</b>, <b>digital business card</b> and '+
+      '<b>calendar</b>, then paste the three links back here</li></ol>'+
+      '<a class="goatbtn" href="'+GOAT_URL+'" target="_blank" rel="noopener noreferrer">Create my free GOAT account &rarr;</a>'+
+    '</div></div>'+
     '<p style="font-family:var(--sans);font-size:11.5px;color:var(--muted);line-height:1.55;margin:14px 0 0">'+
     'Saved in this browser only, separately from client profiles &mdash; opening a client file will not overwrite them.</p>';
   $("drawer").classList.add("open"); $("scrim").classList.add("open");
@@ -6354,7 +6388,7 @@ function fromPopPro(o){
 function popAgent(){
   var g=function(k){ return String(pVal(k)||"").trim(); };
   return { name:g("a_name"), agency:g("a_agency"), npn:g("a_npn"),
-           phone:g("a_phone"), email:g("a_email"), website:g("a_web"), booking:g("a_book") };
+           phone:g("a_phone"), email:g("a_email"), website:g("a_web"), card:g("a_card"), booking:g("a_book") };
 }
 function popFile(){
   var d=new Date(), pad=function(n){return (n<10?"0":"")+n};
