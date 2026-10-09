@@ -91,8 +91,14 @@ body.embed .scrim{position:absolute}
 .ltitle{font-family:var(--serif);font-size:30px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
 .lsub{font-family:var(--serif);font-style:italic;font-size:15.5px;color:var(--muted);margin-bottom:14px}
 .howrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:24px}
-.howbtn{display:inline-block;border:1.5px solid var(--gold);color:var(--golddk);background:transparent;font:700 13.5px var(--sans);text-decoration:none;padding:9px 16px;border-radius:9px}
+.howbtn{display:inline-block;border:1.5px solid var(--gold);color:var(--golddk);background:transparent;font:700 13.5px var(--sans);line-height:20px;text-decoration:none;padding:9px 16px;border-radius:9px}
 .howbtn:hover{background:var(--goldsoft)}
+/* Same pill, filled. Setup was only reachable from inside a script, so a first-time agent met
+   every "___(your name)" blank before they ever found it. Navy on gold, not white on gold: the
+   white version measures 2.4:1 against this gold and is unreadable in daylight on a laptop. */
+button.howbtn{cursor:pointer;font-family:var(--sans)}
+.howbtn.howgo{background:var(--gold);border-color:var(--gold);color:var(--navy);padding:9px 16px;font-weight:700}
+.howbtn.howgo:hover{background:var(--golddk);border-color:var(--golddk);color:#fff}
 .hownote{font-family:var(--sans);font-size:12.5px;color:var(--muted)}
 .lgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:13px}
 .lcard{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--rule);
@@ -740,6 +746,7 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
       <div class="howrow">
         <a class="howbtn" href="https://portal.ffloptimum.com/script-navigator-how-to.html" target="_blank" rel="noopener">How to use the Script Navigator &#8599;</a>
         <a class="howbtn" href="https://youtu.be/c_n8YOr7mp8" target="_blank" rel="noopener">Watch the walkthrough (10 min) &#8599;</a>
+        <button class="howbtn howgo" id="landsetup">&#9881; Set up your agent profile first</button>
         <span class="hownote">New here? Watch the 10-minute run-through. The how-to page has the long version, chopped into clips by step.</span>
       </div>
       <div class="lgrid" id="lgrid"></div>
@@ -6094,6 +6101,7 @@ function pClose(){ closeDrawer(); }
 
 $("profbtn").onclick=pOpen;
 $("setupbtn").onclick=pSetup;
+if($("landsetup")) $("landsetup").onclick=pSetup;
 
 function pWire(){
   var n=document.getElementById("pnotes");
