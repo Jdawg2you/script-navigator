@@ -3140,7 +3140,7 @@ m_concept:"7.1", m_tiedown:"7.2",
 m_budget:"8.1", m_income:"8.2", m_worksheet:"8.3", m_margin:"8.4",
 m_h_intro:"9.1", m_h_heart:"9.2a", m_h_stroke:"9.2b", m_h_diabetes:"9.2c",
 m_h_breathing:"9.2d", m_h_mental:"9.2e", m_h_rest:"9.2f", m_h_meds:"9.3", m_h_transition:"9.4",
-m_product:"10.1", m_ed_types:"10.2", m_ed_iul:"10.3a", m_ed_wl:"10.3b", m_ed_term:"10.3c",
+m_product:"10.1", m_ed_types:"10.2", m_ed_iul:"10.3a", m_ed_wl:"10.3b", m_ed_term:"10.3c", m_ed_cbo:"10.3d",
 m_benefits:"10.4", m_promise:"10.5",
 m_quote:"11.1", m_quote_work:"11.1a", m_quote_time:"11.1b", m_quote_ask:"11.2",
 m_obj_allornothing:"11.3a", m_obj_shop:"11.3b", m_obj_seen:"11.3c", m_obj_spouse:"11.3d", m_obj_high:"11.3e",
@@ -3564,15 +3564,22 @@ m_h_transition:{s:"9",t:"Why you asked",l:[
 ],b:[{k:"Next",to:"m_product",c:"go"}]},
 
 /* ---------- 10 PRODUCT ---------- */
-m_product:{s:"10",t:"Pick the product",l:[
+m_product:{s:"10",t:"Which direction",l:[
 {t:"note",x:"<b>New agents:</b> use the soft hold to get carrier direction. &ldquo;Ok ___, I'm going to put you on a very brief soft hold while I speak with one of our senior underwriters to make sure we're getting you the best coverage at the best price. I'll be right back.&rdquo; If nobody's available, run it through the Product Wizard &mdash; the button at the bottom of this screen."},
 {t:"dobig",x:"Mortgage protection is a CONCEPT, not a product. The concept never changes &mdash; cover the payments, buy the time, save the equity. The product underneath it changes with their age, health, and budget."},
-{t:"note",x:"<b>Healthy, roughly 35 to 55, decent income &rarr; IUL.</b> Permanent, locked rate, living benefits, cash value growth, tax-free. The strongest play for the right client, especially if there's an old 401(k) in the picture."},
+{t:"warn",x:"<b>Four gates, in this order. Do not jump ahead.</b> Each one takes options off the table, and the one that decides most calls is not the health &mdash; it is the budget. You already have every answer you need: the knockouts from stage 9, the age from 1.2, and the real margin from 8.3 or 8.4."},
+{t:"dobig",x:"<b>Gate 1 &mdash; health.</b> Did anything in stage 9 knock them out of simplified issue? If so the product question is already answered: whole life or final expense. Stop looking at the others. Get them approved and protect what you can."},
+{t:"dobig",x:"<b>Gate 2 &mdash; age.</b> Over 60 and CBO is gone, full stop &mdash; it issues 20 to 60 and the Product Wizard enforces it. Term still runs to 75 or 80 depending on carrier. Past about 65, permanent gets expensive fast and whole life starts winning on approvability alone."},
+{t:"dobig",x:"<b>Gate 3 &mdash; budget. This is the one that actually decides.</b> Everything above only tells you what they <i>can</i> have. The margin tells you which one they will keep paying for, and a policy they cannot sustain protects nobody."},
+{t:"note",x:"<b>No real margin, and older &rarr; equity protection.</b> Forget covering the balance. Work out what a small face buys: face divided by their monthly payment is how many months ___(beneficiary / spouse) gets. Even $25,000 against a $1,500 payment is sixteen months &mdash; long enough to get through probate, list the house properly, and walk away with the equity instead of losing it to a forced sale. Something is better than nothing when you explain it the right way."},
+{t:"note",x:"<b>Tight and price-driven, but they qualify &rarr; term.</b> Most face per dollar, and when the budget is genuinely the constraint that matters more than anything else on this list. Say the expiry tradeoff honestly and match the term to the years remaining on the loan."},
+{t:"note",x:"<b>A bit more room, and the payment is the worry or they want money back &rarr; Americo CBO.</b> It costs more each month than plain term, and you tell them why: it is building toward the premiums coming back to them. They are not paying more for the same thing. They are paying more for the part that returns. It is also the only plan here that covers the monthly mortgage payment while they are alive and unable to work."},
+{t:"note",x:"<b>Healthy, roughly 35 to 55, real income &rarr; IUL.</b> Permanent, locked rate, living benefits, cash value growth, tax-free. The strongest play for the right client, especially if there's an old 401(k) in the picture. Needs genuine premium to work &mdash; a minimum-funded IUL on a thin budget is the worst of both worlds."},
+{t:"dobig",x:"<b>Gate 4 &mdash; the amount, and you settle it at 11.1, not here.</b> Direction first, size second. The one exception is equity protection: when that is the answer, the product and the amount are the same decision, and the amount is whatever gets approved."},
 {t:"note",x:"<b>Older, health-limited, or fixed income &rarr; whole life or final expense.</b> Get them approved, protect the home, keep it simple. Don't oversell &mdash; get coverage in place."},
-{t:"note",x:"<b>Tight budget where permanent isn't possible &rarr; term.</b> Last resort for mortgage protection, because it can expire before the mortgage is paid off. If you go here, explain the tradeoff honestly."},
-{t:"note",x:"<b>Their worry is the payment, not the balance &rarr; Americo CBO.</b> If this client keeps circling back to &ldquo;how would she make the payment,&rdquo; CBO is the product that answers it. It carries the benefit that covers the monthly mortgage payment while they are alive and unable to work, and nothing else in this lineup does that &mdash; everything else pays only when they die. It also returns the base premiums at the end of the term."},
 {t:"note",x:"<b>Optional &mdash; the cash-back route.</b> Young, healthy, two incomes, and they told you back at 5.1 they want the house paid off early? There is a fourth way to frame this, where their premiums come back at the end of the term. It is not for most clients and it carries conditions a sharp one will find. Read the <b>Cash-Back Option</b> panel at the bottom of this screen before you offer it to anybody."},
-{t:"do",x:"Decide now which of the three you are recommending and write it down before you click through. The next card explains all three types to the client regardless &mdash; you pick the one you are actually presenting at the end of it, on card 10.2."}
+{t:"do",x:"Decide the direction now and write it down before you click through. The next card educates the client on the types regardless &mdash; you pick the one you are actually presenting at the end of it."},
+{t:"note",x:"<b>Check it against the Product Wizard before you commit.</b> Ages, face caps and the state they live in will overrule anything on this card, and CBO shares Americo term's underwriting exactly &mdash; if they cannot get Americo term, they cannot get CBO either."}
 ],b:[{k:"Explain the three types",to:"m_ed_types",c:"go"}]},
 
 m_ed_types:{s:"10",t:"The three types",l:[
@@ -3580,11 +3587,13 @@ m_ed_types:{s:"10",t:"The three types",l:[
 {t:"say",x:"One &mdash; accidental only. Super cheap, but it only pays if you die in a freak accident."},
 {t:"say",x:"Two &mdash; term. Good for 10 to 30 years, but it usually expires worthless. And here's the problem with term for mortgage protection specifically: if the term ends before the mortgage is paid off, you're left exposed at the worst possible age."},
 {t:"say",x:"Three &mdash; whole life, which is often what we recommend for mortgage protection. Permanent, never expires, locks in your rate for life, and builds cash value you can access while you're alive."},
-{t:"note",x:"<b>If they're healthy and qualify financially, add the fourth:</b> &ldquo;There's actually a fourth type, but it's only for people who are pretty healthy with decent income. In your case I think this might be the best fit. It's permanent coverage that's more affordable than whole life, has all the same benefits, plus growth potential and some powerful living benefits.&rdquo;"}
+{t:"note",x:"<b>If they're healthy and qualify financially, add the fourth:</b> &ldquo;There's actually a fourth type, but it's only for people who are pretty healthy with decent income. In your case I think this might be the best fit. It's permanent coverage that's more affordable than whole life, has all the same benefits, plus growth potential and some powerful living benefits.&rdquo;"},
+{t:"note",x:"<b>If you're going the cash-back route, frame it here as a version of term rather than a fifth animal:</b> &ldquo;Now there's a version of that second one &mdash; the term &mdash; where instead of it expiring worthless, you get your premiums back at the end. That's the one I want to show you.&rdquo; It lands far better as an upgrade to something they just understood than as a new product they have to learn."}
 ],bh:"Which one are you presenting?",b:[
 {k:"IUL",to:"m_ed_iul",c:"go"},
 {k:"Whole life",to:"m_ed_wl",c:"go"},
-{k:"Term",to:"m_ed_term",c:"go"}]},
+{k:"Term",to:"m_ed_term",c:"go"},
+{k:"Cash back &mdash; Americo CBO",to:"m_ed_cbo",c:"go"}]},
 
 m_ed_iul:{s:"10",t:"Explain the IUL",l:[
 {t:"say",x:"So this one builds cash value based on a market index, like the S&amp;P 500, without your money being directly invested in the market. When the market goes up, your policy participates. When it goes down, you cannot go down &mdash; so you never lose money."},
@@ -3607,6 +3616,18 @@ m_ed_term:{s:"10",t:"Explain term &mdash; honestly",l:[
 {t:"say",x:"The tradeoff is that it covers you for a set number of years and then it ends. So we want to make sure the term we pick actually runs as long as the mortgage does &mdash; otherwise you're exposed right when it would cost the most to fix."},
 {t:"ask",x:"Does that make sense?"},
 {t:"say",x:"And this doesn't close any doors. When things change, we can look at converting it or adding to it. That's a phone call, not a whole new process."}
+],b:[{k:"Next",to:"m_benefits",c:"go"}]},
+
+m_ed_cbo:{s:"10",t:"Explain the cash-back plan",l:[
+{t:"say",x:"So this one works a little differently, and I think it fits what you told me. It protects the house exactly the same way &mdash; if something happens to you, ___(beneficiary / spouse) gets the full amount and the mortgage is handled."},
+{t:"say",x:"The difference is two things. First, while you're still here. If you got hurt or sick and couldn't do your job for a while, this one covers your monthly mortgage payment for you. Nothing else I could show you does that. Everything else pays out when you die &mdash; this one also shows up while you're alive."},
+{t:"say",x:"And second, at the end of the term you get your premiums back. So if you outlive this plan &mdash; which I very much hope you do &mdash; you're not out the money. It comes back to you, and most folks put it straight at the house."},
+{t:"ask",x:"Does that make sense so far?"},
+{t:"say",x:"Now, it does cost a bit more each month than a plain plan, and I'd rather tell you that myself than have you spot it. That's because it's building toward the money coming back to you. You're not paying more for the same thing &mdash; you're paying more for the part that comes back."},
+{t:"dobig",x:"<b>Say the price difference before they find it.</b> The entire sale rests on them understanding that the extra premium <i>is</i> the refund. A client who works that out for themselves, after you skated past it, stops trusting everything else you said on the call."},
+{t:"warn",x:"<b>Three things you say out loud, every single time.</b><br>&mdash; <b>Base premiums</b> come back. Policy fees and most riders do not.<br>&mdash; It only comes back if the policy <b>goes the full term</b>. Lapse it or cancel it and the return is gone, which is exactly why this is wrong for a stretched budget.<br>&mdash; It comes back in the <b>same dollars they paid in</b>. No interest, no growth. It is a refund, not an investment, and calling it anything else is how you lose them twenty years from now."},
+{t:"warn",x:"<b>Confirm they're working before you promise the payment benefit</b>, and have the current rider in front of you before you quote a benefit period or an elimination period. Say what it does; do not say how many months until you have read it."},
+{t:"note",x:"Full conditions, the sizing method and the answer to the paydown objection are in the <b>Cash-Back Option</b> panel at the bottom of this screen."}
 ],b:[{k:"Next",to:"m_benefits",c:"go"}]},
 
 m_benefits:{s:"10",t:"Policy benefits",l:[
@@ -3684,6 +3705,7 @@ m_quote_time:{s:"11",t:"The three plans &mdash; buying time",l:[
 {t:"say",x:"<b>Option B</b> is the one most clients pick. Here's why. If something happens to you, the bank isn't going to ring up and demand the whole loan. What they want is next month's payment, and the one after that. B gives ___(beneficiary / spouse) a solid couple of years of those payments completely covered, plus final expenses &mdash; enough time to grieve, work out what's right, and sell or refinance without panicking. <b>Your family decides what happens to this home, not your lender.</b> Does that make sense?"},
 {t:"dobig",x:"&ldquo;Your family decides what happens to this home, not your lender&rdquo; is the best sentence on this card. It is the entire product in one line, it is completely accurate, and it sells control rather than fear. Slow down on it."},
 {t:"say",x:"<b>Option C</b> is the floor &mdash; final expenses covered and at least six months to a year of payments handled. No foreclosure, no losing the equity, and the family still has time. Any questions for me?"},
+{t:"note",x:"<b>On a genuinely thin budget, stop calling it the floor and call it equity protection.</b> &ldquo;You can't qualify for the bigger plan, but what if I could show you how to buy ___(beneficiary / spouse) time? ___(option C) divided by your payment is how many months they get &mdash; enough to get through probate, list this house properly, and walk away with your ___(equity) instead of losing it to a forced sale.&rdquo; Sold that way it stops being a consolation prize and becomes the point."},
 {t:"say",x:"And all three carry the same living benefits we wrote down, so none of these is only about dying."},
 {t:"say",x:"So, assuming we get you approved &mdash; <b>Option A</b> would be ___(option A monthly) a month. <b>Option B</b>, ___(option B monthly) a month. And <b>Option C</b>, ___(option C monthly) a month."},
 {t:"dobig",x:"Say the three prices in one breath and then stop talking. The first person to speak after the numbers loses, and you have already told them which one you recommend &mdash; it does not need defending twice."},
@@ -4920,9 +4942,12 @@ function pBlank(lab){
     return ""; }
   var k=BLANKMAP[lab]; if(!k) return ""; if(k==="a_full") k="a_name"; return pVal(k); }
 
+/* Same agent details as MyPOP Pro's Agent Information (Jesse, 9 Oct): set them once here and they ride
+   over with every client - website and booking link go into the client emails and the post-call text. */
 var AGENT_SPEC=[
  {k:"a_name",l:"Your full name",w:1},{k:"a_agency",l:"Your agency",w:1},{k:"a_npn",l:"Your NPN",w:1},
- {k:"a_phone",l:"Your direct number",w:1},{k:"a_email",l:"Your email",w:1}
+ {k:"a_phone",l:"Your direct number",w:1},{k:"a_email",l:"Your email",w:1},
+ {k:"a_web",l:"Your website",w:1},{k:"a_book",l:"Your booking link",w:1}
 ];
 var PROFILE_ON=false;
 var PKEY="osn_profile_v1", AKEY="osn_agent_v1", P={}, A={}, PSAVE=null;
@@ -6201,6 +6226,7 @@ function popStateFile(){
   var ag=popAgent();
   var o={
     agency:ag.agency||undefined, agentPhone:ag.phone||undefined, agentEmail:ag.email||undefined,
+    agentNPN:ag.npn||undefined, agentWebsite:ag.website||undefined, agentBooking:ag.booking||undefined,
     client:{ agent:ag.name||"", pname:full(c.first,c.last), sname:full(sp.first,sp.last),
              date:c.dob, dob:c.dob, page:String(c.age||""), age:String(c.age||""),
              sdob:sp.dob||"", sage:String(sp.age||""), state:c.state, zip:c.zip },
@@ -6320,7 +6346,7 @@ function fromPopPro(o){
 function popAgent(){
   var g=function(k){ return String(pVal(k)||"").trim(); };
   return { name:g("a_name"), agency:g("a_agency"), npn:g("a_npn"),
-           phone:g("a_phone"), email:g("a_email") };
+           phone:g("a_phone"), email:g("a_email"), website:g("a_web"), booking:g("a_book") };
 }
 function popFile(){
   var d=new Date(), pad=function(n){return (n<10?"0":"")+n};
