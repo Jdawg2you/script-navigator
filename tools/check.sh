@@ -164,6 +164,15 @@ if [ "$FAIL" -eq 0 ]; then
   fi
 fi
 
+# ---- the big medication list (meds/fda-meds.json) must be the same file everywhere ----
+# Built by POP Pro's tools/build-fda-meds.py and copied here; a stale copy would offer different names.
+if [ ! -f meds/fda-meds.json ]; then
+  echo "FAIL  meds/fda-meds.json is missing - the medication type-ahead has no big list"; FAIL=1
+elif [ -f "$HOME/Documents/poppro/tool/meds/fda-meds.json" ]; then
+  if cmp -s meds/fda-meds.json "$HOME/Documents/poppro/tool/meds/fda-meds.json"; then echo "ok    meds/fda-meds.json matches POP Pro"
+  else echo "FAIL  meds/fda-meds.json differs from POP Pro ($HOME/Documents/poppro/tool/meds/fda-meds.json) - copy the newer one over"; FAIL=1; fi
+fi
+
 echo
 if [ "$FAIL" -eq 0 ]; then
   echo "PASS  $N script block(s) parse; every branch and section entry resolves."

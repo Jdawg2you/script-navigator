@@ -581,6 +581,7 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .medsug button{appearance:none;cursor:pointer;font-family:var(--sans);font-size:12px;color:var(--blue);
   background:#fff;border:1px solid var(--rule);border-radius:5px;padding:3px 9px}
 .medsug button:hover{background:var(--bluesoft);border-color:var(--blue)}
+.medsug button.medtyped{border-style:dashed;font-weight:600}
 .refrow{align-items:flex-end}
 /* A word sitting in the run of chips - same weight as the options beside it, so it reads as
    part of the row rather than as a heading. */
@@ -5213,16 +5214,47 @@ document.addEventListener("click",function(e){
 });
 
 
+/* ===== The big medication list (MED-FDA) =====
+   meds/fda-meds.json: every prescription brand and generic on the FDA NDC directory, generic vs brand from
+   the latest CMS NADAC week. Built by POP Pro's tools/build-fda-meds.py; the same file and this same block
+   are in POP Pro, the navigator and the wizard. Rows are [name, other name, 'g'|'b'].
+   These names are found and recorded, but never linked to a condition - that stays MEDS/MED_FOR, which
+   always rank first. Anything can still be added exactly as typed. */
+var MED_FDA=[], MED_FDA_BY={};
+function medFdaLoad(done){ if(!window.fetch) return; fetch('meds/fda-meds.json').then(function(r){ return r.json(); }).then(function(d){
+    MED_FDA=(d.meds||[]).map(function(r){ return {r:r, n:r[0].toLowerCase(), o:(r[1]||'').toLowerCase(), k:medKey(r[0]), k2:medKey2(r[0])}; });
+    MED_FDA_BY={}; MED_FDA.forEach(function(x){ MED_FDA_BY[x.n]=x.r; }); if(done) done(); }).catch(function(){}); }
+function medFdaRow(n){ return MED_FDA_BY[String(n||'').trim().toLowerCase()]||null; }
+/* Core dictionary first, then the big list. sure = the typed word is in the name; sounds-like guesses
+   (a misspelling) only show when nothing contains what was typed. */
+function medSuggestAll(q,limit){ limit=limit||8; var t=String(q||'').trim(), lt=t.toLowerCase(); if(t.length<2) return [];
+  var out=[], had={}, core={};
+  MEDS.forEach(function(r){ r.forEach(function(n){ core[n.toLowerCase()]=1; }); });
+  var add=function(label,other,src,sure){ var k=label.toLowerCase(); if(had[k]) return; had[k]=1; out.push({label:label,other:other,src:src,sure:sure}); };
+  medSuggest(t,limit).forEach(function(h){ add(h,'','core',medRow(h).some(function(n){ return n.toLowerCase().indexOf(lt)>=0; })); });
+  if(MED_FDA.length){ var kt=medKey(t), k2=medKey2(t), sc=[];
+    MED_FDA.forEach(function(x){ if(core[x.n]) return;
+      var s=x.n===lt?0:x.n.indexOf(lt)===0?1+x.n.length/1000:x.o.indexOf(lt)===0?2:x.n.indexOf(lt)>0?3:x.o.indexOf(lt)>0?3.5:
+        (kt.length>=3&&x.k.indexOf(kt)===0)?4+Math.abs(x.k.length-kt.length)/10:(k2.length>=3&&x.k2.indexOf(k2)===0)?6+Math.abs(x.k2.length-k2.length):-1;
+      if(s>=0) sc.push([s,x]); });
+    sc.sort(function(a,b){ return a[0]-b[0]; }).slice(0,limit*2).forEach(function(p){ add(p[1].r[0],p[1].r[1],'fda',p[0]<4); }); }
+  var sure=out.filter(function(h){ return h.sure; });
+  return (sure.length?sure:out.slice(0,4)).slice(0,limit); }
+medFdaLoad();
 document.addEventListener("input",function(e){
   if(!e.target.classList || !e.target.classList.contains("medinput")) return;
   var sg=e.target.parentNode.querySelector(".medsug"); if(!sg) return;
-  var hits=medSuggest(e.target.value,8);
-  sg.innerHTML=hits.map(function(h){return '<button type="button" data-medadd="'+esc(h).replace(/"/g,"&quot;")+'">'+esc(medOption(h,e.target.value))+'</button>';}).join("");
+  var q=e.target.value.trim(), hits=medSuggestAll(q,8), exact=hits.some(function(h){ return h.label.toLowerCase()===q.toLowerCase(); });
+  sg.innerHTML=hits.map(function(h){ var lab=h.src==="core"?esc(medOption(h.label,q)):esc(h.label)+(h.other?' ('+esc(h.other)+')':'');
+      return '<button type="button"'+(h.sure?' data-medsure="1"':'')+' data-medadd="'+esc(h.label).replace(/"/g,"&quot;")+'">'+(h.sure?'':'did you mean ')+lab+'</button>'; }).join("")
+    /* anything can be added exactly as typed - never forced to pick from the list */
+    +(q.length>=2&&!exact?'<button type="button" class="medtyped" data-medadd="'+esc(q).replace(/"/g,"&quot;")+'">+ Add “'+esc(q)+'” as typed</button>':'');
 });
 document.addEventListener("keydown",function(e){
   if(!e.target.classList || !e.target.classList.contains("medinput")) return;
   if(e.key==="Enter"){ e.preventDefault();
-    var sg=e.target.parentNode.querySelector(".medsug"), first=sg&&sg.querySelector("[data-medadd]");
+    /* Enter takes the first CONFIDENT match only - a sound-alike guess never gets added by Enter */
+    var sg=e.target.parentNode.querySelector(".medsug"), first=sg&&sg.querySelector("[data-medsure]");
     medAdd(first? first.getAttribute("data-medadd") : e.target.value.trim(), e.target, e.target.value);
   }
 });
