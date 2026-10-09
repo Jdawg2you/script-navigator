@@ -2905,6 +2905,7 @@ hs_why_losing:{s:"2",pf:"current",t:"Losing coverage",l:[
 {t:"do",x:"Past tense throughout. They are describing something they are about to lose, and it is easier to talk about than a plan they are defending."},
 {t:"ask",x:"Who's your current carrier? ___(current carrier) &mdash; and do you know what the plan's called? ___(plan name)"},
 {t:"ask",x:"What are you paying for that out of pocket? ___(they pay)"},
+{t:"ask",x:"And you're still paying that today &mdash; it hasn't ended? {{cur_paying}}"},
 {t:"ask",x:"And do you know what your employer puts in on top of that? ___(employer pays) &mdash; so the real cost is ___(total cost)."},
 {t:"do",x:"The employer's share is the number that makes a private plan look reasonable later. Most people have never added the two together."},
 {t:"ask",x:"What's the deductible on it? ___(deductible) &mdash; and the most you could pay in a year, the out-of-pocket max? ___(out-of-pocket max)"},
@@ -2924,6 +2925,7 @@ hs_current:{s:"2",pf:"current",t:"What they have now",l:[
 {t:"say",x:"Okay &mdash; before I show you anything, let me understand what you've got, so I'm comparing like for like."},
 {t:"ask",x:"Who's your current carrier? ___(current carrier) &mdash; and do you know what the plan's called? ___(plan name)"},
 {t:"ask",x:"What are you paying for that out of pocket? ___(they pay)"},
+{t:"ask",x:"And you're still paying that today &mdash; it hasn't ended? {{cur_paying}}"},
 {t:"ask",x:"And do you know what your employer puts in on top of that? ___(employer pays) &mdash; so the real cost is ___(total cost)."},
 {t:"do",x:"The employer's share is the number that makes a private plan look reasonable later. Most people have never added the two together."},
 {t:"ask",x:"What's the deductible on it? ___(deductible) &mdash; and the most you could pay in a year, the out-of-pocket max? ___(out-of-pocket max)"},
@@ -4651,6 +4653,7 @@ PF_SPEC_HEALTH=[
  {k:"cur_ded",l:"Deductible",money:"plain",w:1},
  {k:"cur_visits",l:"Doctor visits a year",w:1},{k:"cur_copay",l:"Copay",money:"plain",w:1},
  {k:"cur_oop",l:"Out-of-pocket max",money:"plain",w:1},
+ {k:"cur_paying",l:"Paying for it right now?",w:1,opt:["","Yes","No"]},
  {k:"cur_is_aca",drives:true,l:"Marketplace (ACA) plan?",w:1,opt:["","No","Yes"]},
  {k:"cur_subsidy",l:"Subsidy they get now",money:"plain",w:1,showIf:["cur_is_aca","Yes"]},
  {k:"has_hsa",l:"Have an HSA?",w:1,opt:["","No","Yes"]},
@@ -6107,7 +6110,7 @@ function popClient(){
       hospStay2:yn(P.hosp_stay), spStayWhat:P.sp_stay_what||"",
       married:P.married||"", kidsCount:P.kids||"",
       losing:P.losing||"", nextSame:P.next_same||"",
-      curOop:P.cur_oop||"", curIsAca:P.cur_is_aca||"", curSubsidy:P.cur_subsidy||"", hasHsa:P.has_hsa||"",
+      curOop:P.cur_oop||"", curIsAca:P.cur_is_aca||"", curPaying:P.cur_paying||"", curSubsidy:P.cur_subsidy||"", hasHsa:P.has_hsa||"",
       pregnant:P.pregnant||"", spPregnant:P.sp_pregnant||"", planned:P.planned||"",
       empOffer:P.emp_offer||"", lifeNow:P.life_now||"", billTomorrow:P.bill_tomorrow||"", bankKind:P.bank_kind||"",
       apptDate:P.appt_date||"", apptTime:P.appt_time||"",
@@ -6224,6 +6227,7 @@ function fromPopPro(o){
   var Cu=o.cur||{};
   put("cur_prem", Cu.prem); put("cur_emp_prem", Cu.emp); put("cur_ded", Cu.ded); put("cur_oop", Cu.oop);
   put("cur_copay", Cu.copay); put("cur_visits", I.visits);
+  if(Cu.paying===true) out.cur_paying="Yes"; else if(Cu.paying===false) out.cur_paying="No";
   if(Cu.isAca===true){ out.cur_is_aca="Yes"; var sub=((o.acaIn||{}).ov||{}).subsidy; put("cur_subsidy", sub); }
   else if(Cu.isAca===false && (Cu.prem||Cu.ded)) out.cur_is_aca="No";
   if(I.dv) out.want_dental="Yes";
