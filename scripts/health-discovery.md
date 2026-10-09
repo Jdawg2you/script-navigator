@@ -38,6 +38,10 @@ Pulled from three sources and your own recorded calls:
 > *(listen — take real notes, these are the words you'll use back at them in the presentation)*
 >
 > "Was it more about the cost, the coverage, or something else that made you say *this isn't working*?"
+>
+> "And when you picture the right plan — what's the one thing it has to do for you?"
+>
+> *(write this one short, in their words — "keep Dr. Patel", "never get wiped out by a hospital bill". It's the line you read back on the presentation; the story above is context for you.)*
 
 *Whatever they say, they're right. Agree with them. This is the emotional reason they'll buy, and you'll repeat it back on the presentation call.*
 

@@ -2864,7 +2864,7 @@ hs_qualify_first:{s:"2",t:"Qualify first",l:[
 hs_found:{s:"2",pf:"why",t:"\u201cI already found something great\u201d",l:[
 {t:"say",x:"That's genuinely good to hear &mdash; most people I speak to haven't."},
 {t:"ask",x:"So I'm not wasting your time: what did you land on, and what are you paying for it?"},
-{t:"pf",ks:["why_note"]},
+{t:"pf",ks:["found_plan"]},
 {t:"do",x:"Write down what they say. You are deciding in the next thirty seconds whether there is a reason to keep going, and if there isn't you end the call cleanly and quickly."},
 {t:"train",x:"<b>Do not argue with their plan.</b> They just told you they solved the problem you rang about. Arguing makes you the pushy agent. The only honest reasons to keep talking are that something is <i>missing</i>, not that what they have is bad."},
 {t:"dobig",x:"Four things worth one question each. Stop at the first no."},
@@ -2895,6 +2895,9 @@ hs_why:{s:"2",pf:"why",t:"Why they're shopping",l:[
 {t:"pf",ks:["why_note"]},
 {t:"do",x:"Whatever they say, they're right. Agree. You'll say it back to them on the presentation."},
 {t:"ask",x:"Was it the cost, the coverage, or something else that made you realise what you've got going on isn't working?"},
+{t:"ask",x:"And when you picture the right plan &mdash; what's the one thing it has to do for you?"},
+{t:"pf",ks:["why_matters"]},
+{t:"do",x:"Write it <b>short and in their words</b> &mdash; &ldquo;keep Dr. Patel&rdquo;, &ldquo;never get wiped out by a hospital bill&rdquo;. This is the line you read back to them on the presentation; the story above stays in the box for you."},
 {t:"warn",x:"<b>Only skip that second question if they're losing it through work.</b> That is the reason, and you already have it. Anything else &mdash; cost, a rate rise, a network change, a claim that didn't pay &mdash; and you dig until you know what actually broke. That answer is the why you sell back to them later."}
 ],bh:"What did they say?",b:[
 {k:"Cost, coverage, something else",to:"hs_current",c:"go"},
@@ -4695,7 +4698,9 @@ PF_SPEC_HEALTH=[
  {k:"kids_health",l:"Kids \u2014 health, medications, anything to know",type:"area",w:3},
 
  {sec:"Why they're looking",id:"why"},
- {k:"why_note",l:"Why they need this coverage",hint:"in general / now / what changed",type:"area",w:3},
+ {k:"why_matters",l:"What matters most &mdash; their words",hint:"short: the one thing the plan has to do &mdash; read back on the presentation",w:3},
+ {k:"why_note",l:"What prompted it / current-plan pain",hint:"the story: what changed, cost, coverage, a claim that didn't pay",type:"area",w:3},
+ {k:"found_plan",l:"Plan they already found",hint:"what they landed on and what it costs",w:3},
  {k:"losing",drives:true,l:"Losing coverage \u2014 done deal?",w:1,opt:["","Yes","No"]},
  {k:"last_day",l:"Last day of cover",w:1,showIf:["losing",["Yes","No"]]},
  {k:"start_when",l:"Wants cover to start",w:1},
@@ -6141,7 +6146,7 @@ function popClient(){
       protectable:P.asset_prot||"", invnote:P.asset_notes||"",
       budgetComfort:P.budget_comfort||"", budgetMax:P.budget_max||"",
       healthNotes:P.health_notes||"", healthOther:P.health_other||"",
-      whyShop:P.why_note||"", effDate:dt(P.start_when), lastDay:dt(P.last_day),
+      whyShop:P.why_note||"", whyMatters:P.why_matters||"", foundPlan:P.found_plan||"", effDate:dt(P.start_when), lastDay:dt(P.last_day),
       /* The booked presentation. POP Pro has a follow-up notes box that is exactly where an
          agent looks for "when am I seeing this person again". */
       apptWhen:P.appt_when||"", apptWho:P.appt_who||"", apptNotes:P.appt_notes||"",
@@ -6200,7 +6205,7 @@ function popStateFile(){
       pincome:n(h.incomeThis), sincome:n(h.incomeSpouse), income:n(h.incomeHousehold),
       retage:h.retireAge||"", savings:n(h.liquid), invest:n(h.invest),
       invprot:h.invprot===true, invnote:h.invnote||"",
-      budget:n(h.budgetMax)||n(h.budgetComfort), whyShop:h.whyShop||"",
+      budget:n(h.budgetMax)||n(h.budgetComfort), whyShop:h.whyShop||"", whyMatters:h.whyMatters||"", foundPlan:h.foundPlan||"",
       effDate:h.effDate||"", surg2yrP:h.surgery===true,
       conds:(c.conds||[]).map(function(x){ return {name:x.name, yr:x.yr||"", mo:x.mo||""}; }),
       medSkip:(c.medSkip||[]).slice(),
@@ -6275,7 +6280,7 @@ function fromPopPro(o){
   put("mh_needs", I.mentalP?"Yes":"");    put("sp_mh_needs", I.mentalS?"Yes":"");
   put("mat_needs", I.maternityP?"Yes":"");put("sp_mat_needs", I.maternityS?"Yes":"");
   put("recent_stay", I.surg2yrP?"Yes":"");put("sp_recent_stay", I.surg2yrS?"Yes":"");
-  put("notes", I.notes); put("why_note", I.whyShop); put("start_when", I.effDate);
+  put("notes", I.notes); put("why_note", I.whyShop); put("why_matters", I.whyMatters); put("found_plan", I.foundPlan); put("start_when", I.effDate);
   put("kids_health", I.kidsHealth||I.kidsNote);
   put("budget_comfort", I.budgetComfort); put("occupation", I.occupation);
   /* POP Pro B keeps the current plan in its own section (o.cur) and the children as rows. */
