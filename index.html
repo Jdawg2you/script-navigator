@@ -3325,13 +3325,16 @@ m_home:{s:"5",t:"The mortgage",l:[
 {t:"say",x:"Alright ___(name), let's take a quick look at the home and the mortgage so I have the full picture."},
 {t:"ask",x:"How much is the mortgage? &hellip; What's the term, 15 or 30 years? &hellip; What's the interest rate?"},
 {t:"ask",x:"Did you refinance or purchase &mdash; and when?"},
-{t:"ask",x:"What's the current value of the home? &hellip; And how much do you have left to pay off?"},
+{t:"ask",x:"And hypothetically speaking &mdash; if you were to put the home on the market today, what do you think it would sell for?"},
+{t:"do",x:"&ldquo;Hypothetically&rdquo; is doing real work in that sentence. &ldquo;What's your home worth?&rdquo; sounds like an assessment and people answer it low and defensively. &ldquo;If you put it on the market today&rdquo; is a daydream, and people answer that one high and happily &mdash; which is the number you want, because the whole call runs on the equity."},
+{t:"ask",x:"And how much do you have left to pay off on it?"},
 {t:"ask",x:"What's your monthly payment? Are you making any extra payments to pay it off early?"},
 {t:"dobig",x:"Write down the monthly payment and the equity number. You will use both of them repeatedly for the rest of the call."}
 ],b:[{k:"Next",to:"m_equity",c:"go"}]},
 
 m_equity:{s:"5",t:"The equity",l:[
 {t:"ask",x:"So is it safe to say you've got about ___(equity amount) in equity in the home?"},
+{t:"do",x:"<b>If they lowballed the value, nudge it up before you agree with it.</b> &ldquo;Really? I'd have guessed a place like that goes for at least a bit more than that these days.&rdquo; People correct upward happily and they own the bigger number because they said it. Nudge up, never down &mdash; talking their own equity down is the one move that costs you the rest of the call."},
 {t:"say",x:"Congratulations &mdash; truly. That is remarkable, to build that much value in your home. That's something worth protecting."},
 {t:"dobig",x:"Mean it. This is often the largest thing they've ever built, and almost nobody has ever congratulated them for it. This single moment changes the temperature of the whole call."},
 {t:"note",x:"<b>The equity number is the engine of this script.</b> Everything from here &mdash; the why, the concept, the quote &mdash; runs on the idea that the bank can take it. Get the number and say it back to them."}
@@ -3361,7 +3364,9 @@ m_policy_pull:{s:"5",t:"Get the policy in their hands",l:[
 
 m_workprivate:{s:"5",t:"Work vs. private coverage",l:[
 {t:"note",x:"<b>If it's through work:</b>"},
-{t:"say",x:"Work insurance is great while you have it. But keep in mind &mdash; if you get seriously sick, if your hours get cut, if you change jobs, or if you hit retirement, that coverage usually disappears. So we don't want to count on that for protecting the home."},
+{t:"say",x:"It's great to have those benefits on the job, truly. But here's the thing &mdash; when you leave the job, or the job leaves you, you typically lose most if not all of it. And nobody ever plans for the second one."},
+{t:"do",x:"&ldquo;When you leave the job or the job leaves you&rdquo; is the whole argument in nine words. It covers quitting, retiring, layoffs, and getting too sick to work, without you having to list any of them or sound like you are predicting something bad."},
+{t:"say",x:"So I can absolutely understand why you'd be looking at something private. That's what we don't want to count on for the home."},
 {t:"note",x:"<b>If it's private:</b>"},
 {t:"say",x:"Private coverage is a great start. But most of the time what folks have privately is just enough to cover final expenses &mdash; not enough to actually protect the mortgage."},
 {t:"ask",x:"Is that the case for you, or does what you have actually cover the home if something happens?"},
@@ -3497,7 +3502,13 @@ m_margin:{s:"8",t:"The margin",l:[
 m_h_intro:{s:"9",t:"Health &mdash; transition",l:[
 {t:"say",x:"Now just a few basic health questions so I can find something you're likely to qualify for."},
 {t:"note",x:"<b>If married and both are being covered, ask all of this for the spouse too.</b>"},
-{t:"ask",x:"What's your height and weight?"}
+{t:"ask",x:"When was the last time you saw your doctor? &hellip; Was that just a routine check-up? &hellip; So you're going at least once a year."},
+{t:"do",x:"Open here, not on conditions. It is the easiest question in the section, it establishes that someone is looking after them, and a client who answers three soft questions keeps answering. Going in with &ldquo;any heart attacks?&rdquo; makes the next ten minutes feel like an interrogation."},
+{t:"ask",x:"And any medications you're prescribed or taking daily at this point?"},
+{t:"ask",x:"Now, any past or current scares? And what I mean by that is cancers, heart attacks, strokes, stents, pacemakers &mdash; anything along those lines."},
+{t:"dobig",x:"<b>&ldquo;Any past or current scares&rdquo; outperforms the clinical version.</b> People will tell you about a scare. They will not always tell you about a &ldquo;cardiac event,&rdquo; because the formal word makes it sound like something they are being graded on. You still name the conditions right after it, so nothing is lost."},
+{t:"note",x:"<b>If a scare comes back, go straight at the outcome:</b> &ldquo;Tell me a little about the aftermath &mdash; was there any lasting damage from it?&rdquo; That one word, <i>aftermath</i>, gets you the underwriting answer. No damage and nothing since is a completely different case from ongoing treatment, and you want to know which one you have before you quote."},
+{t:"ask",x:"And what's your approximate height and weight?"}
 ],b:[{k:"Next",to:"m_h_heart",c:"go"}]},
 
 m_h_heart:{s:"9",t:"Heart",l:[
@@ -3528,7 +3539,8 @@ m_h_mental:{s:"9",t:"Mental health",l:[
 m_h_rest:{s:"9",t:"Recent history",l:[
 {t:"ask",x:"Any major surgeries in the last five years? Any overnight hospital stays recently?"},
 {t:"ask",x:"Have you had COVID in the past two years &mdash; were you hospitalized for it?"},
-{t:"ask",x:"Anything else medically I should know about?"}
+{t:"ask",x:"Anything else from a health history standpoint that you think would be important for me to know &mdash; or does that about wrap it up for you?"},
+{t:"do",x:"Give them both doors. &ldquo;Anything else?&rdquo; on its own is a question people answer &ldquo;no&rdquo; to reflexively, just to be finished. Offering &ldquo;or does that wrap it up&rdquo; makes stopping the explicit choice, and the ones with something left to say will take the first door."}
 ],b:[{k:"Next",to:"m_h_meds",c:"go"}]},
 
 m_h_meds:{s:"9",pf:"health",t:"Medications",l:[
@@ -3594,12 +3606,21 @@ m_ed_term:{s:"10",t:"Explain term &mdash; honestly",l:[
 ],b:[{k:"Next",to:"m_benefits",c:"go"}]},
 
 m_benefits:{s:"10",t:"Policy benefits",l:[
-{t:"do",x:"Have them write this down under the heading &ldquo;Policy Benefits.&rdquo;"},
+{t:"say",x:"Before I show you anything &mdash; do you still have that pen and paper? Grab it for me, I'm going to have you write a few things down."},
+{t:"say",x:"And I always like to tell homeowners this up front. I'm sure this isn't something you talk about day in and day out, so as we go through it, there's no such thing as a silly question. Alright?"},
+{t:"dobig",x:"That line changes the next ten minutes. A client who has been told there are no silly questions asks them &mdash; and a client asking questions is engaged, instead of sitting quietly waiting for the price so they can say no to it."},
+{t:"do",x:"Have them write the heading at the top of the page, then this list underneath it."},
 {t:"say",x:"Permanent coverage &mdash; doesn't expire at 80 or 85 like most term policies."},
 {t:"say",x:"Locked-in rate &mdash; never increases."},
+{t:"say",x:"It pays the full amount no matter how much is left on the house. Say you've got this in place and years from now there's only $39,000 still owed. The whole benefit still goes to ___(beneficiary / spouse) &mdash; they clear the $39,000 and they keep the rest. It doesn't shrink as the mortgage does."},
+{t:"dobig",x:"<b>Almost no agent says this, and it answers the question most clients are quietly holding:</b> &ldquo;why would I insure the full balance when I'll owe far less later on?&rdquo; What you are selling is level coverage, not the decreasing kind the lender offers. Say it out loud and the all-or-nothing objection largely stops happening before it starts."},
+{t:"warn",x:"<b>Say it as the beneficiary receiving the money, never the lender.</b> Nothing is paid to the mortgage company. The death benefit goes to the people your client named, and they choose to clear the loan with it. That difference is the entire thing you are selling &mdash; your family decides what happens to this home, not your lender &mdash; so do not hand it away by phrasing it as the bank getting paid."},
 {t:"say",x:"Living benefits &mdash; access funds early if you're critically, chronically, or terminally ill."},
 {t:"say",x:"Tax-free &mdash; everything paid to your family is tax-free."},
 {t:"say",x:"Cash value &mdash; grows over time. Cash value is interest gifted to you by the insurance company. After a few years it begins to build, and you can withdraw it for expenses, though we don't recommend borrowing in the early years."},
+{t:"warn",x:"<b>Two things to keep straight when you describe the living benefits.</b><br>&mdash; <b>It is not the full face amount handed over on diagnosis.</b> Every rider caps what can be accelerated and most discount the advance. Say &ldquo;a significant portion of it&rdquo; unless you have the rider in front of you, and never promise a percentage you have not read.<br>&mdash; <b>The chronic trigger is two of six activities of daily living</b> &mdash; bathing, dressing, eating, getting in and out of a bed or chair, using the toilet, and continence &mdash; or cognitive impairment. &ldquo;Needing help with daily living&rdquo; is a fair way to put it to a client. &ldquo;One of six&rdquo; is not, and neither is naming a cancer stage, which varies by carrier."},
+{t:"note",x:"<b>If the product carries a disability or mortgage-payment rider, present it as the third pillar</b> &mdash; it is the one most agents leave in the brochure. &ldquo;And if something less severe happens &mdash; you break an arm, break a leg, you're in an accident, something that stops you doing your day-to-day work &mdash; they cover your monthly mortgage payment for you while you're out.&rdquo; <b>Read the rider first.</b> The benefit period, the elimination period, and whether taxes and insurance are included are all product-specific, and it generally requires full-time employment &mdash; so confirm they're working before you put it on the page."},
+{t:"note",x:"<b>Only on a cash-back or return-of-premium design</b> (Americo CBO, American Amicable with ROP) do you get to say: &ldquo;And if you outlive it, you're not losing what you put in &mdash; your base premiums come back to you.&rdquo; <b>Never say that about a standard permanent policy.</b> Cash surrender value is not a refund of premiums, it can be less than what they paid in, surrendering ends the coverage, and the gain can be taxable. The <b>Cash-Back Option</b> panel has the conditions."},
 {t:"say",x:"And all of this is about putting the proper plan in place so ___(beneficiary / spouse) doesn't lose this home. Make sense?"},
 {t:"dobig",x:"Recap based on what mattered most to them: keeping the family in the home, protecting the equity, keeping the payment low, leaving a legacy. Use their words."}
 ],b:[{k:"Next",to:"m_promise",c:"go"}]},
@@ -3623,21 +3644,36 @@ m_quote:{s:"11",t:"Which track are you presenting?",l:[
 {k:"Fixed income, tight, or health-limited",to:"m_quote_time",c:"go"}]},
 
 m_quote_work:{s:"11",t:"The three plans &mdash; working household",l:[
-{t:"say",x:"Here's how I want you to think about this. Every option protects your family the same way. The difference is whether it buys them time, or whether it ends the problem outright."},
-{t:"say",x:"<b>The Full Payoff.</b> ___(coverage) for ___(premium) a month. This is the one I'd put in front of you. If something happens to you, the mortgage is gone. Not covered for a while &mdash; gone. ___(beneficiary / spouse) owns this house outright, with no payment to make and nothing forcing a sale on anybody else's timetable."},
-{t:"say",x:"And at your age and your health, that's affordable &mdash; which is exactly why I asked about your budget the way I did. You have the room for it right now. In ten or fifteen years the same plan costs considerably more, and in twenty it may not be available to you at any price."},
-{t:"say",x:"<b>The Time Plan.</b> ___(coverage) for ___(premium) a month. If the full payoff is more than you want to commit to, this gives ___(beneficiary / spouse) a solid one to two years of payments covered plus final expenses. It buys them time rather than ending it, and the equity still stays with the family."},
-{t:"say",x:"<b>The Safety Net.</b> ___(coverage) for ___(premium) a month. That's the floor &mdash; final expenses and six months to a year of payments handled. No foreclosure and no lost equity, but your family is still selling the house."},
-{t:"dobig",x:"Recommend the full payoff out loud, and then stop talking. You worked their budget line by line, so you are not guessing that they can carry it &mdash; and an agent who recommends the smaller plan to a household that can obviously afford the bigger one reads as unsure of himself, not as considerate."},
-{t:"note",x:"<b>Still no losers.</b> If they step down to the Time Plan or the Safety Net, that is a good outcome and you treat it as one on the call. You led with the best option available to them. That is the job."},
-{t:"note",x:"Coverage math is in the <b>Coverage Math</b> panel at the bottom of this page. If they also told you they want the house paid off early, the <b>Cash-Back Option</b> panel is the other way to frame a full payoff for this exact profile."}
+{t:"warn",x:"<b>Coverage first for all three. Prices last, all together.</b> Walk every option for what it <i>does</i>, then give the three premiums in one breath at the end. Pair each number with its price as you go and they stop listening at option A and start doing arithmetic instead. This one change is worth more than any closing line in the script."},
+{t:"say",x:"Alright &mdash; pen and paper. At the top of the page, write <b>Permanent coverage</b>. Underneath that we're going to look at three options. We'll just call them A, B and C."},
+{t:"say",x:"Next to A write ___(option A). Next to B, ___(option B). And next to C, ___(option C)."},
+{t:"do",x:"Numbers only at this stage. Then walk them down the page one at a time, and finish each one with &ldquo;any questions for me there?&rdquo; rather than carrying on &mdash; it keeps them talking and it tells you which option landed."},
+{t:"note",x:"<b>Sizing on this track: A is the full balance, B is about two-thirds of it, C is about half.</b> All three are real plans. Nothing on this page is a token option, and that is exactly why a step down still feels like a decision rather than a defeat."},
+{t:"say",x:"<b>Option A</b> is a full payoff of the home as it stands today. If something happens to you, ___(beneficiary / spouse) has the entire mortgage covered. The house is theirs, free and clear, and nobody is making a payment on it. Any questions for me there?"},
+{t:"say",x:"And this is the one I'd put in front of you. At your age and your health it's affordable &mdash; which is exactly why I asked about your budget the way I did. You've got the room for it right now. In ten or fifteen years the same plan costs considerably more, and in twenty it may not be available to you at any price."},
+{t:"say",x:"<b>Option B.</b> Of course, you're paying this down every month, so you won't always owe the full balance. B covers about two-thirds of it. And remember &mdash; if something happens to you, the bank isn't going to ring up and demand the whole loan. What they want is next month's payment, and the one after that. This makes sure ___(beneficiary / spouse) has roughly twenty of those thirty years of payments sitting there, so <b>your family decides what happens to this home, not your lender.</b> Does that make sense?"},
+{t:"dobig",x:"&ldquo;Your family decides what happens to this home, not your lender&rdquo; is the best sentence on this card. It is the entire product in one line, it is completely accurate, and it sells control rather than fear. Slow down on it and let it sit."},
+{t:"say",x:"<b>Option C</b> is the same thing again, just covering about half the note. Death, illness, or a short-term disability &mdash; it's there for you and for the family. Any questions for me?"},
+{t:"say",x:"And all three carry the same living benefits we wrote down, so none of these is only about dying."},
+{t:"say",x:"So, assuming we get you approved &mdash; <b>Option A</b> would be ___(option A monthly) a month. <b>Option B</b>, ___(option B monthly) a month. And <b>Option C</b>, ___(option C monthly) a month."},
+{t:"dobig",x:"Say the three prices in one breath and then stop talking. The first person to speak after the numbers loses, and you have already told them which one you recommend &mdash; it does not need defending twice."},
+{t:"note",x:"<b>Still no losers.</b> If they step down to B or C, that is a good outcome and you treat it as one on the call. You led with the best option available to them, which is the job."},
+{t:"note",x:"Coverage math is in the <b>Coverage Math</b> panel at the bottom of this page. If they also told you they want the house paid off early, the <b>Cash-Back Option</b> panel is the other way to frame option A for exactly this profile."}
 ],b:[{k:"Next",to:"m_quote_ask",c:"go"}]},
 
 m_quote_time:{s:"11",t:"The three plans &mdash; buying time",l:[
-{t:"say",x:"Here's how I want you to think about this. Every option we're going to look at protects your family the same way &mdash; it just buys them more or less time."},
-{t:"say",x:"<b>The Full Payoff.</b> ___(coverage) for ___(premium) a month. This wipes the mortgage out completely. You can absolutely do this if you want &mdash; but you and I both know, at your age, that's a mortgage payment all over again. Most clients in your position don't go this route, but it's here as an option."},
-{t:"say",x:"<b>The Time Plan.</b> ___(coverage) for ___(premium) a month. This is the one most clients pick. It gives ___(beneficiary / spouse) a full one to two years of mortgage payments completely covered, plus final expenses. That's enough time to grieve, figure out next steps, and sell or refinance without panic &mdash; and the equity stays in the family."},
-{t:"say",x:"<b>The Safety Net.</b> ___(coverage) for ___(premium) a month. This is the floor. Final expenses are covered and ___(beneficiary / spouse) has at least six months to a year of payments handled. No foreclosure, no losing the equity, and the family has time to figure things out."},
+{t:"warn",x:"<b>Coverage first for all three. Prices last, all together.</b> Walk every option for what it <i>does</i>, then give the three premiums in one breath at the end. Pair each number with its price as you go and they stop listening at option A and start doing arithmetic instead. This one change is worth more than any closing line in the script."},
+{t:"say",x:"Alright &mdash; pen and paper. At the top of the page, write <b>Permanent coverage</b>. Underneath that we're going to look at three options. We'll just call them A, B and C."},
+{t:"say",x:"Next to A write ___(option A). Next to B, ___(option B). And next to C, ___(option C)."},
+{t:"do",x:"Numbers only at this stage. Then walk them down the page one at a time, and finish each one with &ldquo;any questions for me there?&rdquo; rather than carrying on &mdash; it keeps them talking and it tells you which option landed."},
+{t:"note",x:"<b>Sizing on this track is months of payments, not fractions of the balance.</b> A is the full payoff, B is roughly two years of payments plus final expenses, C is six to twelve months plus final expenses. On a fixed income the full balance genuinely is not affordable, so the job of the page is to make buying time look like the sensible answer that it is."},
+{t:"say",x:"<b>Option A</b> wipes the mortgage out completely. You can absolutely do this if you want &mdash; but you and I both know, at your age, that's a mortgage payment all over again. Most clients in your position don't go this route. It's on the page so you can see it. Any questions there?"},
+{t:"say",x:"<b>Option B</b> is the one most clients pick. Here's why. If something happens to you, the bank isn't going to ring up and demand the whole loan. What they want is next month's payment, and the one after that. B gives ___(beneficiary / spouse) a solid couple of years of those payments completely covered, plus final expenses &mdash; enough time to grieve, work out what's right, and sell or refinance without panicking. <b>Your family decides what happens to this home, not your lender.</b> Does that make sense?"},
+{t:"dobig",x:"&ldquo;Your family decides what happens to this home, not your lender&rdquo; is the best sentence on this card. It is the entire product in one line, it is completely accurate, and it sells control rather than fear. Slow down on it."},
+{t:"say",x:"<b>Option C</b> is the floor &mdash; final expenses covered and at least six months to a year of payments handled. No foreclosure, no losing the equity, and the family still has time. Any questions for me?"},
+{t:"say",x:"And all three carry the same living benefits we wrote down, so none of these is only about dying."},
+{t:"say",x:"So, assuming we get you approved &mdash; <b>Option A</b> would be ___(option A monthly) a month. <b>Option B</b>, ___(option B monthly) a month. And <b>Option C</b>, ___(option C monthly) a month."},
+{t:"dobig",x:"Say the three prices in one breath and then stop talking. The first person to speak after the numbers loses, and you have already told them which one you recommend &mdash; it does not need defending twice."},
 {t:"note",x:"<b>There are no losers in this lineup.</b> Even the smallest option prevents the foreclosure and saves the equity. That's why you can present all three without any of them feeling like a consolation prize."},
 {t:"note",x:"Coverage math is in the <b>Coverage Math</b> panel at the bottom of this page."}
 ],b:[{k:"Next",to:"m_quote_ask",c:"go"}]},
@@ -3696,7 +3732,9 @@ m_obj_high:{s:"11",t:"&ldquo;That's too high&rdquo;",l:[
 
 /* ---------- 12 APPLICATION ---------- */
 m_app_intro:{s:"12",t:"What happens now",l:[
-{t:"say",x:"Okay, we're nearly there. Here's what happens now &mdash; I'm going to fill this out with you. It takes about five minutes, and then it goes to underwriting for their decision."},
+{t:"say",x:"Okay, we're nearly there. Like I mentioned at the start &mdash; my job is to show you what I believe you qualify for. I don't make that final call."},
+{t:"say",x:"So it's a short application, and I have to ask everybody the exact same questions. From there it goes up to senior underwriting for the final approval, and we usually have a decision back &mdash; if not today, then within about one to five business days."},
+{t:"dobig",x:"&ldquo;I don't make that final call&rdquo; does two jobs at once. It takes you out of the role of the person deciding, which removes the thing they would otherwise be resisting &mdash; and it pre-frames a decline as the carrier's answer rather than yours. Say it before the application, not after a turndown."},
 {t:"say",x:"It's your basic information, then your beneficiary, then a couple of verification steps. There's no medical exam on this &mdash; the way they verify everything instead is with your social, to confirm you're you and to check your records."},
 {t:"say",x:"Here's exactly what the insurance company wants to know, so none of it surprises you. One, who the insured is &mdash; your full legal name, date of birth, address, phone, email and social. All of it has to match, because one day it has to match a death certificate, and if it doesn't they can't pay the claim. Two, who the beneficiary is &mdash; their full legal name and date of birth to match their licence, and a good number to reach them on. And three, how the premium gets paid, checking or savings."},
 {t:"ask",x:"Any questions about any of that before we start?"},
@@ -3710,6 +3748,8 @@ m_app_intro:{s:"12",t:"What happens now",l:[
 m_app:{s:"12",t:"Application, page one",l:[
 {t:"say",x:"Okay, we're nearly there. The next step is to collect a few final details to verify your identity and submit the request to underwriting."},
 {t:"say",x:"Let's go ahead and confirm the spelling of your full name. I've got ___(first name), and your last name is ___?"},
+{t:"say",x:"And bear with me as I go through this &mdash; none of these are meant to sound rhetorical. I just legally have to ask you."},
+{t:"do",x:"Use it the moment you have to ask something you obviously already know &mdash; their state, their own name, whether it is their own bank account. Without it, an obvious question makes you sound like you were not listening. With it, the same question sounds like compliance, and compliance is reassuring."},
 {t:"dobig",x:"On the first main page of the application, fill in everything you already have. Ask only for what you don't."},
 {t:"warn",x:"<b>Complete the entire page before you ask for the social.</b><br>If the SSN field sits in the middle of the page, skip past it, finish everything below it, then come back up to it."}
 ],b:[{k:"Ready for the social",to:"m_app_ssn",c:"go"}]},
@@ -3734,13 +3774,18 @@ m_app_auth1:{s:"12",t:"First authorization &mdash; the MIB pull",l:[
 {t:"say",x:"There's going to be a six-digit code in there. Don't tap anything, don't click anything &mdash; just read me those six digits."},
 {t:"ask",x:"Did it come through?"},
 {t:"dobig",x:"Walk them through it literally. Where to look, what number it comes from, what the message says."},
-{t:"note",x:"<b>You already tested this at credentials.</b> If they couldn't open a text then, you should be on a voice-signature carrier by now."}
+{t:"note",x:"<b>You already tested this at credentials.</b> If they couldn't open a text then, you should be on a voice-signature carrier by now."},
+{t:"say",x:"And just so you know exactly what you're doing when you give me that code. By providing it back to me, you understand and intend to be a party on an insurance application. You also understand that I won't have access to any of your medical or personal information, but the senior underwriting team may. If that's all fair and true, go ahead and read me those six digits."},
+{t:"dobig",x:"Say what the code actually authorises, every time, before they read it out to you. It takes nine seconds, it is the correct thing to do, and it sounds like a professional running a regulated process &mdash; which is exactly what &ldquo;just read me the code&rdquo; does not sound like when the client thinks about it afterwards."}
 ],b:[{k:"Got the code",to:"m_app_ben",c:"go"}]},
 
 m_app_ben:{s:"12",t:"Beneficiaries",l:[
 {t:"say",x:"For your beneficiary &mdash; this is the person or people who receive the money when that time comes. It can be changed later if you need to."},
 {t:"ask",x:"Can I get the correct spelling of their first and last name, their birthdate, and a phone number?"},
 {t:"note",x:"<b>If they don't know the birthdate, it's fine.</b> Only some carriers require it. But always get the phone number for any adult beneficiary &mdash; those are built-in referrals."},
+{t:"note",x:"<b>More than one beneficiary? Take them youngest to oldest, and say so out loud.</b> &ldquo;Let's start with your youngest.&rdquo; It gives you a fixed order, so with four or five names you never lose your place or enter anybody twice &mdash; and asking a parent to start with the baby of the family is a warmer minute than reciting a list."},
+{t:"ask",x:"And did you want them all on there as an even split &mdash; is that right?"},
+{t:"do",x:"Ask the split out loud rather than defaulting to it. Uneven splits are common, and they are awkward to correct after the policy issues."},
 {t:"ask",x:"And would you like to add a contingent beneficiary as well &mdash; just in case something happened to your primary?"},
 {t:"say",x:"Make sure you let ___(beneficiary) know they're listed."},
 {t:"dobig",x:"The beneficiary is your first referral. Get the phone number and write it down."}
@@ -3749,12 +3794,15 @@ m_app_ben:{s:"12",t:"Beneficiaries",l:[
 m_app_draft:{s:"12",t:"Draft date",l:[
 {t:"say",x:"Once you're approved they'll issue the coverage right away so you're protected immediately. Your first premium drafts in about one to two business days &mdash; that's what gets you covered."},
 {t:"say",x:"After that, your payment can either come one month later, or you can pick whatever day of the month works best going forward."},
-{t:"ask",x:"What would be best for you?"},
+{t:"ask",x:"Putting it through today would land your payment on roughly the ___(draft date) each month. Does that work well for you, or do you need a specific day?"},
+{t:"say",x:"And so you're clear on the timing &mdash; assuming approval, you'd see that first draft about 24 to 72 hours after the approval comes back, and then it recurs on that date from there on. Does that make sense?"},
+{t:"do",x:"Give the window, not a single day. &ldquo;24 to 72 hours after approval&rdquo; is true, it is specific, and it means your client is not sitting there on day two deciding something has gone wrong."},
 {t:"do",x:"Line the recurring draft up just after payday or the Social Security deposit. A date a few days before is the one that bounces."}
 ],b:[{k:"Next",to:"m_app_bank",c:"go"}]},
 
 m_app_bank:{s:"12",t:"Checking or savings",l:[
 {t:"ask",x:"Do you want this to come out of your checking or savings? And who do you bank with?"},
+{t:"note",x:"<b>If they offer a card:</b> &ldquo;The insurance companies don't take credit or debit cards on these &mdash; it's bank draft only, through a routing and account number. I wish they took cards, honestly. It'd make my life easier too.&rdquo; Then carry straight on. That small shared complaint keeps you on their side of a rule you did not write, instead of defending it."},
 {t:"do",x:"While they answer: search the bank name, their state, and &ldquo;routing.&rdquo; Have the number on your screen before the next question."}
 ],b:[{k:"Next",to:"m_app_routing",c:"go"}]},
 
@@ -3762,6 +3810,8 @@ m_app_routing:{s:"12",t:"Confirm the routing",l:[
 {t:"say",x:"Great &mdash; can you confirm the last four digits of your routing number? We always like to double-check, since a lot of banks have multiple routing numbers."},
 {t:"do",x:"Wait. Let them read the four digits back and confirm they match what you pulled up."},
 {t:"ask",x:"Perfect. And your account number?"},
+{t:"ask",x:"And I'm probably stating the obvious here, but I do have to state it &mdash; you're the holder on this account, is that right? And it's an individual account, not one tied to a business?"},
+{t:"do",x:"Same tool as the rhetorical line at 12.2, and this is the other place that needs it. Third-party payers and business accounts both cause problems after issue, so the question has to be asked &mdash; it just doesn't have to sound like suspicion."},
 {t:"note",x:"<b>You're not asking them to hand over a routing number.</b> You're asking them to confirm one you already have. Different act entirely."}
 ],b:[
 {k:"Got it",to:"m_app_esign",c:"go"},
@@ -3773,7 +3823,11 @@ m_app_bank_obj:{s:"12",t:"Banking objection",l:[
 ],b:[{k:"Got it",to:"m_app_esign",c:"go"}]},
 
 m_app_esign:{s:"12",t:"Final signature",l:[
-{t:"say",x:"They're going to send you one more code, just like before. Read me the six-digit code. Don't tap anything on your screen &mdash; just let me know what that code is."},
+{t:"say",x:"They're going to send you one more code, just like before. Don't tap anything on your screen &mdash; just read me the six digits."},
+{t:"say",x:"And same as last time, here's what you're agreeing to. By giving me that code, you understand and intend to be a party on an insurance application, and you've answered the questions to the best of your knowledge. And you understand that <b>only in the event of an approval</b> would you see a draft of ___(option A monthly), beginning 24 to 72 hours after that approval and recurring on the ___(draft date) each month after that. In the event of a declination, you'd see no activity at all on your account, and you and I would look in the next best direction together."},
+{t:"ask",x:"If that's all fair and true, go ahead and read me those six digits."},
+{t:"dobig",x:"<b>&ldquo;In the event of a declination you would see no activity on your account&rdquo; is the most valuable sentence in this section.</b> The unspoken worry at the signature is that they have just handed over bank details and money for something that might not even be approved. Answer it before they ask &mdash; and notice it also quietly promises a next step if the answer is no, which is how a decline stays a conversation instead of becoming a refund call."},
+{t:"warn",x:"<b>Say the premium they actually picked.</b> The blank above pulls option A. If they took B or C, say that number instead. Reading back a figure they did not agree to is how a signature gets withdrawn while you are still on the phone."},
 {t:"do",x:"This one signs the final application. Same process they already did once, so it should move fast."}
 ],b:[{k:"Submitted",to:"m_uw",c:"go"}]},
 
@@ -4807,6 +4861,7 @@ var BLANKMAP={
  "their state":"state","state":"state","branch":"branch","DOB":"dob",
  "spouse 2":"spouse","surviving spouse":"spouse",
  "their goal":"goal","their stated wish":"goal","max coverage":"opt1_cov","max monthly":"opt1_prem","recommended coverage":"opt2_cov","recommended monthly":"opt2_prem","basic coverage":"opt3_cov","basic monthly":"opt3_prem",
+ "option A":"opt1_cov","option A monthly":"opt1_prem","option B":"opt2_cov","option B monthly":"opt2_prem","option C":"opt3_cov","option C monthly":"opt3_prem",
  "equity amount":"m_equity","mortgage balance":"m_balance",
  "spell it":"a_name","spell it out":"a_name","last name":"last","client's state":"state",
  "spouse":"spouse","beneficiary":"ben","beneficiary / spouse":"ben","branch of service":"branch",
