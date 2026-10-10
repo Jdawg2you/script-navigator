@@ -1601,6 +1601,8 @@ app_auth1:{s:"10",pf:"who",t:"First authorization &mdash; the MIB pull",l:[
 {t:"note",x:"<b>You already tested this at 3.6.</b> If they couldn't open a text back then, you should be on a voice-signature carrier by now &mdash; don't discover the problem here."},
 {t:"do",x:"Some carriers make them click a link or press a button instead of reading a code. Know how yours works before you dial."},
 {t:"do",x:"If you're on an iPhone, you can start a screen share mid-call and physically show them where to look &mdash; point right at it on their screen instead of describing it. Works even if they're not on an iPhone. Practice it once before you need it on a live call."}
+,{t:"say",x:"And just so you know exactly what you're doing when you give me that code. By providing it back to me, you understand and intend to be a party on an insurance application. You also understand that I won't have access to any of your medical or personal information, but the senior underwriting team may. If that's all fair and true, go ahead and read me those six digits."},
+{t:"dobig",x:"Say what the code actually authorises, every time, before they read it out to you. It takes nine seconds, it is the correct thing to do, and it sounds like a professional running a regulated process &mdash; which is exactly what &ldquo;just read me the code&rdquo; does not sound like when the client thinks about it afterwards. Marisa says it before both codes, every call."}
 ],b:[{k:"Got the code",to:"app_draft",c:"go"}]},
 
 app_draft:{s:"10",pf:"wrap",t:"Draft date",l:[
@@ -1632,7 +1634,10 @@ app_esign:{s:"10",pf:"wrap",t:"Final signature",l:[
 {t:"say",x:"Alright, everything looks good. So what happens now is I submit this to ___(carrier) for approval &mdash; that's ___(coverage) for ___(premium) a month."},
 {t:"ask",x:"Sound good?"},
 {t:"train",x:"Assumptive, not permission-seeking. You're telling them what happens next, not asking whether you may proceed &mdash; but the coverage amount and the premium still get said out loud, and they still agree to them, right before the signature. That's the part that matters if anyone ever listens back."},
-{t:"say",x:"They're going to send you one more code, just like before. Read me the six-digit code. Don't tap anything on your screen &mdash; just let me know what that code is."},
+{t:"say",x:"They're going to send you one more code, just like before. Don't tap anything on your screen &mdash; just read me the six digits."},
+{t:"say",x:"And same as last time, here's what you're agreeing to. By giving me that code, you understand and intend to be a party on an insurance application, and you've answered the questions to the best of your knowledge. And you understand that <b>only in the event of an approval</b> would you see a draft of ___(premium), beginning 24 to 72 hours after that approval and recurring on the ___(draft date) each month after that. In the event of a declination, you'd see no activity at all on your account, and you and I would look in the next best direction together."},
+{t:"ask",x:"If that's all fair and true, go ahead and read me those six digits."},
+{t:"dobig",x:"<b>&ldquo;In the event of a declination you would see no activity on your account&rdquo; is the most valuable sentence in this section.</b> The unspoken worry at the signature is that they have just handed over bank details and money for something that might not even be approved. Answer it before they ask &mdash; and notice it also quietly promises a next step if the answer is no, which is how a decline stays a conversation instead of becoming a refund call."},
 {t:"do",x:"This one signs the final application. Same process they already did once, so it should move fast."},
 {t:"do",x:"If a carrier uses a link, a button, or a voice signature instead of a code, adjust the wording &mdash; but keep it to one small step at a time."}
 ],b:[{k:"Submitted",to:"uw_submitted",c:"go"}]},
@@ -2583,6 +2588,8 @@ i_app_auth1:{s:"14",t:"First authorization &mdash; the MIB pull",l:[
 {t:"note",x:"<b>You already tested this back at credentials.</b> If they couldn't open a text then, you should be on a voice-signature carrier by now &mdash; don't discover the problem here."},
 {t:"do",x:"Some carriers make them click a link or press a button instead of reading a code. Know how yours works before you dial."},
 {t:"do",x:"If you're on an iPhone, you can start a screen share mid-call and physically show them where to look. Practice it once before you need it on a live call."}
+,{t:"say",x:"And just so you know exactly what you're doing when you give me that code. By providing it back to me, you understand and intend to be a party on an insurance application. You also understand that I won't have access to any of your medical or personal information, but the senior underwriting team may. If that's all fair and true, go ahead and read me those six digits."},
+{t:"dobig",x:"Say what the code actually authorises, every time, before they read it out to you. It takes nine seconds, it is the correct thing to do, and it sounds like a professional running a regulated process &mdash; which is exactly what &ldquo;just read me the code&rdquo; does not sound like when the client thinks about it afterwards. Marisa says it before both codes, every call."}
 ],b:[{k:"Got the code",to:"i_app_ben",c:"go"}]},
 
 i_app_ben:{s:"14",pf:"bendetail",t:"Beneficiaries",l:[
@@ -2628,7 +2635,10 @@ i_app_bank_obj:{s:"14",t:"Banking objection",l:[
 ],b:[{k:"Got it",to:"i_app_esign",c:"go"}]},
 
 i_app_esign:{s:"14",t:"Final signature",l:[
-{t:"say",x:"They're going to send you one more code, just like before. Read me the six-digit code. Don't tap anything on your screen &mdash; just let me know what that code is."},
+{t:"say",x:"They're going to send you one more code, just like before. Don't tap anything on your screen &mdash; just read me the six digits."},
+{t:"say",x:"And same as last time, here's what you're agreeing to. By giving me that code, you understand and intend to be a party on an insurance application, and you've answered the questions to the best of your knowledge. And you understand that <b>only in the event of an approval</b> would you see a draft of ___(premium), beginning 24 to 72 hours after that approval and recurring on the ___(draft date) each month after that. In the event of a declination, you'd see no activity at all on your account, and you and I would look in the next best direction together."},
+{t:"ask",x:"If that's all fair and true, go ahead and read me those six digits."},
+{t:"dobig",x:"<b>&ldquo;In the event of a declination you would see no activity on your account&rdquo; is the most valuable sentence in this section.</b> The unspoken worry at the signature is that they have just handed over bank details and money for something that might not even be approved. Answer it before they ask &mdash; and notice it also quietly promises a next step if the answer is no, which is how a decline stays a conversation instead of becoming a refund call."},
 {t:"do",x:"This one signs the final application. Same process they already did once, so it should move fast."},
 {t:"do",x:"If a carrier uses a link, a button, or a voice signature instead of a code, adjust the wording &mdash; but keep it to one small step at a time."}
 ],b:[{k:"Submitted",to:"i_uw",c:"go"}]},
@@ -6090,9 +6100,9 @@ function pSetup(){
       '<div class="linknote"><b>Don\'t have these yet? All three are free.</b> <span class="freetag">NO COST</span>'+
       '<p>One GOAT account gives you an agent website, a digital business card, and a booking calendar '+
       'clients can use to book themselves.</p>'+
-      '<ol class="gsteps"><li>Create your free account</li><li>Fill in your agent profile</li>'+
-      '<li>Open <b>Settings</b></li><li>Switch on your <b>website</b>, <b>digital business card</b> and '+
-      '<b>calendar</b>, then paste the three links back here</li></ol>'+
+      '<ol class="gsteps"><li>Create your free account</li><li>Fill in <b>Profile</b></li>'+
+      '<li>In <b>Settings</b>, open <b>Website</b>, <b>Business Card</b> and <b>Calendar</b></li>'+
+      '<li>Publish each one, then paste the three links back here</li></ol>'+
       '<a class="goatbtn" href="'+GOAT_URL+'" target="_blank" rel="noopener noreferrer">Create my free GOAT account &rarr;</a>'+
     '</div></div>'+
     '<p style="font-family:var(--sans);font-size:11.5px;color:var(--muted);line-height:1.55;margin:14px 0 0">'+
