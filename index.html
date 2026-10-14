@@ -7714,7 +7714,8 @@ if(want && LIB[want]){
    answer typed here goes straight back to POP Pro, which fills its Intake and keeps the whole call in its save file. */
 var HOST = QS.get("host")==="poppro" && window.self!==window.top, HOST_ORIGIN="*", HOST_T=null;
 function hostOk(o){ return ["https://mypoppro.com","https://www.mypoppro.com"].indexOf(o)>=0 || /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/.test(o); }
-function hostPush(){ if(!HOST) return; clearTimeout(HOST_T); HOST_T=setTimeout(function(){
+function hostPush(){ if(!HOST || HOST_ORIGIN==="*") return;   /* nothing leaves until a page that passed hostOk has sent call-init */
+  clearTimeout(HOST_T); HOST_T=setTimeout(function(){
   try{ parent.postMessage({source:"optimum-suite",type:"client",v:1,tool:"poppro",live:true,client:popClient(),profile:navOnly(P)},HOST_ORIGIN); }catch(e){} },350); }
 if(HOST){
   document.body.classList.add("host-pop"); P={};                     /* this client's call arrives from POP Pro */
