@@ -56,9 +56,9 @@ body.embed{min-height:0}
 /* Inside MyPOP Pro (?host=poppro): POP Pro owns saving, loading, the agent's details and the push, so their
    stand-alone controls go; the call itself is unchanged. */
 body.host-pop #toScripts,body.host-pop .o-suite,body.host-pop #setupbtn,body.host-pop #restart,body.host-pop .recstrip,
-body.host-pop #profprint,body.host-pop #profsave,body.host-pop #profopen,body.host-pop #poppro,body.host-pop #popnote{display:none!important}
+body.host-pop #profprint,body.host-pop #profsave,body.host-pop #profopen,body.host-pop #poppro,body.host-pop #popnote,body.host-pop .ptools{display:none!important}
 /* POP Pro gives the call a window-height panel: the profile docks beside the script instead of covering it */
-body.host-pop .drawer{position:fixed}
+body.host-pop{overflow-x:hidden}body.host-pop .drawer{position:fixed}
 @media (min-width:860px){body.host-pop .drawer{width:min(430px,44%)}body.host-pop .scrim{display:none!important}body.host-pop.prof-open #app{margin-right:min(430px,44%)}}
 body.embed #launcher{min-height:0}
 body.embed header,body.embed footer{position:static}
@@ -7719,6 +7719,13 @@ function hostPush(){ if(!HOST || HOST_ORIGIN==="*") return;   /* nothing leaves 
   try{ parent.postMessage({source:"optimum-suite",type:"client",v:1,tool:"poppro",live:true,client:popClient(),profile:navOnly(P)},HOST_ORIGIN); }catch(e){} },350); }
 if(HOST){
   document.body.classList.add("host-pop"); P={};                     /* this client's call arrives from POP Pro */
+  /* Inside POP Pro the fill-ins live in the script itself (Jesse, 14 Oct): the interactive profile is always on, the
+     slide-out starts closed and is there only if the agent wants it. Stand-alone, nothing here changes. */
+  var _closeDrawerHost=closeDrawer; closeDrawer=function(){ _closeDrawerHost.apply(null,arguments); PROFILE_ON=true; if(typeof render==="function"&&$("script")) render(); };
+  var _openDrawerHost=openDrawer; openDrawer=function(){ _openDrawerHost.apply(null,arguments); PROFILE_ON=true; };
+  /* openScript('health') queues its own pOpen() for the next tick - close after it, so the call starts with the slide-out shut */
+  var hostShut=function(){ if($("drawer")&&$("drawer").classList.contains("open")) _closeDrawerHost(); PROFILE_ON=true; if(typeof render==="function"&&$("script")) render(); };
+  hostShut(); setTimeout(hostShut,0);
   var _pStoreHost=pStore; pStore=function(){ _pStoreHost.apply(null,arguments); hostPush(); };
   window.addEventListener("message",function(e){ if(!hostOk(e.origin)) return; var d=e.data;
     if(!d||d.source!=="optimum-poppro"||d.type!=="call-init") return; HOST_ORIGIN=e.origin;
