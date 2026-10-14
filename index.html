@@ -6337,6 +6337,7 @@ function popStateFile(){
   };
   /* An empty agency must not travel - POP Pro would take it literally and wipe its own. */
   Object.keys(o).forEach(function(k){ if(o[k]===undefined) delete o[k]; });
+  o.nav=navOnly(P);   /* portable: the whole call rides along, so POP Pro can hand it back */
   return o;
 }
 /* The agent's own details live in their own store here (set once under Set up, and kept
@@ -6363,6 +6364,19 @@ function condLines(){
 }
 /* POP Pro -> this profile. The mirror of popClient(). Only the client travels back;
    products, pricing and the quote stay in POP Pro where they belong. */
+/* ===== Portable client file (Jesse, 14 Oct) =====
+   One file per client opens in either tool. A navigator profile carries the POP Pro quote it came with (_pop); a POP
+   Pro quote carries the whole navigator call (nav). Opening a file: take this tool's own part as the base, then lay
+   the saving tool's answers over it - whoever saved last has the newer work. Old files without the other part load
+   exactly as before. */
+function navOnly(p){ var o={}; for(var k in p){ if(k!=="_pop" && Object.prototype.hasOwnProperty.call(p,k)) o[k]=p[k]; } return JSON.parse(JSON.stringify(o)); }
+function popPart(o){ var c={}; for(var k in o){ if(k!=="nav" && Object.prototype.hasOwnProperty.call(o,k)) c[k]=o[k]; } return c; }
+function isPopProFile(o){ return !!(o && o.intake && (o.packages||o.aca||o.client)); }
+function profileFromFile(o){
+  if(!isPopProFile(o)) return o;                                   /* a navigator profile, with or without _pop */
+  var base=o.nav&&typeof o.nav==="object"?JSON.parse(JSON.stringify(o.nav)):{}, mapped=fromPopPro(o);
+  for(var k in mapped){ var v=mapped[k]; if(v!==undefined && v!==null && v!=="" && !(Array.isArray(v)&&!v.length)) base[k]=v; }
+  base._pop=popPart(o); return base; }
 function fromPopPro(o){
   var c=o.client||{}, I=o.intake||{}, out={};
   var put=function(k,v){ if(v!==undefined && v!==null && v!=="" && v!==0) out[k]=String(v); };
@@ -6464,7 +6478,7 @@ function popOpen(){
       popRest(); return;
     }
     try{ POP_WIN.postMessage({source:"optimum-suite",type:"client",v:1,tool:"poppro",
-                              client:popClient(), agent:popAgent()},"*"); }catch(e){}
+                              client:popClient(), agent:popAgent(), profile:navOnly(P)},"*"); }catch(e){}
   },300);
 }
 function popRest(){ var b=document.getElementById("poppro"); if(b) b.classList.remove("busy"); }
@@ -6515,7 +6529,7 @@ $("proffile").onchange=function(){
       /* A POP Pro quote is a different shape entirely - its own state, not this profile.
          Rather than tell the agent it is the wrong file, read what is in it and carry it
          back across. Its own fields stay in the file; this only takes the client. */
-      P = (o && o.intake && (o.packages||o.aca||o.client)) ? fromPopPro(o) : o;
+      P = profileFromFile(o);
       if(P.married==="Yes") P.married="Married";
       else if(P.married==="No") P.married="Single";
       pStore(); pOpen(); if(typeof render==="function") render(); }
