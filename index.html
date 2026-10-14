@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Insurance Script Navigator — Optimum</title>
-<meta name="description" content="Know what to say, know what to ask, and write more business off every call. Card-by-card scripts for vet/FEX, IUL, mortgage protection and health discovery — each one builds a client profile you can save, print, or send to the Product Wizard or MyPOP Pro. Free from Optimum.">
+<meta name="description" content="Know what to say, know what to ask, and write more business off every call. Card-by-card scripts for vet/FEX, IUL, mortgage protection and health discovery — each one builds a client profile you can save, print, or send to the Product Wizard or MyPopPro. Free from Optimum.">
 <meta name="theme-color" content="#16203C">
 <meta name="author" content="Optimum">
 <link rel="canonical" href="https://script.ffloptimum.com/">
@@ -19,7 +19,7 @@
 <meta property="og:image" content="https://script.ffloptimum.com/og.png?v=3">
 <meta property="og:image:width" content="2400">
 <meta property="og:image:height" content="1260">
-<meta property="og:image:alt" content="Insurance Script Navigator — pick the call, read card by card, build the profile. Vet/FEX, Indexed Universal Life, Mortgage Protection, Health Discovery. Save it, print it, send it to the Product Wizard or MyPOP Pro. Free from Optimum.">
+<meta property="og:image:alt" content="Insurance Script Navigator — pick the call, read card by card, build the profile. Vet/FEX, Indexed Universal Life, Mortgage Protection, Health Discovery. Save it, print it, send it to the Product Wizard or MyPopPro. Free from Optimum.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://script.ffloptimum.com/og.png?v=3">
 <meta name="twitter:title" content="Insurance Script Navigator">
@@ -778,7 +778,7 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
         <span class="hownote">New here? Watch the 10-minute run-through. The how-to page has the long version, chopped into clips by step.</span>
       </div>
       <div class="lgrid" id="lgrid"></div>
-      <div class="lfoot"><b>Every script builds a client profile while you talk</b> &mdash; save it, reload it before the next call, print it for the file, or send it straight to the Product Wizard or MyPOP Pro. Each script opens as a card-by-card navigator with its own reference panels, and you can jump back here any time from the top of the screen.</div>
+      <div class="lfoot"><b>Every script builds a client profile while you talk</b> &mdash; save it, reload it before the next call, print it for the file, or send it straight to the Product Wizard or MyPopPro. Each script opens as a card-by-card navigator with its own reference panels, and you can jump back here any time from the top of the screen.</div>
       <div class="promo">
         <div class="peyebrow">Free for agents</div>
         <h3>Everything you need to look like a professional</h3>
@@ -2886,8 +2886,8 @@ hs_book_end:{s:"1",t:"After the booking",l:[
 {t:"dobig",when:["did_discovery","Yes"],x:"You have a full profile on this one. Don't let it die in the browser tab."},
 {t:"say",when:["did_discovery","Yes"],x:"<b>Save it, then push it over.</b> Saving keeps a copy on record and gives you a file you can reload before the presentation call &mdash; so you walk in already knowing their medications, their doctors, their income and their number."},
 {t:"handoff",when:["did_discovery","Yes"]},
-{t:"do",when:["did_discovery","Yes"],x:"Save first, every time. Once it is saved, open MyPOP Pro and start building the good / better / best while the call is still fresh."},
-{t:"train",when:["did_discovery","Yes"],x:"<b>The presentation is built before the call, not on it.</b> If you open POP Pro cold at the appointment time you will spend the first ten minutes typing what they already told you, and they will hear it."},
+{t:"do",when:["did_discovery","Yes"],x:"Save first, every time. Once it is saved, open MyPopPro and start building the good / better / best while the call is still fresh."},
+{t:"train",when:["did_discovery","Yes"],x:"<b>The presentation is built before the call, not on it.</b> If you open MyPopPro cold at the appointment time you will spend the first ten minutes typing what they already told you, and they will hear it."},
 {t:"warn",when:["did_discovery","Yes"],x:"The saved file lives in your downloads folder, not in this browser. It has health information in it &mdash; keep it where you keep client paperwork, and don't email it around."}
 ],b:[{k:"Back to the start",to:"hs_start",c:"go"}]},
 
@@ -4523,7 +4523,7 @@ function render(){
         '<span>A .json file you can reload next time &mdash; or send with the file</span></button>'+
       '<button type="button" class="hbtn" data-handoff="print">Print the profile'+
         '<span>Paper copy, or save as PDF</span></button>'+
-      '<button type="button" class="hbtn hpop" data-handoff="pop">Push client to MyPOP&nbsp;Pro'+
+      '<button type="button" class="hbtn hpop" data-handoff="pop">Push client to MyPopPro'+
         '<span>Start building the private health presentation</span></button>'+
       '</div></div>';
     if(L.t==="appt") return '<div class="line"><div class="apptpick">'+apptHTML()+'</div></div>';
@@ -6207,7 +6207,7 @@ var POP_WIN=null, POP_TRY=null, POP_DONE=false;
 
 function popPromoHTML(){
   return '<button type="button" class="poppro" id="poppro">'+
-    '<span style="display:block"><b>Push client to <em>MyPOP&nbsp;Pro</em></b>'+
+    '<span style="display:block"><b>Push client to <em>MyPopPro</em></b>'+
     '<span>Build the private health presentation from this profile &mdash; good, better and best, '+
     'the subsidy cliff, and the Package of Protection.</span></span>'+
     '<span class="arr">&#8599;</span></button>'+
@@ -6454,7 +6454,7 @@ function popFile(){
   var d=new Date(), pad=function(n){return (n<10?"0":"")+n};
   var stamp=pad(d.getMonth()+1)+"."+pad(d.getDate())+"."+d.getFullYear();
   var who=((P.first||"")+" "+(P.last||"")).replace(/\s+/g," ").trim()||"Client";
-  var name=(who+" - POP Pro - "+stamp).replace(/[\/\\:*?"<>|]/g,"");
+  var name=(who+" - MyPopPro - "+stamp).replace(/[\/\\:*?"<>|]/g,"");
     /* Load Quote reads POP Pro's own state, not the suite client object, so the
    fallback file has to be shaped that way rather than sent as-is. */
   var blob=new Blob([JSON.stringify(popStateFile(),null,2)],{type:"application/json"});
@@ -6483,8 +6483,8 @@ function popOpen(){
     if(++n>16){   /* ~5s with no acknowledgement - POP Pro is not listening yet */
       clearInterval(POP_TRY);
       var f=popFile();
-      popSay('POP Pro cannot take the profile straight across yet, so it has been saved as '+
-             '<b>'+esc(f)+'</b>. In POP Pro, use <b>Load Quote</b> and pick that file.');
+      popSay('MyPopPro cannot take the profile straight across yet, so it has been saved as '+
+             '<b>'+esc(f)+'</b>. In MyPopPro, use <b>Load Quote</b> and pick that file.');
       popRest(); return;
     }
     try{ POP_WIN.postMessage({source:"optimum-suite",type:"client",v:1,tool:"poppro",
@@ -6498,8 +6498,8 @@ window.addEventListener("message",function(e){
   if(d && d.source==="optimum-poppro" && d.type==="applied"){
     POP_DONE=true; clearInterval(POP_TRY); popRest();
     popSay(d.ok===false
-      ? 'MyPOP Pro kept the case it already had open. Nothing was changed there.'
-      : 'Sent to MyPOP Pro &mdash; it opened on the intake with this profile in it. Save the profile too; that is the copy you reload next time.');
+      ? 'MyPopPro kept the case it already had open. Nothing was changed there.'
+      : 'Sent to MyPopPro &mdash; it opened on the intake with this profile in it. Save the profile too; that is the copy you reload next time.');
   }
 });
 
@@ -6752,7 +6752,7 @@ function pPrint(){
 
     if(P.notes) a(card("Notes from the call", row("1fr", f("", esc(P.notes).replace(/\n/g,"<br>"), "note")), "margin-top:8px"));
     a(card("Next steps", row("1fr 1fr",
-      f("Profile saved / pushed to MyPOP Pro","")+f("Presentation booked for", v("appt_when"))), "margin-top:8px"));
+      f("Profile saved / pushed to MyPopPro","")+f("Presentation booked for", v("appt_when"))), "margin-top:8px"));
 
     a('</div>');
     a('<div class="foot"><span class="g">Confidential &mdash; protected health information. '+
