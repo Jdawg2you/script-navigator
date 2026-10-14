@@ -53,6 +53,14 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 
 /* ---------- embed mode: ?embed=1 ---------- */
 body.embed{min-height:0}
+/* Inside MyPOP Pro (?host=poppro): POP Pro owns saving, loading, the agent's details and the push, so their
+   stand-alone controls go; the call itself is unchanged. */
+body.host-pop #toScripts,body.host-pop .o-suite,body.host-pop #setupbtn,body.host-pop #restart,body.host-pop .recstrip,
+body.host-pop #profprint,body.host-pop #profsave,body.host-pop #profopen,body.host-pop #poppro,body.host-pop #popnote{display:none!important}
+/* POP Pro gives the call a window-height panel: the profile docks beside the script instead of covering it */
+body.host-pop .drawer{position:fixed;width:min(430px,44%)}
+body.host-pop .scrim{display:none!important}
+@media (min-width:860px){body.host-pop.prof-open #app{margin-right:min(430px,44%)}}
 body.embed #launcher{min-height:0}
 body.embed header,body.embed footer{position:static}
 body.embed .drawer{position:absolute}
@@ -7658,6 +7666,7 @@ if(EMBED) document.body.classList.add("embed");
 
 function postHeight(){
   if(window.self === window.top) return;
+  if(typeof HOST!=="undefined" && HOST) return;      /* inside POP Pro the call is a fixed-height panel that scrolls */
   try{
     var h = Math.max(
       document.body.scrollHeight, document.body.offsetHeight,
@@ -7699,6 +7708,26 @@ if(want && LIB[want]){
   if(READ_ON_LOAD) setTimeout(function(){ viewReadable(want); },0);
 } else {
   postHeight();
+}
+/* ---------------- inside MyPOP Pro (Jesse, 14 Oct) ----------------
+   POP Pro frames this page as its Discovery step (?embed=1&script=health&host=poppro). POP Pro hands in the client's
+   saved call and the agent's details ("call-init" - a framed page cannot see the stand-alone site's storage), and every
+   answer typed here goes straight back to POP Pro, which fills its Intake and keeps the whole call in its save file. */
+var HOST = QS.get("host")==="poppro" && window.self!==window.top, HOST_ORIGIN="*", HOST_T=null;
+function hostOk(o){ return ["https://mypoppro.com","https://www.mypoppro.com"].indexOf(o)>=0 || /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/.test(o); }
+function hostPush(){ if(!HOST) return; clearTimeout(HOST_T); HOST_T=setTimeout(function(){
+  try{ parent.postMessage({source:"optimum-suite",type:"client",v:1,tool:"poppro",live:true,client:popClient(),profile:navOnly(P)},HOST_ORIGIN); }catch(e){} },350); }
+if(HOST){
+  document.body.classList.add("host-pop"); P={};                     /* this client's call arrives from POP Pro */
+  var _pStoreHost=pStore; pStore=function(){ _pStoreHost.apply(null,arguments); hostPush(); };
+  window.addEventListener("message",function(e){ if(!hostOk(e.origin)) return; var d=e.data;
+    if(!d||d.source!=="optimum-poppro"||d.type!=="call-init") return; HOST_ORIGIN=e.origin;
+    P=d.pop?profileFromFile(d.pop):{}; delete P._pop;
+    if(d.agent) Object.keys(d.agent).forEach(function(k){ if(String(d.agent[k]||"").trim()) A[k]=String(d.agent[k]); });
+    if(typeof render==="function") render(); if(document.body.classList.contains("drawer-open")||($("drawer")&&$("drawer").classList.contains("open"))) pOpen(); postHeight(); });
+  try{ parent.postMessage({source:"insurance-script-navigator",type:"call-ready"},"*"); }catch(e){}
+  var dr=$("drawer"); if(dr&&window.MutationObserver){ var syncDock=function(){ document.body.classList.toggle("prof-open",dr.classList.contains("open")); };
+    new MutationObserver(syncDock).observe(dr,{attributes:true,attributeFilter:["class"]}); syncDock(); }
 }
 </script>
 <!-- ===== OPTIMUM SUITE: cross-links to the other free tools (shared across all tools) ===== -->
