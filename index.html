@@ -6267,6 +6267,9 @@ function popClient(){
       budgetComfort:P.budget_comfort||"", budgetMax:P.budget_max||"",
       healthNotes:P.health_notes||"", healthOther:P.health_other||"",
       whyShop:P.why_note||"", whyMatters:P.why_matters||"", foundPlan:P.found_plan||"", effDate:dt(P.start_when), lastDay:dt(P.last_day),
+      /* GLP-1 at 5.1, one set per person (Jesse, 2026-10-14): MyPopPro opens its GLP-1 rows on these. */
+      glp1On:P.glp1||"", glp1Drug:P.glp1_drug||"", glp1For:P.glp1_for||"", glp1Since:P.glp1_since||"", glp1Cost:P.glp1_cost||"", glp1Source:P.glp1_source||"",
+      spGlp1On:P.sp_glp1||"", spGlp1Drug:P.sp_glp1_drug||"", spGlp1For:P.sp_glp1_for||"", spGlp1Since:P.sp_glp1_since||"", spGlp1Cost:P.sp_glp1_cost||"", spGlp1Source:P.sp_glp1_source||"",
       /* The booked presentation. POP Pro has a follow-up notes box that is exactly where an
          agent looks for "when am I seeing this person again". */
       apptWhen:P.appt_when||"", apptWho:P.appt_who||"", apptNotes:P.appt_notes||"",
@@ -6418,6 +6421,8 @@ function fromPopPro(o){
   put("mh_needs", I.mentalP?"Yes":"");    put("sp_mh_needs", I.mentalS?"Yes":"");
   put("mat_needs", I.maternityP?"Yes":"");put("sp_mat_needs", I.maternityS?"Yes":"");
   put("recent_stay", I.surg2yrP?"Yes":"");put("sp_recent_stay", I.surg2yrS?"Yes":"");
+  ["p","s"].forEach(function(w){ var G=(I.glp1||{})[w]||{}, pre=w==="s"?"sp_glp1":"glp1";
+    put(pre, G.on); put(pre+"_drug", G.drug); put(pre+"_for", G.for); put(pre+"_since", G.since); put(pre+"_cost", G.cost?String(G.cost):""); put(pre+"_source", G.source); });
   put("notes", I.notes); put("why_note", I.whyShop); put("why_matters", I.whyMatters); put("found_plan", I.foundPlan); put("start_when", I.effDate);
   put("kids_health", I.kidsHealth||I.kidsNote);
   put("budget_comfort", I.budgetComfort); put("occupation", I.occupation);
