@@ -6393,6 +6393,9 @@ function fromPopPro(o){
   };
   var n=split(c.pname); put("first",n[0]); put("last",n[1]);
   var sn=split(c.sname); put("sp_name",sn[0]); put("sp_last",sn[1]);
+  /* POP Pro's Send-the-quote follow-up is the presentation the Book stage booked - carry it back (Jesse, 14 Oct) */
+  var sq=o.sendq||{}; if(/^\d{4}-\d{2}-\d{2}$/.test(String(sq.date||""))){ put("appt_date",sq.date); put("appt_time",sq.time);
+    if(typeof apptPretty==="function") put("appt_when",apptPretty(sq.date,sq.time||"")); }
   put("dob", c.dob||c.date); put("age", c.age||c.page);
   put("sp_dob", c.sdob); put("sp_age", c.sage);
   put("state", c.state); put("zip", c.zip); put("address", c.address);
