@@ -2937,12 +2937,12 @@ hs_tone:{s:"2",t:"Set the tone",l:[
 
 hs_why:{s:"2",pf:"why",t:"Why they're shopping",l:[
 {t:"ask",x:"So what made you start looking?"},
-{t:"pf",ks:["why_note"]},
-{t:"do",x:"Whatever they say, they're right. Agree. You'll say it back to them on the presentation."},
+{t:"pf",ks:["why_matters","why_tags"]},
+{t:"do",x:"Type <b>their exact words</b> &mdash; &ldquo;healthcare has just gotten so flippin' expensive&rdquo; &mdash; then click whatever is behind it. On the presentation you quote them: <i>&ldquo;Last time we talked, you said &hellip;&rdquo;</i>. Whatever they say, they're right. Agree."},
 {t:"ask",x:"Was it the cost, the coverage, or something else that made you realise what you've got going on isn't working?"},
 {t:"ask",x:"And when you picture the right plan &mdash; what's the one thing it has to do for you?"},
-{t:"pf",ks:["why_matters"]},
-{t:"do",x:"Write it <b>short and in their words</b> &mdash; &ldquo;keep Dr. Patel&rdquo;, &ldquo;never get wiped out by a hospital bill&rdquo;. This is the line you read back to them on the presentation; the story above stays in the box for you."},
+{t:"pf",ks:["why_note"]},
+{t:"do",x:"Anything more they tell you goes in <b>their story</b> &mdash; it's for you, not read back. If this answer says it better than the first one, put their words in the <b>why</b> box instead."},
 {t:"warn",x:"<b>Only skip that second question if they're losing it through work.</b> That is the reason, and you already have it. Anything else &mdash; cost, a rate rise, a network change, a claim that didn't pay &mdash; and you dig until you know what actually broke. That answer is the why you sell back to them later."}
 ],bh:"What did they say?",b:[
 {k:"Cost, coverage, something else",to:"hs_current",c:"go"},
@@ -4787,8 +4787,11 @@ PF_SPEC_HEALTH=[
  {k:"kids_health",l:"Kids \u2014 health, medications, anything to know",type:"area",w:3},
 
  {sec:"Why they're looking",id:"why"},
- {k:"why_matters",l:"What matters most &mdash; their words",hint:"short: the one thing the plan has to do &mdash; read back on the presentation",w:3},
- {k:"why_note",l:"What prompted it / current-plan pain",hint:"the story: what changed, cost, coverage, a claim that didn't pay",type:"area",w:3},
+ /* One Why (Jesse, 2026-10-16): their exact words, quoted back on the presentation ("you said, ..."), plus tags that
+    add their own facts. The story stays for the agent. Keys kept from 9 Oct so old files still load. */
+ {k:"why_matters",l:"Their why &mdash; in their words",hint:"exactly as they said it &mdash; this is quoted back to them on the presentation",w:3},
+ {k:"why_tags",l:"What's behind it",w:3,multi:true,opt:["","Too expensive","Deductible too high","Losing coverage","No coverage now","Doctor / network","Life change","Other"]},
+ {k:"why_note",l:"Their story &mdash; for you, not read back",hint:"what changed, a rate rise, a claim that didn't pay",type:"area",w:3},
  {k:"found_plan",l:"Plan they already found",hint:"what they landed on and what it costs",w:3},
  {k:"losing",drives:true,l:"Losing coverage \u2014 done deal?",w:1,opt:["","Yes","No"]},
  {k:"last_day",l:"Last day of cover",w:1,showIf:["losing",["Yes","No"]]},
@@ -6266,7 +6269,7 @@ function popClient(){
       protectable:P.asset_prot||"", invnote:P.asset_notes||"",
       budgetComfort:P.budget_comfort||"", budgetMax:P.budget_max||"",
       healthNotes:P.health_notes||"", healthOther:P.health_other||"",
-      whyShop:P.why_note||"", whyMatters:P.why_matters||"", foundPlan:P.found_plan||"", effDate:dt(P.start_when), lastDay:dt(P.last_day),
+      whyShop:P.why_note||"", whyMatters:P.why_matters||"", whyTags:P.why_tags||"", foundPlan:P.found_plan||"", effDate:dt(P.start_when), lastDay:dt(P.last_day),
       /* GLP-1 at 5.1, one set per person (Jesse, 2026-10-14): MyPopPro opens its GLP-1 rows on these. */
       glp1On:P.glp1||"", glp1Drug:P.glp1_drug||"", glp1For:P.glp1_for||"", glp1Since:P.glp1_since||"", glp1Cost:P.glp1_cost||"", glp1Source:P.glp1_source||"",
       spGlp1On:P.sp_glp1||"", spGlp1Drug:P.sp_glp1_drug||"", spGlp1For:P.sp_glp1_for||"", spGlp1Since:P.sp_glp1_since||"", spGlp1Cost:P.sp_glp1_cost||"", spGlp1Source:P.sp_glp1_source||"",
@@ -6423,7 +6426,7 @@ function fromPopPro(o){
   put("recent_stay", I.surg2yrP?"Yes":"");put("sp_recent_stay", I.surg2yrS?"Yes":"");
   ["p","s"].forEach(function(w){ var G=(I.glp1||{})[w]||{}, pre=w==="s"?"sp_glp1":"glp1";
     put(pre, G.on); put(pre+"_drug", G.drug); put(pre+"_for", G.for); put(pre+"_since", G.since); put(pre+"_cost", G.cost?String(G.cost):""); put(pre+"_source", G.source); });
-  put("notes", I.notes); put("why_note", I.whyShop); put("why_matters", I.whyMatters); put("found_plan", I.foundPlan); put("start_when", I.effDate);
+  put("notes", I.notes); put("why_note", I.whyShop); put("why_matters", I.whyMatters); put("why_tags", Array.isArray(I.whyTags)?I.whyTags.join(", "):I.whyTags); put("found_plan", I.foundPlan); put("start_when", I.effDate);
   put("kids_health", I.kidsHealth||I.kidsNote);
   put("budget_comfort", I.budgetComfort); put("occupation", I.occupation);
   /* POP Pro B keeps the current plan in its own section (o.cur) and the children as rows. */
