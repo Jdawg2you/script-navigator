@@ -61,7 +61,7 @@ body.host-pop #profprint,body.host-pop #profsave,body.host-pop #profopen,body.ho
 body.host-pop .wrap{max-width:min(1240px,100%)}
 /* POP Pro gives the call a window-height panel: the profile docks beside the script instead of covering it */
 body.host-pop{overflow-x:hidden}body.host-pop .drawer{position:fixed}
-@media (min-width:860px){body.host-pop .drawer{width:min(430px,44%)}body.host-pop .scrim{display:none!important}body.host-pop.prof-open #app{margin-right:min(430px,44%)}}
+@media (min-width:860px){body.host-pop .drawer{width:min(430px,44%)}body.host-pop .scrim{display:none!important}body.host-pop.prof-open #app{margin-right:min(430px,44%)}body.host-pop #app.docked{padding-right:0}}   /* the stand-alone dock padding would reserve the room twice (Jesse, 16 Oct) */
 body.embed #launcher{min-height:0}
 body.embed header,body.embed footer{position:static}
 body.embed .drawer{position:absolute}
@@ -6433,7 +6433,7 @@ function fromPopPro(o){
   put("recent_stay", I.surg2yrP?"Yes":"");put("sp_recent_stay", I.surg2yrS?"Yes":"");
   ["p","s"].forEach(function(w){ var G=(I.glp1||{})[w]||{}, pre=w==="s"?"sp_glp1":"glp1";
     put(pre, G.on); put(pre+"_drug", G.drug); put(pre+"_for", G.for); put(pre+"_since", G.since); put(pre+"_cost", G.cost?String(G.cost):""); put(pre+"_source", G.source); });
-  put("notes", I.notes); put("why_note", I.whyShop); put("why_matters", I.whyMatters); put("why_other", I.whyOther); put("why_tags", Array.isArray(I.whyTags)?I.whyTags.join(", "):I.whyTags); put("found_plan", I.foundPlan); put("start_when", I.effDate);
+  put("notes", String(I.notes||"").split("\n").filter(function(l){ return l.indexOf("From the discovery call")!==0; }).join("\n").trim());   /* MyPopPro's own summary lines stay there - echoing them back stacked a copy per handoff */ put("why_note", I.whyShop); put("why_matters", I.whyMatters); put("why_other", I.whyOther); put("why_tags", Array.isArray(I.whyTags)?I.whyTags.join(", "):I.whyTags); put("found_plan", I.foundPlan); put("start_when", I.effDate);
   put("kids_health", I.kidsHealth||I.kidsNote);
   put("budget_comfort", I.budgetComfort); put("occupation", I.occupation);
   /* POP Pro B keeps the current plan in its own section (o.cur) and the children as rows. */
