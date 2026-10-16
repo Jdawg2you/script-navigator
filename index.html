@@ -512,6 +512,8 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .iblank:focus{outline:2px solid var(--gold);border-color:var(--gold)}
 .iblank.bad{border-color:var(--rust);background:#FCF3F1}
 .iblank.imoney{font-variant-numeric:tabular-nums}
+.optpill{display:inline-block;font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8a6a1f;border:1px dashed #c9a24e;border-radius:999px;padding:1px 8px;margin-right:6px;vertical-align:2px}
+.line details.ideas ol{margin:6px 0 0;padding-left:20px}.line details.ideas small{display:block;margin-top:4px;color:var(--muted,#777);font-size:11.5px}
 /* follow-up ideas under an ask: folded until wanted */
 .line details.ideas{margin-top:6px;font-size:13px}.line details.ideas summary{cursor:pointer;color:var(--gold-d,#8a6a1f);font-weight:600;font-size:12.5px}.line details.ideas ul{margin:6px 0 0;padding-left:18px}.line details.ideas li{margin:2px 0}
 .wizbtn span{font-size:11px;opacity:.75;margin-left:1px}
@@ -2985,7 +2987,7 @@ hs_current:{s:"2",pf:"current",t:"What they have now",l:[
 ],b:[{k:"Next",to:"hs_diff",c:"go"}]},
 
 hs_diff:{s:"2",t:"The differentiator",l:[
-{t:"say",x:"I work with a lot of self-employed people frustrated with what healthcare costs. Every marketplace plan &mdash; ACA, Obamacare, same thing &mdash; has to carry all ten essential benefits."},
+{t:"say",x:"I work with a lot of self-employed people frustrated with what healthcare costs. Every marketplace plan &mdash; ACA, Obamacare, same thing &mdash; has to carry all ten essential benefits. <details class=\"ideas\"><summary>The 10 essential benefits</summary><ol><li>Outpatient care &mdash; doctor visits without being admitted</li><li>Emergency services</li><li>Hospitalization &mdash; surgery and overnight stays</li><li>Pregnancy, maternity and newborn care</li><li>Mental health and substance use disorder services</li><li>Prescription drugs</li><li>Rehabilitative and habilitative services and devices &mdash; physical, speech and occupational therapy</li><li>Lab services</li><li>Preventive and wellness services, and chronic disease management</li><li>Pediatric services, including dental and vision for children</li></ol><small>Source: HealthCare.gov, &ldquo;What Marketplace health insurance plans cover&rdquo;.</small></details>"},
 {t:"say",x:"Most people don't need all ten. If you're not planning on having a baby, why pay for maternity &mdash; one of the most expensive things a plan can cover? So I tailor a plan around what you actually use."},
 {t:"warn",x:"<b>Never call these PPO plans.</b> They're fixed-benefit policies. Say &ldquo;no network restriction &mdash; any doctor, any hospital, the same benefit&rdquo;, then name the trade: there's no annual out-of-pocket cap."}
 ],b:[{k:"Next",to:"hs_startdate",c:"go"}]},
@@ -3004,9 +3006,9 @@ hs_family:{s:"3",pf:"who",t:"Family",l:[
 hs_occupation:{s:"3",pf:"income",t:"Occupation",l:[
 {t:"ask",x:"What kind of work do you do? ___(type of work)"},
 {t:"ask",x:"And how long have you been doing that? ___(how long)"},
-{t:"ask",x:"Does your work offer health coverage? {{emp_offer}}"},
-{t:"ask",when:["married",["Married","Partnered"]],x:"And your spouse's work? {{sp_emp_offer}}"},
-{t:"do",x:"<b>Optional.</b> Skip it when you already know the answer &mdash; they're losing coverage through work, or they're retired."},
+{t:"ask",x:"<span class=\"optpill\">Optional &middot; read the room</span> Does your work offer health coverage? {{emp_offer}}"},
+{t:"ask",when:["married",["Married","Partnered"]],x:"<span class=\"optpill\">Optional &middot; read the room</span> And your spouse's work? {{sp_emp_offer}}"},
+{t:"do",x:"Ask these only if it makes sense. Skip them when you already know &mdash; they're losing coverage through work, they're retired, or they work for themselves."},
 {t:"do",when:[["emp_offer","Yes"],["sp_emp_offer","Yes"]],x:"An affordable work plan can take away the marketplace subsidy, so note whose job it is and roughly what it would cost them."},
 {t:"train",x:"<b>This is not small talk.</b> What they do decides how much risk sits outside the health plan. An office job and a power-line job carry the same health premium and completely different exposure &mdash; accident cover, disability, workman's comp. You're listening for the gap you'll name on the presentation."},
 {t:"do",x:"If they're changing jobs or retiring, follow it. It moves the timeline and usually the income."}
