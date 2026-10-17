@@ -711,6 +711,8 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   border:1px solid var(--rule);border-radius:6px;padding:7px 9px;resize:vertical;color:var(--ink)}
 .pnote{font-family:var(--sans);font-size:11px;color:var(--muted);line-height:1.5;margin:5px 0 0}
 .filled{color:var(--navy);font-weight:600;border-bottom:2px solid var(--gold);padding:0 1px}
+/* the bio is a whole paragraph - a light underline so it reads as filled in without shouting (Jesse, 17 Oct) */
+.filled.fbio{font-weight:500;border-bottom:1px solid rgba(201,162,78,.38)}
 
 
 .lcard.vid{background:var(--navy);border-left-color:var(--gold);position:relative;text-decoration:none;display:block}
@@ -4114,7 +4116,7 @@ function fmt(x){
               return '<input class="iblank'+(mny?' imoney':'')+'"'+(mny?' inputmode="decimal"':'')+(k==="state"?' list="statelist"':k==="branch"?' list="branchlist"':'')+' data-pk="'+k+'" data-inline="1" title="'+esc(lab)+'"'+
                      ' placeholder="'+(mny?'$ ':'')+esc(lab)+'" style="width:'+w+'ch" value="'+esc(v).replace(/"/g,"&quot;")+'">';
             }
-            return v ? '<span class="filled">'+esc(v)+'</span>'
+            return v ? '<span class="filled'+(lab==="your bio"?" fbio":"")+'">'+esc(v)+'</span>'
                      : '<span class="blank"></span><span class="hint">('+lab+')</span>';
           })
           .replace(/_{3,}/g,'<span class="blank"></span>');
