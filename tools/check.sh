@@ -173,6 +173,15 @@ elif [ -f "$HOME/Documents/poppro/tool/meds/fda-meds.json" ]; then
   else echo "FAIL  meds/fda-meds.json differs from POP Pro ($HOME/Documents/poppro/tool/meds/fda-meds.json) - copy the newer one over"; FAIL=1; fi
 fi
 
+# ---- scripts/health-discovery.md is printed from LIB.health, never hand-edited ----------
+# It drifted for 13 commits once and a script review was written against it. A warning, not a
+# failure: regenerate with `node tools/emit-health-md.mjs` and commit it with the card change.
+NODE="$(command -v node || echo "$HOME/.local/node/bin/node")"
+if [ -x "$NODE" ]; then
+  OUT=$("$NODE" tools/emit-health-md.mjs --check 2>&1)
+  case "$OUT" in ok*) echo "$OUT";; *) echo "WARN  $OUT";; esac
+fi
+
 echo
 if [ "$FAIL" -eq 0 ]; then
   echo "PASS  $N script block(s) parse; every branch and section entry resolves."

@@ -7,7 +7,7 @@ touched.** These are source documents; incorporating them is the work.
 
 | File | What it is |
 |---|---|
-| `health-discovery.md` | **The script.** 25 sections. Built from Kyle/ManhattanLife June 2025, HealthFirst July 2026, and three of Jesse's recorded calls (Livingston 9/15, Boo 9/21, Cosgriff 9/23). ★ marks what he isn't currently doing, with the cost of each omission. |
+| `health-discovery.md` | **The live script, printed.** Generated from the `LIB.health` cards in `index.html` by `node tools/emit-health-md.mjs` — never edit it by hand; `tools/check.sh` warns when it is stale. The earlier hand-written version (★ markers, sources, cost of each omission) is in git at `8cd80e6`. |
 | `health-discovery-callsheet.html` | Same script, laid out to read live on a call. Sticky must-ask bar, FPL table inline. Standalone, no dependencies. |
 | `health-discovery-v2-draft.md` | Earlier hybrid draft. Superseded by `health-discovery.md`; kept for the cut-list reasoning. |
 

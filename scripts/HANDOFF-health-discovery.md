@@ -15,7 +15,7 @@ scripts exist and all three fed into it.
 
 Two formats, same content:
 
-- **`health-discovery.md`** — the script with its reasoning attached. ★ markers, evidence
+- **`health-discovery.md`** — *(now generated from the live cards; the version this note describes is in git at `8cd80e6`)* the script with its reasoning attached. ★ markers, evidence
   tables, and a cut list. This is the editorial source.
 - **`health-discovery-callsheet.html`** — the same script laid out to be read *while on a
   call*. Standalone, no dependencies. This is what Jesse actually uses today.
