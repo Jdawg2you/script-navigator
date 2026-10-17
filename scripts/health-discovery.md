@@ -1,6 +1,6 @@
 # Health Discovery — the live script
 
-**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ ee0a590 2026-10-17 + uncommitted changes) by
+**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 3734086 2026-10-17 + uncommitted changes) by
 `node tools/emit-health-md.mjs`. The cards in `index.html` are the script; change them there and regenerate.
 
 Every line of every card, in card-number order. Tags:
@@ -435,8 +435,7 @@ _Card: opens the profile at *Family history and general*._
 - **SAY** — A few quick yes or no questions — these change which plans are worth quoting.
 - **ON SCREEN** — Yes/no grid: Family history — cancer · Family history — heart · Family history — stroke · Mental health needs (applicant and spouse)
 - **DO** — Family history, not their own diagnosis. Their own conditions you already have.
-- **TIP** _only when Family history — cancer (`fh_cancer`) is “Yes”, **or** Family history — heart (`fh_heart`) is “Yes”, **or** Family history — stroke (`fh_stroke`) is “Yes”, **or** Spouse — cancer (`sp_fh_cancer`) is “Yes”, **or** Spouse — heart (`sp_fh_heart`) is “Yes”, **or** Spouse — stroke (`sp_fh_stroke`) is “Yes”_ — **Family history noted — it comes back on the presentation.** When you show the cancer / heart & stroke coverage and living benefits, you’ll tie them to this. If they mention who, jot it down below — optional.
-- **COLLECT** _only when Family history — cancer (`fh_cancer`) is “Yes”, **or** Family history — heart (`fh_heart`) is “Yes”, **or** Family history — stroke (`fh_stroke`) is “Yes”, **or** Spouse — cancer (`sp_fh_cancer`) is “Yes”, **or** Spouse — heart (`sp_fh_heart`) is “Yes”, **or** Spouse — stroke (`sp_fh_stroke`) is “Yes”_ — Who in the family — optional (`fh_who`)
+- **TIP** _only when Family history — cancer (`fh_cancer`) is “Yes”, **or** Family history — heart (`fh_heart`) is “Yes”, **or** Family history — stroke (`fh_stroke`) is “Yes”, **or** Spouse — cancer (`sp_fh_cancer`) is “Yes”, **or** Spouse — heart (`sp_fh_heart`) is “Yes”, **or** Spouse — stroke (`sp_fh_stroke`) is “Yes”_ — **Family history noted — it comes back on the presentation.** When you show the cancer / heart & stroke coverage and living benefits, you’ll tie them to this. Click **Mom** and/or **Dad** under each Yes if they say who.
 - **ASK** — `Read the room` Is anyone pregnant right now? And is there any chance anyone could become pregnant in the next couple of years?
 - **ON SCREEN** — Yes/no grid: Pregnant now · Future maternity needs (applicant and spouse)
 - **TRAIN** — **Maternity is the expensive one.** A plan without it is materially cheaper, and putting someone on a plan that excludes it when they are planning a family is the single worst outcome here. Ask it plainly, of both of them.

@@ -644,7 +644,8 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .fhhead{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
   color:var(--golddk);text-align:center}
 .fhq{color:var(--ink);line-height:1.4}
-.fhcell{display:inline-flex;justify-content:center}
+.fhcell{display:inline-flex;flex-direction:column;align-items:center;gap:4px}
+.fhrel{display:inline-flex;gap:4px}.fhrelb{appearance:none;cursor:pointer;font-family:var(--sans);font-size:11.5px;font-weight:600;color:var(--muted);background:#fff;border:1px solid var(--rule);border-radius:999px;padding:2px 8px}.fhrelb.on{color:var(--navy);border-color:var(--gold);background:var(--goldsoft,#fbf3dd)}
 .fhtog{appearance:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;
   font-family:var(--sans);font-size:12px;font-weight:600;color:var(--muted);
   background:#fff;border:1px solid var(--rule);border-radius:999px;padding:3px 10px 3px 4px}
@@ -3084,8 +3085,7 @@ hs_famhist:{s:"5",pf:"famhist",t:"Family history and general",l:[
 {t:"say",x:"A few quick yes or no questions &mdash; these change which plans are worth quoting."},
 {t:"fhgrid"},
 {t:"do",x:"Family history, not their own diagnosis. Their own conditions you already have."},
-{t:"tip",when:[["fh_cancer","Yes"],["fh_heart","Yes"],["fh_stroke","Yes"],["sp_fh_cancer","Yes"],["sp_fh_heart","Yes"],["sp_fh_stroke","Yes"]],x:"<b>Family history noted &mdash; it comes back on the presentation.</b> When you show the cancer / heart &amp; stroke coverage and living benefits, you&rsquo;ll tie them to this. If they mention who, jot it down below &mdash; optional."},
-{t:"pf",ks:["fh_who"],when:[["fh_cancer","Yes"],["fh_heart","Yes"],["fh_stroke","Yes"],["sp_fh_cancer","Yes"],["sp_fh_heart","Yes"],["sp_fh_stroke","Yes"]]},
+{t:"tip",when:[["fh_cancer","Yes"],["fh_heart","Yes"],["fh_stroke","Yes"],["sp_fh_cancer","Yes"],["sp_fh_heart","Yes"],["sp_fh_stroke","Yes"]],x:"<b>Family history noted &mdash; it comes back on the presentation.</b> When you show the cancer / heart &amp; stroke coverage and living benefits, you&rsquo;ll tie them to this. Click <b>Mom</b> and/or <b>Dad</b> under each Yes if they say who."},
 {t:"ask",x:"<span class=\"optpill\">Read the room</span> Is anyone pregnant right now? And is there any chance anyone could become pregnant in the next couple of years?"},
 {t:"fhgrid",rows:"preg"},
 {t:"train",x:"<b>Maternity is the expensive one.</b> A plan without it is materially cheaper, and putting someone on a plan that excludes it when they are planning a family is the single worst outcome here. Ask it plainly, of both of them."}
@@ -4841,7 +4841,6 @@ PF_SPEC_HEALTH=[
  {k:"sp_fh_heart",l:"Spouse \u2014 heart",w:1,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
  {k:"fh_stroke",l:"Family history \u2014 stroke",w:1,opt:["","No","Yes"]},
  {k:"sp_fh_stroke",l:"Spouse \u2014 stroke",w:1,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
- {k:"fh_who",l:"Who in the family &mdash; optional",hint:"e.g. Dad &mdash; heart attack; Mom &mdash; breast cancer",type:"area",w:3,showIf:[["fh_cancer","Yes"],["fh_heart","Yes"],["fh_stroke","Yes"],["sp_fh_cancer","Yes"],["sp_fh_heart","Yes"],["sp_fh_stroke","Yes"]]},
  {k:"mh_needs",l:"Mental health needs",w:1,opt:["","No","Yes"]},
  {k:"sp_mh_needs",l:"Spouse \u2014 mental health",w:1,opt:["","No","Yes"],showIf:["married",["Married","Partnered"]]},
  {k:"mat_needs",l:"Future maternity needs",w:1,opt:["","No","Yes"]},
@@ -5509,9 +5508,13 @@ document.addEventListener("keydown",function(e){
   }
 });
 document.addEventListener("click",function(e){
+  var fr=e.target.closest && e.target.closest("[data-fhrel]");
+  if(fr){ var fk=fr.getAttribute("data-fhrel")+"_who", rv=fr.getAttribute("data-rel"), cur=String(P[fk]||"").split(", ").filter(Boolean), at=cur.indexOf(rv);
+          if(at>-1) cur.splice(at,1); else cur.push(rv); P[fk]=["Mom","Dad"].filter(function(x){ return cur.indexOf(x)>-1; }).join(", ");
+          pStore(); if(document.getElementById("profbody")) pRender(); if(typeof render==="function" && $("script")) render(); return; }
   var tg=e.target.closest && e.target.closest("[data-fhtog]");
   if(tg){ var tk=tg.getAttribute("data-fhtog");
-          P[tk]=(pVal(tk)||"")==="Yes" ? "No" : "Yes";
+          P[tk]=(pVal(tk)||"")==="Yes" ? "No" : "Yes"; if(P[tk]==="No"&&FH_REL[tk]) delete P[tk+"_who"];
           pStore(); pFlash();
           if(document.getElementById("profbody")) pRender();
           if(typeof render==="function" && $("script")) render();
@@ -5570,6 +5573,8 @@ document.addEventListener("change",function(e){
 });
 /* A You / Spouse grid. The spouse column only exists when there is a spouse on the plan -
    an empty column is a question the agent reads out and should not. */
+/* the family-history rows that get Mom / Dad (mental health and pregnancy do not) */
+var FH_REL={fh_cancer:1,fh_heart:1,fh_stroke:1,sp_fh_cancer:1,sp_fh_heart:1,sp_fh_stroke:1};
 /* pregnancy is two different questions - now, and any chance later (Jesse, 16 Oct) - asked on their own grid */
 var FHROWS_PREG=[
  ["pregnant","sp_pregnant","Pregnant right now"],
@@ -5587,10 +5592,13 @@ function fhGridHTML(rows){ rows=rows||FHROWS;
      row by clicking five times, and an unanswered box looks identical to a "no" anyway - so
      No is the resting state and the agent only moves the ones that are a yes. */
   var cell=function(k){
-    var yes=(pVal(k)||"")==="Yes";
+    var yes=(pVal(k)||"")==="Yes", rel=FH_REL[k], got=String(P[k+"_who"]||"").split(", ").filter(Boolean);
+    /* who in the family as two clicks, not free text (Jesse, 17 Oct): Mom, Dad, or both */
+    var who=(yes&&rel)?'<span class="fhrel">'+["Mom","Dad"].map(function(r){ var on=got.indexOf(r)>-1;
+        return '<button type="button" class="fhrelb'+(on?" on":"")+'" data-fhrel="'+k+'" data-rel="'+r+'" aria-pressed="'+(on?"true":"false")+'">'+(on?"&#9679; ":"&#9675; ")+r+'</button>'; }).join("")+'</span>':'';
     return '<span class="fhcell"><button type="button" class="fhtog'+(yes?" yes":"")+
            '" data-fhtog="'+k+'" role="switch" aria-checked="'+(yes?"true":"false")+'">'+
-           '<span class="fhknob"></span><i>'+(yes?"Yes":"No")+'</i></button></span>';
+           '<span class="fhknob"></span><i>'+(yes?"Yes":"No")+'</i></button>'+who+'</span>';
   };
   return '<div class="fhgrid'+(sp?' withsp':'')+'">'+
     '<span class="fhhead"></span><span class="fhhead">You</span>'+(sp?'<span class="fhhead">Spouse</span>':'')+
@@ -6350,6 +6358,7 @@ function popClient(){
       curEmpPrem:P.cur_emp_prem||"", curTotal:P.cur_total||"", curDed:P.cur_ded||"",
       curVisits:P.cur_visits||"", curCopay:P.cur_copay||"", covGap:P.cov_gap||"",
       fhCancer:P.fh_cancer||"", fhHeart:P.fh_heart||"", fhStroke:P.fh_stroke||"", fhWho:P.fh_who||"",
+      fhCancerWho:P.fh_cancer_who||"", fhHeartWho:P.fh_heart_who||"", fhStrokeWho:P.fh_stroke_who||"", spFhCancerWho:P.sp_fh_cancer_who||"", spFhHeartWho:P.sp_fh_heart_who||"", spFhStrokeWho:P.sp_fh_stroke_who||"",
       mhNeeds:P.mh_needs||"", matNeeds:P.mat_needs||"",
       spFhCancer:P.sp_fh_cancer||"", spFhHeart:P.sp_fh_heart||"", spFhStroke:P.sp_fh_stroke||"",
       spMhNeeds:P.sp_mh_needs||"", spMatNeeds:P.sp_mat_needs||"",
