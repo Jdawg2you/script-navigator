@@ -2961,7 +2961,7 @@ hs_why:{s:"2",pf:"why",t:"Why they're shopping",l:[
 {t:"ask",x:"So what made you start looking? <details class=\"ideas\"><summary>Ideas to keep them talking</summary><ul><li>Was it the cost &mdash; what you pay each month?</li><li>Or what it covers &mdash; the deductible, what you end up paying anyway?</li><li>Did the rate go up this year?</li><li>A claim that didn't pay, or a bill you didn't expect?</li><li>A doctor who isn't in the network?</li><li>Or is it changing &mdash; losing it through work, a new job, a move, a baby?</li></ul></details>"},
 {t:"pf",ks:["why_matters","why_tags"]},
 {t:"pf",ks:["why_other"],when:["why_tags","~Other"]},
-{t:"do",x:"Type <b>their exact words</b> &mdash; &ldquo;healthcare has just gotten so flippin' expensive&rdquo; &mdash; then click whatever is behind it. On the presentation you quote them: <i>&ldquo;Last time we talked, you said &hellip;&rdquo;</i>. Whatever they say, they're right. Agree."},
+{t:"do",x:"Type <b>their exact words, the way they said them</b> &mdash; &ldquo;healthcare has just gotten so flippin' expensive&rdquo;, &ldquo;I&rsquo;m paying way too much for what I get&rdquo; &mdash; not a note about them (&ldquo;wants cheaper&rdquo;): a note can&rsquo;t be quoted back as something they said. Then click whatever is behind it. On the presentation you quote them: <i>&ldquo;Last time we talked, you said &hellip;&rdquo;</i>. Whatever they say, they're right. Agree."},
 {t:"ask",x:"And when you picture the right plan for you &mdash; what's most important?"},
 {t:"pf",ks:["why_note"]},
 {t:"do",x:"Anything more they tell you goes in <b>their story</b> &mdash; it's for you, not read back. If this answer says it better than the first one, put their words in the <b>why</b> box instead."},
@@ -4811,7 +4811,7 @@ PF_SPEC_HEALTH=[
  {sec:"Why they're looking",id:"why"},
  /* One Why (Jesse, 2026-10-16): their exact words, quoted back on the presentation ("you said, ..."), plus tags that
     add their own facts. The story stays for the agent. Keys kept from 9 Oct so old files still load. */
- {k:"why_matters",l:"Their why &mdash; in their words",hint:"exactly as they said it &mdash; this is quoted back to them on the presentation",type:"area",w:3},
+ {k:"why_matters",l:"Their why &mdash; in their words, as they said it",hint:"&ldquo;I&rsquo;m paying way too much for what I get&rdquo; &mdash; quoted back to them as &ldquo;you said&rdquo;. A note like &ldquo;wants cheaper&rdquo; won&rsquo;t be quoted.",type:"area",w:3},
  {k:"why_tags",l:"What's behind it",w:3,multi:true,opt:["","Too expensive","Deductible too high","Losing coverage","No coverage now","Doctor / network","Life change","Other"]},
  {k:"why_other",l:"Other &mdash; what is it?",hint:"goes to your notes, not the why",type:"area",w:3,showIf:["why_tags","~Other"]},
  {k:"why_note",l:"Their story &mdash; for you, not read back",hint:"what changed, a rate rise, a claim that didn't pay",type:"area",w:3},

@@ -1,6 +1,6 @@
 # Health Discovery — the live script
 
-**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 7e327b2 2026-10-17 + uncommitted changes) by
+**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ ae7034e 2026-10-17 + uncommitted changes) by
 `node tools/emit-health-md.mjs`. The cards in `index.html` are the script; change them there and regenerate.
 
 Every line of every card, in card-number order. Tags:
@@ -221,9 +221,9 @@ _Card: opens the profile at *Why they're looking*._
     - A claim that didn't pay, or a bill you didn't expect?
     - A doctor who isn't in the network?
     - Or is it changing — losing it through work, a new job, a move, a baby?
-- **COLLECT** — Their why — in their words (`why_matters`) · What's behind it (`why_tags`): (pick any) Too expensive · Deductible too high · Losing coverage · No coverage now · Doctor / network · Life change · Other
+- **COLLECT** — Their why — in their words, as they said it (`why_matters`) · What's behind it (`why_tags`): (pick any) Too expensive · Deductible too high · Losing coverage · No coverage now · Doctor / network · Life change · Other
 - **COLLECT** _only when What's behind it (`why_tags`) includes “Other”_ — Other — what is it? (`why_other`)
-- **DO** — Type **their exact words** — “healthcare has just gotten so flippin' expensive” — then click whatever is behind it. On the presentation you quote them: *“Last time we talked, you said …”*. Whatever they say, they're right. Agree.
+- **DO** — Type **their exact words, the way they said them** — “healthcare has just gotten so flippin' expensive”, “I’m paying way too much for what I get” — not a note about them (“wants cheaper”): a note can’t be quoted back as something they said. Then click whatever is behind it. On the presentation you quote them: *“Last time we talked, you said …”*. Whatever they say, they're right. Agree.
 - **ASK** — And when you picture the right plan for you — what's most important?
 - **COLLECT** — Their story — for you, not read back (`why_note`)
 - **DO** — Anything more they tell you goes in **their story** — it's for you, not read back. If this answer says it better than the first one, put their words in the **why** box instead.
