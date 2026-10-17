@@ -2938,10 +2938,14 @@ hs_found_end:{s:"2",t:"Ending it well",l:[
 ],b:[{k:"Back to the start",to:"hs_start",c:"go"}]},
 
 hs_tone:{s:"2",t:"Set the tone",l:[
-{t:"say",x:"Most agents will try to sell you a policy right away. We look at your whole situation and put together a <b>Package of Protection</b>."},
+{t:"say",x:"Before we dive in, let me tell you a little about who I am and how I work."},
+{t:"say",x:"___(your bio)"},
+{t:"do",x:"That's <b>your bio</b>, from Set up. Say it in your own words &mdash; what matters is that they hear you're not tied to one company, so you can be trusted to compare. Change it any time; empty means the default."},
+{t:"say",x:"So most agents will try to sell you a policy right away. We look at your whole situation and put together a <b>Package of Protection</b>."},
 {t:"say",x:"That doesn't mean more insurance. It means making sure there are no financial risks sitting right in front of you that could hurt you or your family."},
-{t:"say",x:"It also means I'm going to ask you some questions that aren't only about your health and your health insurance &mdash; some are about your overall finances. That's so I've got the whole picture, because your situation affects both the coverage that's <i>available</i> to you and the coverage you actually <i>need</i>."},
-{t:"train",x:"That third line buys you the income and savings questions later. Say it now and they are expected. Skip it and question 9 sounds nosy."}
+{t:"say",x:"Which is why I'm going to ask you some questions that aren't only about your health &mdash; some are about your finances. Here's why, so it doesn't come out of nowhere. I'll be looking at several plans for you. Some carry a deductible and some don't. If I recommend one with a $10,000 deductible and it turns out you don't have $10,000 sitting spare, I've just put you somewhere that could throw you into a tailspin &mdash; and that would be my fault, not yours."},
+{t:"say",x:"So the money questions aren't to sell you anything today. They're so what I recommend actually fits. Does that make sense?"},
+{t:"train",x:"<b>This buys you the income and savings questions later.</b> Say it now and they're expected; skip it and section 6 sounds nosy. Keep the $10,000 a <i>plan</i> figure &mdash; the moment it sounds like you think <i>they</i> have a $10,000 problem, the sentence changes character. (Jesse's bootcamp framing, 17 Oct.)"}
 ],b:[{k:"Next",to:"hs_why",c:"go"}]},
 
 hs_why:{s:"2",pf:"why",t:"Why they're shopping",l:[
@@ -4983,7 +4987,7 @@ var BLANKMAP={
  "monthly premium":"premium","burial/cremation":"burial","what they pay now":"inplace_prem","policy number":"policy","draft date":"draft","monthly income":"i_income","age":"age","their savings number":"i_left","monthly rent":"rent","what they are doing now":"doing_now","monthly contribution":"i_contrib","children":"kids_names","liquid savings":"i_liquid","occupation":"occupation","anything else":"health_notes","their goal, in their words":"goal","monthly amount":"premium","left over":"i_left","Carrier?":"inplace_carrier","how much coverage":"inplace_amt","their number":"arrangement_cost","their goal, in their words":"goal",
  "address":"address","balance":"m_balance","monthly payment":"m_payment","equity":"m_equity",
  
- "your name":"a_name","your full name":"a_full","agent name":"a_name","your NPN":"a_npn",
+ "your bio":"a_bio", "your name":"a_name","your full name":"a_full","agent name":"a_name","your NPN":"a_npn",
  /* 2.1 says "this is ___(your name) with ___(your agency)". Without this line that second
     blank had nothing behind it, so the one field Set up asks for and never used was the
     one the agent had to say out loud. It is also the name that goes over to MyPOP Pro. */
@@ -5019,14 +5023,20 @@ function pBlank(lab){
     if(P.inplace==="No") return "nothing";
     if(P.inplace==="Yes"){ var ia=num(P.inplace_amt); return ia?money(ia):""; }
     return ""; }
-  var k=BLANKMAP[lab]; if(!k) return ""; if(k==="a_full") k="a_name"; return pVal(k); }
+  var k=BLANKMAP[lab]; if(!k) return ""; if(k==="a_full") k="a_name"; if(k==="a_bio") return agentBio(); return pVal(k); }
 
 /* Same agent details as MyPOP Pro's Agent Information (Jesse, 9 Oct): set them once here and they ride
    over with every client - website and booking link go into the client emails and the post-call text. */
+/* The agent's "who I am", read at 2.3 (Jesse, 17 Oct). Empty = this default, so clearing storage never leaves a
+   blank on the call. Built from Jesse's bootcamp framing (Health Insurance/_training/financial-framing/, block A),
+   health first because they called about health. MyPopPro carries the same text - tools/check.sh compares them. */
+var DEFAULT_BIO="I'm a licensed health insurance agent, and I also help families with life insurance, retirement planning and a number of other financial services. What I do is find out what's important to you, so we can tailor a plan that actually accomplishes your goals. There are a lot of companies and a lot of products out there, and they don't all do the same thing, so it matters who you work with. I'm not beholden to any one company. If one company is the best fit for you, I want to have compared it against all the A-rated ones first.";
+function agentBio(){ var b=String(A.a_bio||"").trim(); return b||DEFAULT_BIO; }
 var AGENT_SPEC=[
  {k:"a_name",l:"Your full name",w:1},{k:"a_agency",l:"Your agency",w:1},{k:"a_npn",l:"Your NPN",w:1},
  {k:"a_phone",l:"Your direct number",w:1},{k:"a_email",l:"Your email",w:1},
- {k:"a_web",l:"Your website",w:1},{k:"a_card",l:"Your digital business card",w:1},{k:"a_book",l:"Your booking link",w:1}
+ {k:"a_web",l:"Your website",w:1},{k:"a_card",l:"Your digital business card",w:1},{k:"a_book",l:"Your booking link",w:1},
+ {k:"a_bio",l:"Your bio &mdash; who you are, read at the start of the call",hint:"leave it empty to use the default",type:"area",w:3}
 ];
 var PROFILE_ON=false;
 var PKEY="osn_profile_v1", AKEY="osn_agent_v1", P={}, A={}, PSAVE=null;
@@ -6137,7 +6147,11 @@ function pSetup(){
     '<p style="font-family:var(--sans);font-size:12.5px;color:var(--slate);line-height:1.6;margin:0 0 14px">'+
     'Type these once. They fill themselves into every script, on every call, on this device.</p>'+
     '<div class="setsec">Your details <em>&mdash; the scripts say these out loud</em></div>'+
-    '<div class="prow">'+AGENT_SPEC.filter(function(f){return !/^a_(web|card|book)$/.test(f.k)}).map(pField).join("")+'</div>'+
+    '<div class="prow">'+AGENT_SPEC.filter(function(f){return !/^a_(web|card|book|bio)$/.test(f.k)}).map(pField).join("")+'</div>'+
+    '<div class="setsec">Your bio <em>&mdash; read at the start of every health call (2.3)</em></div>'+
+    '<div class="prow">'+AGENT_SPEC.filter(function(f){return f.k==="a_bio"}).map(pField).join("")+'</div>'+
+    '<p style="font-family:var(--sans);font-size:12px;color:var(--slate);margin:-4px 0 12px">Write it the way you\'d say it. Empty means the default is read. '+
+    '<button type="button" class="hbtn" onclick="A.a_bio=DEFAULT_BIO;pStore();pSetup();">Use the default</button></p>'+
     '<div class="linkbox">'+
       '<div class="setsec">Your links <em>&mdash; all three are free, see below</em></div>'+
       '<div class="prow">'+AGENT_SPEC.filter(function(f){return /^a_(web|card|book)$/.test(f.k)}).map(function(f){
