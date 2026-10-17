@@ -142,7 +142,8 @@ const WIDGET = {
   handoff: () => "Buttons: Save the profile · Print the profile · Push client to MyPopPro",
 };
 function line(L) {
-  const cond = when(L.when, L.dflt);
+  let cond = when(L.when, L.dflt);
+  if (L.unless) cond = (cond ? cond.replace(/_$/, '') + '; ' : '_') + 'not when ' + pair(L.unless) + '_';   /* e.g. skip the protected-position ask for a current employer's plan */
   let head, body = "", folds = [];
   if (L.t === "pf") {
     head = "**COLLECT**";

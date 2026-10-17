@@ -1,6 +1,6 @@
 # Health Discovery — the live script
 
-**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 3734086 2026-10-17 + uncommitted changes) by
+**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 57138a4 2026-10-17 + uncommitted changes) by
 `node tools/emit-health-md.mjs`. The cards in `index.html` are the script; change them there and regenerate.
 
 Every line of every card, in card-number order. Tags:
@@ -526,9 +526,9 @@ _Card: opens the profile at *Money*._
 - **DO** — **“Behaves” is the word that does the work** (Alison’s, from the bootcamp). It asks what the money *does*, not what product it is — so a 401(k), a TSP or an old pension comes back as the answer, and you’re straight into the protected-position question.
 - **COLLECT** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — Account type (`asset_where`) · Roughly how much (`asset_amt`) · Where it's held (`asset_employer`): Current employer · Previous employer · They hold it themselves · Mixed
 - **DO** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — Ask the amount **dismissively** — “got it, and about how much is in there?” — and keep moving. The next question is the one that matters.
-- **ASK** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — Now — is that in a **protected position**, or is it still at **market risk**? [Protected or at market risk?: Protected · Market risk · Not sure]
+- **ASK** _only when Anything that acts like insurance? (`has_assets`) is “Yes”; not when Where it's held (`asset_employer`) is “Current employer”_ — Now — is that in a **protected position**, or is it still at **market risk**? [Protected or at market risk?: Protected · Market risk · Not sure]
   - Fold-out ▸ **If they ask what you mean by protected**
-- **DO** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — They usually don’t know what “protected position” means — but they know *protected* and they know *risk*. Whatever they say, note it and move on. **Don’t fix it today**: you’re planting it for a later conversation, not selling an annuity on a health call.
+- **DO** _only when Anything that acts like insurance? (`has_assets`) is “Yes”; not when Where it's held (`asset_employer`) is “Current employer”_ — They usually don’t know what “protected position” means — but they know *protected* and they know *risk*. Whatever they say, note it and move on. **Don’t fix it today**: you’re planting it for a later conversation, not selling an annuity on a health call.
 - **ASK** — Any actual life insurance in place right now — including through work? [Life insurance now?: No · Yes]
 - **COLLECT** _only when Life insurance now? (`life_has`) is “Yes”_ — Through (`life_src`): Work · Private · Both · Type (`life_type`): Term · Whole · Not sure · Coverage amount (`life_amt`) · Who's covered (`life_who`): Them · Spouse · Both · What they pay a month (`life_cost`)
 - **COLLECT** _only when Life insurance now? (`life_has`) is “Yes”_ — Anything else about it (`life_now`)
