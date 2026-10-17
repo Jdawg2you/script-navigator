@@ -59,6 +59,9 @@ body.host-pop #toScripts,body.host-pop .o-suite,body.host-pop #setupbtn,body.hos
 body.host-pop #profprint,body.host-pop #profsave,body.host-pop #profopen,body.host-pop #poppro,body.host-pop #popnote,body.host-pop .ptools,body.host-pop .profnudge{display:none!important}
 /* inside MyPopPro the card grows with the window (Jesse, 16 Oct); the stand-alone navigator keeps 800px */
 body.host-pop .wrap{max-width:min(1240px,100%)}
+/* MyPopPro's own header is gone; its "Review the Intake" lives here, beside the timer (Jesse, 17 Oct) */
+.hostonly{display:none}body.host-pop .hostonly{display:inline-flex}
+.hostgo{align-items:center;font:inherit;font-family:var(--sans);font-size:13px;font-weight:800;background:var(--gold,#c9a24e);color:var(--navy,#12213b);border:none;border-radius:9px;padding:9px 14px;cursor:pointer;margin-left:10px;white-space:nowrap}.hostgo:hover{filter:brightness(1.05)}
 /* POP Pro gives the call a window-height panel: the profile docks beside the script instead of covering it */
 body.host-pop{overflow-x:hidden}body.host-pop .drawer{position:fixed}
 @media (min-width:860px){body.host-pop .drawer{width:min(430px,44%)}body.host-pop .scrim{display:none!important}body.host-pop.prof-open #app{margin-right:min(430px,44%)}body.host-pop #app.docked{padding-right:0}}   /* the stand-alone dock padding would reserve the room twice (Jesse, 16 Oct) */
@@ -839,6 +842,7 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
   <div class="spacer"></div>
   <select id="jump" aria-label="Jump to section"></select>
   <div class="timer">Call<b id="timer">00:00</b></div>
+  <button type="button" class="hostonly hostgo" id="hostIntake">Review the Intake &rarr;</button>
   <div class="o-suite"><button type="button">More free tools &#9662;</button><div class="o-suite-menu"></div></div>
   <button class="pillbtn" id="setupbtn">&#9881; Set up</button>
   <button class="pillbtn" id="restart">&#8635; Start over</button>
@@ -7782,6 +7786,7 @@ if(HOST){
     if(d.agent) Object.keys(d.agent).forEach(function(k){ if(String(d.agent[k]||"").trim()) A[k]=String(d.agent[k]); });
     if(typeof render==="function") render(); if(document.body.classList.contains("drawer-open")||($("drawer")&&$("drawer").classList.contains("open"))) pOpen(); postHeight(); });
   try{ parent.postMessage({source:"insurance-script-navigator",type:"call-ready"},"*"); }catch(e){}
+  var hi=$("hostIntake"); if(hi) hi.onclick=function(){ if(HOST_ORIGIN==="*") return; try{ parent.postMessage({source:"insurance-script-navigator",type:"go-intake"},HOST_ORIGIN); }catch(e){} };
   var dr=$("drawer"); if(dr&&window.MutationObserver){ var syncDock=function(){ document.body.classList.toggle("prof-open",dr.classList.contains("open")); };
     new MutationObserver(syncDock).observe(dr,{attributes:true,attributeFilter:["class"]}); syncDock(); }
 }
