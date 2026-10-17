@@ -1,6 +1,6 @@
 # Health Discovery — the live script
 
-**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 1af392b 2026-10-17 + uncommitted changes) by
+**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 77d863b 2026-10-17 + uncommitted changes) by
 `node tools/emit-health-md.mjs`. The cards in `index.html` are the script; change them there and regenerate.
 
 Every line of every card, in card-number order. Tags:
@@ -528,7 +528,10 @@ _Card: opens the profile at *Money*._
 - **ASK** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — Now — is that in a **protected position**, or is it still at **market risk**? [Protected or at market risk?: Protected · Market risk · Not sure]
   - Fold-out ▸ **If they ask what you mean by protected**
 - **DO** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — They usually don’t know what “protected position” means — but they know *protected* and they know *risk*. Whatever they say, note it and move on. **Don’t fix it today**: you’re planting it for a later conversation, not selling an annuity on a health call.
-- **ASK** — Any life insurance in place right now — including through work? ___(life insurance now)
+- **ASK** — Any actual life insurance in place right now — including through work? [Life insurance now?: No · Yes]
+- **COLLECT** _only when Life insurance now? (`life_has`) is “Yes”_ — Through (`life_src`): Work · Private · Both · Type (`life_type`): Term · Whole · Not sure · Coverage amount (`life_amt`) · Who's covered (`life_who`): Them · Spouse · Both · What they pay a month (`life_cost`)
+- **COLLECT** _only when Life insurance now? (`life_has`) is “Yes”_ — Anything else about it (`life_now`)
+- **DO** _only when Life insurance now? (`life_has`) is “Yes”_ — Through work usually ends when the job does, and it’s often only a year or two of salary. Note it plainly — you’re not selling life today, you’re finding out what would land on the family.
 - **TRAIN** — **You are not selling any of this today.** You are finding out whether a big medical bill would land on savings, on a retirement account, or on nothing at all. That answer is what the Package of Protection conversation is built from on the presentation call.
 
 **Buttons**
@@ -622,6 +625,5 @@ Each `___(label)` in the cards, the card it first appears on, and the profile fi
 | ___(your income) | 6.1 | Income this year (`income_this`) |
 | ___(your retirement age) | 6.1 | Target retirement age (`i_retire`) |
 | ___(approximate savings) | 6.1 | Liquid savings (`i_liquid`) |
-| ___(life insurance now) | 6.1 | Life insurance now (incl. through work) (`life_now`) |
 | ___(bill tomorrow) | 6.2 | Could pay tomorrow without stress (`bill_tomorrow`) |
 

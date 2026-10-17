@@ -3149,7 +3149,10 @@ hs_income:{s:"6",pf:"income",t:"Income and the cliff",l:[
 {t:"do",when:["has_assets","Yes"],x:"Ask the amount <b>dismissively</b> &mdash; &ldquo;got it, and about how much is in there?&rdquo; &mdash; and keep moving. The next question is the one that matters."},
 {t:"ask",when:["has_assets","Yes"],x:"Now &mdash; is that in a <b>protected position</b>, or is it still at <b>market risk</b>? {{asset_risk}} <details class=\"ideas\"><summary>If they ask what you mean by protected</summary><p>What I mean by protected is this: is your money in a position where, when the market drops again &mdash; not if &mdash; the way it did in 2008, it doesn&rsquo;t take your savings with it? Back then some people lost 47% of their life savings, and for some it took nine years just to get back to even.</p><p>And here&rsquo;s the part most people haven&rsquo;t done the math on. If you lose half, getting half back doesn&rsquo;t put you level. A hundred, down fifty percent, is fifty. Fifty, up fifty percent, is seventy-five. You&rsquo;re still a quarter down.</p><p>That&rsquo;s survivable at forty. At the point you actually need the money, you may not have the time to recover. So it&rsquo;s worth a look &mdash; not today, but it&rsquo;s worth a look.</p></details>"},
 {t:"do",when:["has_assets","Yes"],x:"They usually don&rsquo;t know what &ldquo;protected position&rdquo; means &mdash; but they know <i>protected</i> and they know <i>risk</i>. Whatever they say, note it and move on. <b>Don&rsquo;t fix it today</b>: you&rsquo;re planting it for a later conversation, not selling an annuity on a health call."},
-{t:"ask",x:"Any life insurance in place right now &mdash; including through work? ___(life insurance now)"},
+{t:"ask",x:"Any actual life insurance in place right now &mdash; including through work? {{life_has}}"},
+{t:"pf",ks:["life_src","life_type","life_amt","life_who","life_cost"],when:["life_has","Yes"]},
+{t:"pf",ks:["life_now"],when:["life_has","Yes"]},
+{t:"do",when:["life_has","Yes"],x:"Through work usually ends when the job does, and it&rsquo;s often only a year or two of salary. Note it plainly &mdash; you&rsquo;re not selling life today, you&rsquo;re finding out what would land on the family."},
 {t:"train",x:"<b>You are not selling any of this today.</b> You are finding out whether a big medical bill would land on savings, on a retirement account, or on nothing at all. That answer is what the Package of Protection conversation is built from on the presentation call."}
 ],b:[{k:"Next",to:"hs_budget",c:"go"}]},
 
@@ -4902,7 +4905,13 @@ PF_SPEC_HEALTH=[
  {k:"asset_prot",l:"Protectable?",w:1,opt:["","Yes","No"],showIf:["has_assets","Yes"]},
  {k:"asset_risk",l:"Protected or at market risk?",w:1,opt:["","Protected","Market risk","Not sure"],showIf:["has_assets","Yes"]},
  {k:"asset_notes",l:"Notes on their money / details",w:2},
- {k:"life_now",l:"Life insurance now (incl. through work)",w:2},
+ {k:"life_has",drives:true,l:"Life insurance now?",w:1,opt:["","No","Yes"]},
+ {k:"life_src",l:"Through",w:1,opt:["","Work","Private","Both"],showIf:["life_has","Yes"]},
+ {k:"life_type",l:"Type",w:1,opt:["","Term","Whole","Not sure"],showIf:["life_has","Yes"]},
+ {k:"life_amt",l:"Coverage amount",money:"plain",w:1,showIf:["life_has","Yes"]},
+ {k:"life_who",l:"Who's covered",w:1,opt:["","Them","Spouse","Both"],showIf:["life_has","Yes"]},
+ {k:"life_cost",l:"What they pay a month",money:"plain",w:1,showIf:["life_has","Yes"]},
+ {k:"life_now",l:"Anything else about it",hint:"carrier, when the term ends, more than one policy",type:"area",w:3,showIf:["life_has","Yes"]},
 
  {sec:"Budget",id:"budget"},
  {k:"budget_comfort",l:"Comfortable at",money:"plain",w:1},
@@ -5045,6 +5054,11 @@ function pBlank(lab){
    health first because they called about health. MyPopPro carries the same text - tools/check.sh compares them. */
 var DEFAULT_BIO="I'm a licensed health insurance agent, and I also help families with life insurance, retirement planning and a number of other financial services. What I do is find out what's important to you, so we can tailor a plan that actually accomplishes your goals. There are a lot of companies and a lot of products out there, and they don't all do the same thing, so it matters who you work with. I'm not beholden to any one company. If one company is the best fit for you, I want to have compared it against all the A-rated ones first.";
 function agentBio(){ var b=String(A.a_bio||"").trim(); return b||DEFAULT_BIO; }
+/* "Life insurance now" for MyPopPro's notes: the Yes/No and its follow-ups as one line (Jesse, 17 Oct) */
+function lifeNowLine(){ if(P.life_has==="No") return "None"; if(P.life_has!=="Yes") return P.life_now||"";
+  var bits=[P.life_src?(P.life_src==="Work"?"through work":P.life_src==="Private"?"private":"work and private"):"", (P.life_type&&P.life_type!=="Not sure")?String(P.life_type).toLowerCase():"",
+    P.life_amt?P.life_amt+" coverage":"", P.life_who?(P.life_who==="Them"?"covers them":P.life_who==="Spouse"?"covers the spouse":"covers both"):"", P.life_cost?P.life_cost+"/mo":""].filter(Boolean);
+  return "Yes"+(bits.length?" — "+bits.join(", "):"")+(String(P.life_now||"").trim()?" · "+String(P.life_now).trim():""); }
 var AGENT_SPEC=[
  {k:"a_name",l:"Your full name",w:1},{k:"a_agency",l:"Your agency",w:1},{k:"a_npn",l:"Your NPN",w:1},
  {k:"a_phone",l:"Your direct number",w:1},{k:"a_email",l:"Your email",w:1},
@@ -6347,7 +6361,7 @@ function popClient(){
       losing:P.losing||"", nextSame:P.next_same||"",
       curOop:P.cur_oop||"", curIsAca:P.cur_is_aca||"", curPaying:P.cur_paying||"", curSubsidy:P.cur_subsidy||"", hasHsa:P.has_hsa||"",
       pregnant:P.pregnant||"", spPregnant:P.sp_pregnant||"", planned:P.planned||"",
-      empOffer:P.emp_offer||"", spEmpOffer:P.sp_emp_offer||"", assetRisk:P.asset_risk||"", whyOther:P.why_other||"", lifeNow:P.life_now||"", billTomorrow:P.bill_tomorrow||"", bankKind:P.bank_kind||"",
+      empOffer:P.emp_offer||"", spEmpOffer:P.sp_emp_offer||"", assetRisk:P.asset_risk||"", whyOther:P.why_other||"", lifeNow:lifeNowLine(), billTomorrow:P.bill_tomorrow||"", bankKind:P.bank_kind||"",
       apptDate:P.appt_date||"", apptTime:P.appt_time||"",
       notes:P.notes||"",
       doctors:docs.map(function(d){
