@@ -152,11 +152,11 @@ function line(L) {
     body = WIDGET[L.t](L);
   } else {
     head = "**" + (TAG[L.t] || L.t.toUpperCase()) + "**";
-    ({ text: body, folds } = md(L.x));
+    /* this file is also the printable script, so the bio prints as the words the agent says */
+    ({ text: body, folds } = md(String(L.x || "").replace(/_{3,}\s*\(your bio\)/g, DEFAULT_BIO.replace(/\$/g, "$$$$"))));
+    if (/_{3,}\s*\(your bio\)/.test(L.x || "")) body += " _(the default bio — the agent's own bio from Set up replaces this)_";
   }
   let out = "- " + head + (cond ? " " + cond : "") + " — " + body;
-  if (/_{3,}\s*\(your bio\)/.test(L.x || ""))
-    out += "\n  - Default bio, read when the agent's Set up bio is empty:\n    > " + DEFAULT_BIO;
   folds.forEach(f => {
     out += "\n  - Fold-out ▸ **" + f.title + "**";
     f.items.forEach((it, i) => { out += "\n    " + (f.ordered ? (i + 1) + "." : "-") + " " + it; });

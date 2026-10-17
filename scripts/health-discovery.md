@@ -197,9 +197,7 @@ _Card: opens the profile at *Why they're looking*._
 ### 2.3 · Set the tone  `hs_tone`
 
 - **SAY** — Before we dive in, let me tell you a little about who I am and how I work.
-- **SAY** — ___(your bio)
-  - Default bio, read when the agent's Set up bio is empty:
-    > I'm a licensed health insurance agent, and I also help families with life insurance, retirement planning and a number of other financial services. What I do is find out what's important to you, so we can tailor a plan that actually accomplishes your goals. There are a lot of companies and a lot of products out there, and they don't all do the same thing, so it matters who you work with. I'm not beholden to any one company. If one company is the best fit for you, I want to have compared it against all the A-rated ones first.
+- **SAY** — I'm a licensed health insurance agent, and I also help families with life insurance, retirement planning and a number of other financial services. What I do is find out what's important to you, so we can tailor a plan that actually accomplishes your goals. There are a lot of companies and a lot of products out there, and they don't all do the same thing, so it matters who you work with. I'm not beholden to any one company. If one company is the best fit for you, I want to have compared it against all the A-rated ones first. _(the default bio — the agent's own bio from Set up replaces this)_
 - **DO** — That's **your bio**, from Set up. Say it in your own words — what matters is that they hear you're not tied to one company, so you can be trusted to compare. Change it any time; empty means the default.
 - **SAY** — So most agents will try to sell you a policy right away. We look at your whole situation and put together a **Package of Protection**.
 - **SAY** — That doesn't mean more insurance. It means making sure there are no financial risks sitting right in front of you that could hurt you or your family.
