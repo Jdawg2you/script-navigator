@@ -469,7 +469,10 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .alt.on{color:var(--ink);font-style:normal;background:var(--goldsoft);border-radius:6px;
   margin:2px -6px;padding:7px 6px}
 .alt.on i{color:var(--golddk)}
-.pfi.wide{flex-basis:100%}
+.pfi.wide{flex:1 1 100%}
+/* text boxes on the card use the card's width and grow with what's typed (Jesse, 17 Oct) */
+.pfi.wide textarea{flex:1 1 auto;min-height:58px;resize:vertical;overflow:hidden}
+.pfi.wide input{flex:1 1 auto}
 .pfi.wide textarea,.pfi.wide input{width:100%;min-width:340px}
 .pfi.wide textarea{font-family:var(--sans);font-size:12.5px;line-height:1.45;padding:6px 8px;
   border:1px solid var(--rule);border-radius:6px;resize:vertical}
@@ -5318,6 +5321,9 @@ document.addEventListener("input",function(e){
   if(k && !t.hasAttribute("data-dep")) mirrorField(k,t.value,t);
   if(k==="dob"||k==="sp_dob"||t.hasAttribute("data-dep")) syncAges();
 });
+function pfGrow(t){ if(!t||t.tagName!=="TEXTAREA"||!t.closest||!t.closest(".pfi.wide")) return; t.style.height="auto"; t.style.height=Math.max(58,t.scrollHeight+2)+"px"; }
+document.addEventListener("input",function(e){ pfGrow(e.target); });
+if(window.MutationObserver) new MutationObserver(function(){ [].forEach.call(document.querySelectorAll("#script .pfi.wide textarea"),pfGrow); }).observe(document.documentElement,{childList:true,subtree:true});
 document.addEventListener("change",function(e){
   var t=e.target; if(!t.getAttribute) return;
   var k=t.getAttribute("data-pk")||t.getAttribute("data-pf");
