@@ -1,6 +1,6 @@
 # Health Discovery — the live script
 
-**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 93659a4 2026-10-17) by
+**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 93659a4 2026-10-17 + uncommitted changes) by
 `node tools/emit-health-md.mjs`. The cards in `index.html` are the script; change them there and regenerate.
 
 Every line of every card, in card-number order. Tags:
@@ -520,8 +520,12 @@ _Card: opens the profile at *Money*._
 - **SAY** — Some plans carry high deductibles — I'll steer you away from those, but I do want to know what's behind you if something big happened.
 - **ASK** — Do you have liquid savings — something like six months put aside if there were an emergency? [Liquid savings?: No · Yes]
 - **ASK** _only when Liquid savings? (`has_liquid`) is “Yes”_ — Roughly how much? ___(approximate savings)
-- **ASK** — And is there anything else that acts like an insurance policy for your finances? A 401(k), an IRA, savings? [Anything that acts like insurance?: No · Yes]
+- **ASK** — And is there anything else that acts like an insurance policy for your finances? A 401(k), a TSP, an IRA, savings? [Anything that acts like insurance?: No · Yes]
 - **COLLECT** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — Where is it (`asset_where`) · Roughly how much (`asset_amt`)
+- **DO** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — Ask the amount **dismissively** — “got it, and about how much is in there?” — and keep moving. The next question is the one that matters.
+- **ASK** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — Now — is that in a **protected position**, or is it still at **market risk**? [Protected or at market risk?: Protected · Market risk · Not sure]
+  - Fold-out ▸ **If they ask what you mean by protected**
+- **DO** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — They usually don’t know what “protected position” means — but they know *protected* and they know *risk*. Whatever they say, note it and move on. **Don’t fix it today**: you’re planting it for a later conversation, not selling an annuity on a health call.
 - **COLLECT** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — Where is it held (`asset_employer`): Current employer · Previous employer · They hold it themselves · Mixed
 - **ASK** — Any life insurance in place right now — including through work? ___(life insurance now)
 - **COLLECT** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — Protectable? (`asset_prot`): Yes · No · Notes on their money / details (`asset_notes`)
