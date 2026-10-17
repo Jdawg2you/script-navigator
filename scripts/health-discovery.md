@@ -1,6 +1,6 @@
 # Health Discovery — the live script
 
-**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ abc595d 2026-10-17 + uncommitted changes) by
+**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 1559f53 2026-10-17 + uncommitted changes) by
 `node tools/emit-health-md.mjs`. The cards in `index.html` are the script; change them there and regenerate.
 
 Every line of every card, in card-number order. Tags:
@@ -435,7 +435,7 @@ _Card: opens the profile at *Family history and general*._
 - **SAY** — A few quick yes or no questions — these change which plans are worth quoting.
 - **ON SCREEN** — Yes/no grid: Family history — cancer · Family history — heart · Family history — stroke · Mental health needs (applicant and spouse)
 - **DO** — Family history, not their own diagnosis. Their own conditions you already have.
-- **ASK** — Is anyone pregnant right now? And is there any chance anyone could become pregnant in the next couple of years?
+- **ASK** — `Read the room` Is anyone pregnant right now? And is there any chance anyone could become pregnant in the next couple of years?
 - **ON SCREEN** — Yes/no grid: Pregnant now · Future maternity needs (applicant and spouse)
 - **TRAIN** — **Maternity is the expensive one.** A plan without it is materially cheaper, and putting someone on a plan that excludes it when they are planning a family is the single worst outcome here. Ask it plainly, of both of them.
 

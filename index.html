@@ -3078,7 +3078,7 @@ hs_famhist:{s:"5",pf:"famhist",t:"Family history and general",l:[
 {t:"say",x:"A few quick yes or no questions &mdash; these change which plans are worth quoting."},
 {t:"fhgrid"},
 {t:"do",x:"Family history, not their own diagnosis. Their own conditions you already have."},
-{t:"ask",x:"Is anyone pregnant right now? And is there any chance anyone could become pregnant in the next couple of years?"},
+{t:"ask",x:"<span class=\"optpill\">Read the room</span> Is anyone pregnant right now? And is there any chance anyone could become pregnant in the next couple of years?"},
 {t:"fhgrid",rows:"preg"},
 {t:"train",x:"<b>Maternity is the expensive one.</b> A plan without it is materially cheaper, and putting someone on a plan that excludes it when they are planning a family is the single worst outcome here. Ask it plainly, of both of them."}
 ],b:[{k:"Next",to:"hs_recent",c:"go"}]},
@@ -5323,7 +5323,12 @@ document.addEventListener("input",function(e){
   if(k==="dob"||k==="sp_dob"||t.hasAttribute("data-dep")) syncAges();
 });
 function pfGrow(t){ if(!t||t.tagName!=="TEXTAREA"||!t.closest||!t.closest(".pfi.wide")) return; t.style.height="auto"; t.style.height=Math.max(58,t.scrollHeight+2)+"px"; }
-document.addEventListener("input",function(e){ pfGrow(e.target); });
+document.addEventListener("input",function(e){ pfGrow(e.target);
+  /* money boxes read as money while typing - $118,000, not 118000 (Jesse, 17 Oct). The cursor sits at the end, where it was. */
+  var t=e.target, k=t&&t.getAttribute&&t.getAttribute("data-pk"), f=k&&(typeof pSpecOf==="function")&&pSpecOf(k);
+  if(f&&f.money==="plain"&&t.tagName==="INPUT"){ var raw=String(t.value||"").replace(/[^0-9.]/g,""); if(!raw){ return; }
+    var parts=raw.split("."), int=parts[0].replace(/^0+(?=\d)/,""), dec=parts.length>1?"."+parts.slice(1).join("").slice(0,2):"";
+    var v="$"+(int?Number(int).toLocaleString("en-US"):"0")+dec; if(v!==t.value){ t.value=v; try{ t.setSelectionRange(v.length,v.length); }catch(x){} } } });
 if(window.MutationObserver) new MutationObserver(function(){ [].forEach.call(document.querySelectorAll("#script .pfi.wide textarea"),pfGrow); }).observe(document.documentElement,{childList:true,subtree:true});
 document.addEventListener("change",function(e){
   var t=e.target; if(!t.getAttribute) return;
