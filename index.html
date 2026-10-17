@@ -5334,7 +5334,12 @@ document.addEventListener("input",function(e){ pfGrow(e.target);
   if(f&&f.money==="plain"&&t.tagName==="INPUT"){ var raw=String(t.value||"").replace(/[^0-9.]/g,""); if(!raw){ return; }
     var parts=raw.split("."), int=parts[0].replace(/^0+(?=\d)/,""), dec=parts.length>1?"."+parts.slice(1).join("").slice(0,2):"";
     var v="$"+(int?Number(int).toLocaleString("en-US"):"0")+dec; if(v!==t.value){ t.value=v; try{ t.setSelectionRange(v.length,v.length); }catch(x){} } } });
-if(window.MutationObserver) new MutationObserver(function(){ [].forEach.call(document.querySelectorAll("#script .pfi.wide textarea"),pfGrow); }).observe(document.documentElement,{childList:true,subtree:true});
+/* money that arrives from MyPopPro or a saved file is a bare number (118000) - shown as money wherever it's drawn,
+   and stored that way too, so the profile and the next push agree (Jesse, 17 Oct) */
+function moneyShow(root){ [].forEach.call((root||document).querySelectorAll("input[data-pk]"),function(t){ if(document.activeElement===t) return;
+    var k=t.getAttribute("data-pk"), f=(typeof pSpecOf==="function")&&pSpecOf(k); if(!f||f.money!=="plain") return;
+    var v=String(t.value||"").trim(); if(!/^\d+(\.\d+)?$/.test(v.replace(/,/g,""))) return; var m=pMoneyPlain(v); if(m&&m!==v){ t.value=m; if(k.indexOf("a_")!==0&&P[k]!==m){ P[k]=m; } if(t.classList.contains("iblank")) pFit(t); } }); }
+if(window.MutationObserver) new MutationObserver(function(){ [].forEach.call(document.querySelectorAll("#script .pfi.wide textarea"),pfGrow); moneyShow(); }).observe(document.documentElement,{childList:true,subtree:true});
 document.addEventListener("change",function(e){
   var t=e.target; if(!t.getAttribute) return;
   var k=t.getAttribute("data-pk")||t.getAttribute("data-pf");
