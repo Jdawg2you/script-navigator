@@ -1,6 +1,6 @@
 # Health Discovery — the live script
 
-**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ ee65f50 2026-10-17 + uncommitted changes) by
+**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 7e54cb6 2026-10-17 + uncommitted changes) by
 `node tools/emit-health-md.mjs`. The cards in `index.html` are the script; change them there and regenerate.
 
 Every line of every card, in card-number order. Tags:
@@ -106,7 +106,7 @@ _Card: opens the profile at *Who you're calling*._
 - **DO** — Send the text now, while they're still on the phone. Not after.
 - **SAY** — Now, I do have one request that I'd like to make.
 - **DO** — Micro-pause. Let them say “sure”. The pause is what turns this from a throwaway line into a commitment.
-- **SAY** — *“If anything comes up, would you do me the courtesy of letting me know as soon as possible? I'd hate to be sitting there waiting for our call if something came up — so just let me know and I'll move our time to what works better. Is that fair?”*
+- **SAY** — *“If anything comes up, would you do me the courtesy of letting me know as soon as possible? I'd hate to be sitting there waiting for our call if something came up! — so just let me know and I'll move our time to what works better. Is that fair?”*
 - **TIP** — Say it however it comes out of your mouth — the words are not the point. The point is that they hear our time is worth something too. That is what turns a booking into a kept appointment.
 - **DO** — Wait for the yes. That yes is the appointment.
 - **SAY** — And just so you know, we won't be paying for anything on that call. What I'll do is break it all down so you're completely clear, and then you'll tell me which direction you'd like to go from there.
