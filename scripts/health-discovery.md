@@ -1,6 +1,6 @@
 # Health Discovery — the live script
 
-**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 1559f53 2026-10-17 + uncommitted changes) by
+**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 86ccf16 2026-10-17 + uncommitted changes) by
 `node tools/emit-health-md.mjs`. The cards in `index.html` are the script; change them there and regenerate.
 
 Every line of every card, in card-number order. Tags:
@@ -521,7 +521,8 @@ _Card: opens the profile at *Money*._
 - **SAY** — Some plans carry high deductibles — I'll steer you away from those, but I do want to know what's behind you if something big happened.
 - **ASK** — Do you have liquid savings — something like six months put aside if there were an emergency? [Liquid savings?: No · Yes]
 - **ASK** _only when Liquid savings? (`has_liquid`) is “Yes”_ — Roughly how much? ___(approximate savings)
-- **ASK** — And is there anything else that acts like an insurance policy for your finances? A 401(k), a TSP, an IRA, savings? [Anything that acts like insurance?: No · Yes]
+- **ASK** — And do you have anything that **behaves** like an insurance policy for your finances — something that, if life went sideways, would give you or your family money to lean on? A 401(k), a TSP, an IRA, savings? [Anything that acts like insurance?: No · Yes]
+- **DO** — **“Behaves” is the word that does the work** (Alison’s, from the bootcamp). It asks what the money *does*, not what product it is — so a 401(k), a TSP or an old pension comes back as the answer, and you’re straight into the protected-position question.
 - **COLLECT** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — Where is it (`asset_where`) · Roughly how much (`asset_amt`)
 - **DO** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — Ask the amount **dismissively** — “got it, and about how much is in there?” — and keep moving. The next question is the one that matters.
 - **ASK** _only when Anything that acts like insurance? (`has_assets`) is “Yes”_ — Now — is that in a **protected position**, or is it still at **market risk**? [Protected or at market risk?: Protected · Market risk · Not sure]
