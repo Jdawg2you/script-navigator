@@ -3041,7 +3041,8 @@ hs_household:{s:"4",t:"Household",l:[
 {t:"say",when:["kids",["1","2","3","4+"]],x:"<b>Okay &mdash; now on to the kids.</b>"},
 {t:"deps",when:["kids",["1","2","3","4+"]]},
 {t:"do",x:"Name, date of birth and gender for each child &mdash; the age works itself out. No height, weight or tobacco; those only rate the adults."},
-{t:"ask",when:["kids",["1","2","3","4+"]],x:"And how's their health &mdash; everything all good, or is there anything major, or any medications? ___(kids health)"},
+{t:"ask",when:["kids",["1","2","3","4+"]],x:"And your kids' health &mdash; all good there? Any medications?"},
+{t:"pf",ks:["kids_health"],when:["kids",["1","2","3","4+"]]},
 {t:"do",when:["kids",["1","2","3","4+"]],x:"One open question, not a health history each. You are listening for anything that changes which plan the family can go on &mdash; asthma, an inhaler, a specialist they see. Type what they say."}
 ],b:[{k:"Move to health",to:"hs_history",c:"go"}]},
 

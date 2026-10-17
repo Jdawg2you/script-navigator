@@ -1,6 +1,6 @@
 # Health Discovery — the live script
 
-**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 93659a4 2026-10-17 + uncommitted changes) by
+**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ abc595d 2026-10-17 + uncommitted changes) by
 `node tools/emit-health-md.mjs`. The cards in `index.html` are the script; change them there and regenerate.
 
 Every line of every card, in card-number order. Tags:
@@ -375,7 +375,8 @@ _Card: opens the profile at *Qualify*._
 - **SAY** _only when Children (`kids`) is “1” or “2” or “3” or “4+”_ — **Okay — now on to the kids.**
 - **ON SCREEN** _only when Children (`kids`) is “1” or “2” or “3” or “4+”_ — Children: name, date of birth, gender for each
 - **DO** — Name, date of birth and gender for each child — the age works itself out. No height, weight or tobacco; those only rate the adults.
-- **ASK** _only when Children (`kids`) is “1” or “2” or “3” or “4+”_ — And how's their health — everything all good, or is there anything major, or any medications? ___(kids health)
+- **ASK** _only when Children (`kids`) is “1” or “2” or “3” or “4+”_ — And your kids' health — all good there? Any medications?
+- **COLLECT** _only when Children (`kids`) is “1” or “2” or “3” or “4+”_ — Kids — health, medications, anything to know (`kids_health`)
 - **DO** _only when Children (`kids`) is “1” or “2” or “3” or “4+”_ — One open question, not a health history each. You are listening for anything that changes which plan the family can go on — asthma, an inhaler, a specialist they see. Type what they say.
 
 **Buttons**
@@ -606,7 +607,6 @@ Each `___(label)` in the cards, the card it first appears on, and the profile fi
 | ___(spouse age) | 4.2 | Age (`sp_age`) |
 | ___(spouse height) | 4.2 | Height (`sp_height`) |
 | ___(spouse weight) | 4.2 | Weight (`sp_weight`) |
-| ___(kids health) | 4.2 | Kids — health, medications, anything to know (`kids_health`) |
 | ___(which GLP-1) | 5.1 | Which one (`glp1_drug`) |
 | ___(how long on it) | 5.1 | How long on it (`glp1_since`) |
 | ___(what the GLP-1 costs) | 5.1 | What they pay a month (`glp1_cost`) |
