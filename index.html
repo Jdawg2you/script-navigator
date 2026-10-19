@@ -143,6 +143,11 @@ button.howbtn{cursor:pointer;font-family:var(--sans)}
 .lcard.ext{border-left-color:var(--blue);cursor:pointer;display:block;text-decoration:none;color:inherit}
 .lcard.ext:hover{box-shadow:0 4px 14px rgba(22,32,60,.12);transform:translateY(-2px)}
 .lbadge.ext{background:var(--bluesoft);color:var(--blue)}
+.lcard.pop{background:#0f1b33;border-color:#0f1b33;border-left-color:#e3b23c;color:#fff;cursor:pointer;display:block;text-decoration:none;position:relative}
+.lcard.pop h2{color:#e3b23c}.lcard.pop p{color:#d6dbe6}
+.lcard.pop:hover{box-shadow:0 4px 14px rgba(22,32,60,.25);transform:translateY(-2px)}
+.lcard.pop .popmark{position:absolute;top:14px;right:14px;border-radius:10px}
+.lbadge.pop{background:#e3b23c;color:#0f1b33}
 .lcard h2{font-family:var(--serif);font-size:20px;font-weight:700;margin-bottom:5px;line-height:1.25}
 .lcard p{font-size:13.5px;line-height:1.55;color:var(--muted)}
 .lbadge{display:inline-block;font-size:11px;font-weight:600;
@@ -1044,8 +1049,10 @@ var SCRIPTS=[
   desc:"Warm or scheduled IUL calls. Goal discovery, eligibility, then a fork into IUL, a Zoom for larger cases, or a whole life pivot.", tail:"Builds a client profile &rarr; <b>Product Wizard</b>"},
  {k:"mortgage",ready:true,  title:"Mortgage Protection",
   desc:"Homeowner leads. Reframes payoff into protecting equity and buying time, then forks into IUL, whole life or term.", tail:"Builds a client profile &rarr; <b>Product Wizard</b>"},
- {k:"health",   ready:true,  title:"Health — Discovery Call",
-  desc:"Private health discovery. Appointment or warm call, household and health for both spouses, the subsidy cliff, then book the presentation.", tail:"Builds a private health profile &rarr; <b>MyPOP&nbsp;Pro</b>"}
+ /* Health lives in MyPopPro now (Jesse, 18 Oct): the tile sends agents there. LIB.health stays - MyPopPro's Discovery
+    step runs it here in embed mode (?embed=1&script=health&host=poppro), and ?script=health still opens it directly. */
+ {k:"health", pop:"https://mypoppro.com/tool/", title:"MyPopPro",
+  desc:"Health clients start here: the discovery call, the quote, the presentation, enrollment and the benefits review &mdash; all in one place."}
 ];
 
 var LIB={
@@ -7254,6 +7261,12 @@ document.addEventListener("keydown",function(e){
 
 function buildLauncher(){
   $("lgrid").innerHTML=SCRIPTS.map(function(x){
+    if(x.pop){
+      return '<a class="lcard pop" href="'+x.pop+'" target="_blank" rel="noopener">'+
+        '<img class="popmark" src="https://mypoppro.com/assets/apple-touch-icon.png" alt="" width="44" height="44">'+
+        '<span class="lbadge pop">Health &middot; opens MyPopPro &#8599;</span>'+
+        '<h2>'+x.title+'</h2><p>'+x.desc+'</p></a>';
+    }
     if(x.external){
       return '<a class="lcard ext" href="'+x.external+'" target="_blank" rel="noopener noreferrer">'+
         '<span class="lbadge ext">Opens externally &#8599;</span>'+
