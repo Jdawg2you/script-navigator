@@ -1,6 +1,6 @@
 # Health Discovery — the live script
 
-**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 4ae9b45 2026-10-17 + uncommitted changes) by
+**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ cae2366 2026-10-18 + uncommitted changes) by
 `node tools/emit-health-md.mjs`. The cards in `index.html` are the script; change them there and regenerate.
 
 Every line of every card, in card-number order. Tags:
@@ -122,12 +122,8 @@ _Card: opens the profile at *Who you're calling*._
 ### 1.3c · After the booking  `hs_book_end`
 
 - **NOTE** — Log it, send the confirmation text, set your own reminder. Call back at the exact time you promised.
-- **DO (big)** _only when Full discovery done (set at 7.1) (`did_discovery`) is “Yes”_ — You have a full profile on this one. Don't let it die in the browser tab.
-- **SAY** _only when Full discovery done (set at 7.1) (`did_discovery`) is “Yes”_ — **Save it, then push it over.** Saving keeps a copy on record and gives you a file you can reload before the presentation call — so you walk in already knowing their medications, their doctors, their income and their number.
-- **ON SCREEN** _only when Full discovery done (set at 7.1) (`did_discovery`) is “Yes”_ — Buttons: Save the profile · Print the profile · Push client to MyPopPro
-- **DO** _only when Full discovery done (set at 7.1) (`did_discovery`) is “Yes”_ — Save first, every time. Once it is saved, open MyPopPro and start building the good / better / best while the call is still fresh.
-- **TRAIN** _only when Full discovery done (set at 7.1) (`did_discovery`) is “Yes”_ — **The presentation is built before the call, not on it.** If you open MyPopPro cold at the appointment time you will spend the first ten minutes typing what they already told you, and they will hear it.
-- **WARN ★** _only when Full discovery done (set at 7.1) (`did_discovery`) is “Yes”_ — The saved file lives in your downloads folder, not in this browser. It has health information in it — keep it where you keep client paperwork, and don't email it around.
+- **ON SCREEN** — What happens next: ✓ Discovery call → Intake (check what the call filled in) → Quote → Present → Enroll → Benefits Review. Button: Review the Intake →
+- **TRAIN** — **The presentation is built before the call, not on it.** Review the Intake and build the quote while this call is still fresh — at the appointment you walk in already knowing their medications, their doctors and their number.
 
 **Buttons**
 

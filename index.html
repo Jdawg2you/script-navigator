@@ -681,6 +681,15 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .refadd{appearance:none;cursor:pointer;font-family:var(--sans);font-size:12px;font-weight:600;
   color:var(--golddk);background:#fff;border:1px dashed var(--goldline);border-radius:6px;padding:6px 12px;margin-top:2px}
 .refadd:hover{background:var(--goldsoft);border-style:solid}
+.nextsteps{border:1px solid var(--rule);border-radius:12px;padding:14px 16px;background:var(--card)}
+.nextsteps .nxhd{font-weight:700;margin:0 0 8px}
+.nextsteps ol{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:6px;counter-reset:nx}
+.nextsteps li{counter-increment:nx;display:grid;grid-template-columns:26px 1fr;column-gap:8px;align-items:start;font-size:14px}
+.nextsteps li::before{content:counter(nx);width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:#ece6d6;color:#5b5543}
+.nextsteps li::before{grid-row:1 / span 2}.nextsteps li b{display:block;grid-column:2}.nextsteps li span{grid-column:2;color:var(--muted,#6b6355);font-size:13px}
+.nextsteps li.done::before{background:#2f7d4a;color:#fff}.nextsteps li.done{opacity:.75}
+.nextsteps li.now::before{background:#e3b23c;color:#16203c}.nextsteps li.now b{color:#16203c}
+.nextsteps .nxgo{display:inline-block;font:inherit;font-weight:700;font-size:15px;border:0;border-radius:9px;padding:11px 18px;cursor:pointer;background:#e3b23c;color:#16203c;text-decoration:none}
 .handoff{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px;margin:2px 0}
 .hbtn{appearance:none;cursor:pointer;text-align:left;font-family:var(--sans);font-size:13px;
   font-weight:700;color:var(--navy);background:#fff;border:1px solid var(--rule);
@@ -2908,15 +2917,10 @@ hs_book_lock:{s:"1",t:"Lock it in",l:[
 
 hs_book_end:{s:"1",t:"After the booking",l:[
 {t:"note",x:"Log it, send the confirmation text, set your own reminder. Call back at the exact time you promised."},
-
-/* The plain booking ends here. The one that follows a full discovery does not - there is a
-   profile sitting in front of the agent and it is worth something only if it gets saved. */
-{t:"dobig",when:["did_discovery","Yes"],x:"You have a full profile on this one. Don't let it die in the browser tab."},
-{t:"say",when:["did_discovery","Yes"],x:"<b>Save it, then push it over.</b> Saving keeps a copy on record and gives you a file you can reload before the presentation call &mdash; so you walk in already knowing their medications, their doctors, their income and their number."},
-{t:"handoff",when:["did_discovery","Yes"]},
-{t:"do",when:["did_discovery","Yes"],x:"Save first, every time. Once it is saved, open MyPopPro and start building the good / better / best while the call is still fresh."},
-{t:"train",when:["did_discovery","Yes"],x:"<b>The presentation is built before the call, not on it.</b> If you open MyPopPro cold at the appointment time you will spend the first ten minutes typing what they already told you, and they will hear it."},
-{t:"warn",when:["did_discovery","Yes"],x:"The saved file lives in your downloads folder, not in this browser. It has health information in it &mdash; keep it where you keep client paperwork, and don't email it around."}
+/* Health lives in MyPopPro now (Jesse, 19 Oct): no save / print / push here. The call is done - show where it goes
+   next, the same six steps as MyPopPro's walk-through, and one button into the Intake. */
+{t:"nextsteps"},
+{t:"train",x:"<b>The presentation is built before the call, not on it.</b> Review the Intake and build the quote while this call is still fresh &mdash; at the appointment you walk in already knowing their medications, their doctors and their number."}
 ],b:[{k:"Back to the start",to:"hs_start",c:"go"}]},
 
 hs_open:{s:"2",pf:"who",t:"Open",l:[
@@ -4560,6 +4564,11 @@ function render(){
       '<button type="button" class="hbtn hpop" data-handoff="pop">Push client to MyPopPro'+
         '<span>Start building the private health presentation</span></button>'+
       '</div></div>';
+    if(L.t==="nextsteps"){ var NX=[["Discovery call","Done &mdash; the Intake has filled itself from what you typed."],["Intake","Check what the call filled in. Add anything missing."],["Quote","Build the packages. Set the follow-up time."],["Present","Walk the client through it on screen at the appointment."],["Enroll","Take the application, then send the thank-you."],["Benefits Review","After approval: the premium and draft date, then their registrations, on the call."]];
+      return '<div class="line"><div class="nextsteps"><div class="nxhd">Discovery call done. Here&rsquo;s what happens next:</div><ol>'+
+        NX.map(function(x,i){ return '<li class="'+(i===0?"done":(i===1?"now":""))+'"><b>'+(i===0?"&#10003; ":"")+x[0]+'</b><span>'+x[1]+'</span></li>'; }).join("")+'</ol>'+
+        (HOST?'<button type="button" class="nxgo" data-nextgo="intake">Review the Intake &rarr;</button>'
+             :'<a class="nxgo" href="https://mypoppro.com/" target="_blank" rel="noopener">Open MyPopPro &rarr;</a>')+'</div></div>'; }
     if(L.t==="appt") return '<div class="line"><div class="apptpick">'+apptHTML()+'</div></div>';
     if(L.t==="fhgrid") return '<div class="line">'+fhGridHTML(L.rows==="preg"?FHROWS_PREG:FHROWS)+'</div>';
     if(L.t==="deps") return !PROFILE_ON ? "" : '<div class="line" id="depscard">'+pDepsHTML()+'</div>';
@@ -5529,6 +5538,8 @@ document.addEventListener("click",function(e){
           if(document.getElementById("profbody")) pRender();
           if(typeof render==="function" && $("script")) render();
           return; }
+  var nx=e.target.closest && e.target.closest("[data-nextgo]");
+  if(nx){ var hi=$("hostIntake"); if(hi) hi.click(); return; }
   var h=e.target.closest && e.target.closest("[data-handoff]");
   if(h){ var w=h.getAttribute("data-handoff");
          if(w==="save") pSaveFile();

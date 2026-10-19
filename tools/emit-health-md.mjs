@@ -140,6 +140,7 @@ const WIDGET = {
     : "Yes/no grid: " + ["fh_cancer", "fh_heart", "fh_stroke", "mh_needs"].map(label).join(" · ") + " (applicant and spouse)",
   appt: () => "Appointment picker: " + ["appt_date", "appt_time"].map(label).join(" · "),
   handoff: () => "Buttons: Save the profile · Print the profile · Push client to MyPopPro",
+  nextsteps: () => "What happens next: ✓ Discovery call → Intake (check what the call filled in) → Quote → Present → Enroll → Benefits Review. Button: Review the Intake →",
 };
 function line(L) {
   let cond = when(L.when, L.dflt);
