@@ -1051,8 +1051,9 @@ var SCRIPTS=[
   desc:"Homeowner leads. Reframes payoff into protecting equity and buying time, then forks into IUL, whole life or term.", tail:"Builds a client profile &rarr; <b>Product Wizard</b>"},
  /* Health lives in MyPopPro now (Jesse, 18 Oct): the tile sends agents there. LIB.health stays - MyPopPro's Discovery
     step runs it here in embed mode (?embed=1&script=health&host=poppro), and ?script=health still opens it directly. */
- {k:"health", pop:"https://mypoppro.com/tool/", title:"MyPopPro",
-  desc:"Health clients start here: the discovery call, the quote, the presentation, enrollment and the benefits review &mdash; all in one place."}
+ {k:"health", ready:true, title:"Health — Discovery Call",
+  desc:"Private health discovery. Appointment or warm call, household and health for both spouses, the subsidy cliff, then book the presentation.",
+  pop:{href:"https://mypoppro.com/tool/", title:"MyPopPro", desc:"Health clients start here: the discovery call, the quote, the presentation, enrollment and the benefits review &mdash; all in one place."}}
 ];
 
 var LIB={
@@ -7262,10 +7263,10 @@ document.addEventListener("keydown",function(e){
 function buildLauncher(){
   $("lgrid").innerHTML=SCRIPTS.map(function(x){
     if(x.pop){
-      return '<a class="lcard pop" href="'+x.pop+'" target="_blank" rel="noopener">'+
+      return '<a class="lcard pop" href="'+x.pop.href+'" target="_blank" rel="noopener">'+
         '<img class="popmark" src="https://mypoppro.com/assets/apple-touch-icon.png" alt="" width="44" height="44">'+
         '<span class="lbadge pop">Health &middot; opens MyPopPro &#8599;</span>'+
-        '<h2>'+x.title+'</h2><p>'+x.desc+'</p></a>';
+        '<h2>'+x.pop.title+'</h2><p>'+x.pop.desc+'</p></a>';
     }
     if(x.external){
       return '<a class="lcard ext" href="'+x.external+'" target="_blank" rel="noopener noreferrer">'+
