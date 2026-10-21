@@ -4546,7 +4546,8 @@ function render(){
     if(L.t==="cfollow") return cfollowHTML(L.meds ? medCondsOn(L.who) : cardConds, L.all, L.who);
     if(L.t==="pendflag"){ if(!(typeof navAfcOn==="function"&&navAfcOn()&&typeof AFC_PENDING!=="undefined")) return "";
       var pv=String(pVal(L.who?"sp_pending_care":"pending_care")||""), pr=AFC_PENDING[pv]; if(!pr) return "";
-      return '<div class="line navafc"><div class="afcflag '+(pr.res==="bad"?"bad":"chk")+'"><span class="afct">'+(pr.res==="bad"?"✕ <b>ManhattanLife Affordable Choice is unlikely for now.</b> ":"⚠ ")+esc(pr.m)+'<span class="afcq">'+afcGuideLink(pr.pg)+'</span></span></div></div>'; }
+      return '<div class="line navafc"><div class="afcflag '+(pr.res==="bad"?"bad":"chk")+'"><span class="afct">'+(pr.res==="bad"?"✕ <b>ManhattanLife Affordable Choice is unlikely for now.</b> ":"⚠ ")+esc(pr.m)+'<span class="afcq">'+afcGuideLink(pr.pg)+'</span>'+
+        (typeof AFC_MENTOR!=="undefined"?'<b style="display:block;margin-top:6px;color:#1c4f8a">'+esc(AFC_MENTOR)+'</b>':'')+'</span></div></div>'; }
     /* Conditions searched like medications (Jesse, 21 Oct) - for the ones no medication pointed at. Inside MyPopPro the
        ManhattanLife question for each condition sits right under it. */
     if(L.t==="condsearch") return !PROFILE_ON ? "" : '<div class="line">'+condSearchHTML(L.who)+
