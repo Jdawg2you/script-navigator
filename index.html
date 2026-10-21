@@ -4314,6 +4314,7 @@ function medFlags(who){
   var on=(P[CONDKEY(who)]||[]), out=[];
   (P[MEDKEY(who)]||[]).forEach(function(m){
     var base=m.replace(/\s*\(.*\)$/,"");
+    if(navAfcOn()&&afcMedRow(m)) return;   /* MyPopPro: the ManhattanLife question asks what it's for instead */
     (MED_FOR[base]||[]).forEach(function(c){
       if(on.indexOf(c)<0 && (P.med_skip||[]).indexOf(who+m+"|"+c)<0 && !out.some(function(x){return x.m===m&&x.c===c})) out.push({m:m,c:c});
     });
@@ -4527,7 +4528,9 @@ function render(){
     while((m=re.exec(L.x||""))) if(cardConds.indexOf(m[1])<0) cardConds.push(m[1]);
   });
   $("script").innerHTML=n.l.map(function(L){
-    if(L.t==="cfollow") return cfollowHTML(L.meds ? medCondsOn(L.who) : cardConds, L.all, L.who);
+    if(L.t==="cfollow") return cfollowHTML(L.meds ? medCondsOn(L.who) : cardConds, L.all, L.who)+
+      /* MyPopPro: the ManhattanLife question for each condition on the case, right where its follow-ups are asked */
+      (L.all&&HOST?'<div class="navafc" data-afcwrap="cond" data-who="'+(L.who||"")+'">'+navAfcCondHTML(L.who)+'</div>':'');
     var x=fmt(L.x||"");
     if(L.unless && whenHit(L.unless)) return "";   /* e.g. the protected-position ask is pointless for a current employer's plan */
     if(L.when && L.t!=="askif" && L.t!=="alt" && L.t!=="pf"){
@@ -4560,8 +4563,10 @@ function render(){
     if(L.t==="bens") return !PROFILE_ON ? "" : '<div class="line" id="benscard">'+pBensHTML()+'</div>';
     if(L.t==="refs") return !PROFILE_ON ? "" : '<div class="line" id="refscard">'+pRefsHTML()+'</div>';
     if(L.t==="meds") return !PROFILE_ON ? "" : '<div class="line">'+pMedsHTML(true,L.who)+
-        '<div id="'+(L.who?'spmedflagwrap':'medflagwrap')+'">'+medFlagHTML(L.who)+'</div></div>';
-    if(L.t==="conds") return !PROFILE_ON ? "" : '<div class="line">'+condsHTMLFor(L.who)+'</div>';
+        '<div id="'+(L.who?'spmedflagwrap':'medflagwrap')+'">'+medFlagHTML(L.who)+'</div>'+
+        '<div class="navafc" data-afcwrap="med" data-who="'+(L.who||"")+'">'+navAfcMedHTML(L.who)+'</div></div>';
+    if(L.t==="conds") return !PROFILE_ON ? "" : '<div class="line">'+condsHTMLFor(L.who)+
+        '<div class="navafc" data-afcwrap="cond" data-who="'+(L.who||"")+'">'+navAfcCondHTML(L.who)+'</div></div>';
     if(L.t==="handoff") return '<div class="line"><div class="handoff">'+
       '<button type="button" class="hbtn hprimary" data-handoff="save">Save the profile'+
         '<span>A .json file you can reload next time &mdash; or send with the file</span></button>'+
@@ -5256,6 +5261,36 @@ document.addEventListener("click",function(e){
   pFlash();
 });
 
+/* ===== ManhattanLife check, inside MyPopPro only (Jesse, 21 Oct) =====
+   The client is on the phone here, so this is where "what is it for?" gets asked. The rules come from MyPopPro's own
+   afc-rules.js (loaded from the host after call-init); the answers live in P.afc_med / P.afc_cond, keyed who|name,
+   travel to MyPopPro with every push, and come back on call-init - so the Intake shows them already answered. */
+function navAfcOn(){ return typeof HOST_AFC!=="undefined" && HOST_AFC && typeof afcMedRow==="function"; }
+function navAfcWho(who){ return who?"s":"p"; }
+function navAfcMedState(who,m,r){ var a=(P.afc_med||{})[navAfcWho(who)+"|"+m]; if(a==="y"||a==="n"||a==="g") return {st:a,auto:false}; if(a==="ask") return {st:null,auto:false};
+  var on=P[CONDKEY(who)]||[]; return r.auto.concat([r.add]).some(function(k){ return on.indexOf(k)>=0; })?{st:"y",auto:true}:{st:null,auto:false}; }
+function navAfcMedHTML(who){ if(!navAfcOn()) return ""; who=who||"";
+  return (P[MEDKEY(who)]||[]).map(function(m){ var r=afcMedRow(m); if(!r) return ""; var s=navAfcMedState(who,m,r), ins=r.b==="Insulin", k=esc(navAfcWho(who)+"|"+m).replace(/"/g,"&quot;");
+    var lbl='<b>'+esc(m)+'</b>', cite=function(pg){ return '<span class="afcq">'+afcGuideLink(pg)+'</span>'; }, btn=function(v,t,c){ return '<button type="button"'+(c?' class="'+c+'"':'')+' data-navafc="med" data-k="'+k+'" data-v="'+v+'">'+t+'</button>'; };
+    if(s.st==="y") return '<div class="afcflag bad"><span class="afct">✕ '+lbl+' for '+(ins?'diabetes':esc(r.q))+(s.auto?' (they said so above)':'')+' — <b>ManhattanLife Affordable Choice is unlikely.</b> '+(ins?'Insulin in the last five years declines.':'This medication for that condition is on their decline list.')+cite(ins?22:r.pg)+'</span>'+btn("ask","change","lnk")+'</div>';
+    if(s.st==="g") return '<div class="afcflag chk"><span class="afct">'+lbl+' for gestational diabetes — ManhattanLife postpones until symptom- and treatment-free for 6 months.'+cite(22)+'</span>'+btn("ask","change","lnk")+'</div>';
+    if(s.st==="n") return '<div class="afcflag chk"><span class="afct">'+lbl+' — not for '+esc(r.q)+'. It is still on ManhattanLife’s list, so the agent may want to check with underwriting.'+cite(r.pg)+'</span>'+btn("ask","change","lnk")+'</div>';
+    if(ins) return '<div class="afcflag ask"><span class="afct">⚠ <b>Ask:</b> what is the '+lbl+' for — diabetes, or only gestational diabetes?'+cite(22)+'</span>'+btn("y","Diabetes","y")+btn("g","Gestational only")+'</div>';
+    return '<div class="afcflag ask"><span class="afct">⚠ <b>Ask:</b> is the '+lbl+' for '+esc(r.q)+'?'+cite(r.pg)+'</span>'+btn("y","Yes","y")+btn("n","No — something else")+'</div>'; }).join(""); }
+function navAfcCondHTML(who){ if(!navAfcOn()) return ""; who=who||"";
+  return (P[CONDKEY(who)]||[]).map(function(c){ var k0=AFC_CK[c]||afcCondMatch(c); if(!k0) return ""; var kind=k0[0], Q=AFC_CQ[kind], k=esc(navAfcWho(who)+"|"+c).replace(/"/g,"&quot;");
+    var a=(P.afc_cond||{})[navAfcWho(who)+"|"+c], st=(Q&&a&&Q.r[a])?a:null, res=kind==="chk"?"warn":(st?Q.r[st]:null), cite=k0[2]?'<span class="afcq">'+afcGuideLink(k0[2])+'</span>':'', lbl='<b>'+esc(c)+'</b>';
+    var chg='<button type="button" class="lnk" data-navafc="cond" data-k="'+k+'" data-v="">change</button>';
+    if(kind==="chk") return '<div class="afcflag chk"><span class="afct">'+lbl+' — '+esc(k0[1])+'.'+cite+'</span></div>';
+    if(!st) return '<div class="afcflag ask"><span class="afct">⚠ <b>Ask:</b> '+esc(Q.q)+' <span style="opacity:.75">('+esc(c)+')</span>'+cite+'</span>'+Q.b.map(function(b){ return '<button type="button"'+(Q.r[b[0]]==="bad"?' class="y"':'')+' data-navafc="cond" data-k="'+k+'" data-v="'+b[0]+'">'+esc(b[1])+'</button>'; }).join("")+'</div>';
+    if(res==="bad") return '<div class="afcflag bad"><span class="afct">✕ '+lbl+' — <b>ManhattanLife Affordable Choice is unlikely.</b> '+esc(Q.m[st])+cite+'</span>'+chg+'</div>';
+    if(res==="warn") return '<div class="afcflag chk"><span class="afct">'+lbl+' — '+esc(Q.m[st])+cite+'</span>'+chg+'</div>';
+    return '<div class="afcflag ok"><span class="afct">✓ '+lbl+' — '+esc(Q.m[st])+'</span>'+chg+'</div>'; }).join(""); }
+function navAfcRefresh(){ [].forEach.call(document.querySelectorAll("[data-afcwrap]"),function(w){ var who=w.getAttribute("data-who")||"";
+  w.innerHTML=w.getAttribute("data-afcwrap")==="med"?navAfcMedHTML(who):navAfcCondHTML(who); }); }
+document.addEventListener("click",function(e){ var b=e.target.closest&&e.target.closest("[data-navafc]"); if(!b) return;
+  var kind=b.getAttribute("data-navafc"), key=b.getAttribute("data-k"), v=b.getAttribute("data-v"), f=kind==="med"?"afc_med":"afc_cond", o=P[f]||{};
+  if(v) o[key]=v; else delete o[key]; P[f]=o; pStore(); navAfcRefresh(); });
 function medFlagHTML(who){
   who=who||"";
   var f=medFlags(who); if(!f.length) return "";
@@ -5319,6 +5354,7 @@ function pMedsRefresh(){
     }).join(""); });
   var fw=document.getElementById("medflagwrap"); if(fw) fw.innerHTML=medFlagHTML();
   var fw2=document.getElementById("spmedflagwrap"); if(fw2) fw2.innerHTML=medFlagHTML("sp");
+  navAfcRefresh();
 }
 function medAdd(name,from,typed,who){
   who = who || (from && from.closest && from.closest(".medbox") ? (from.closest(".medbox").getAttribute("data-who")||"") : "");
@@ -6357,6 +6393,8 @@ function popClient(){
        this is where that distinction comes from - which card it was typed on. */
     spMeds:(P.sp_meds_list||[]).map(function(m){ return m.replace(/\s*\(.*\)$/,""); }),
     spConds:(P.sp_conds||[]).map(function(n){ return {name:n}; }),
+    /* the ManhattanLife check's answers, who|name -> y / n / g / ask (MyPopPro only) */
+    afcMed:P.afc_med||{}, afcCond:P.afc_cond||{},
     /* The conditions written out with the answers that were given for each. POP Pro shows
        no condition list anywhere, so a tick there is invisible - this is the readable version
        that goes into its routing notes. */
@@ -6555,6 +6593,10 @@ function fromPopPro(o){
   /* Conditions come back to the person they were ticked against (Jesse, 21 Oct). Ones MyPopPro added because of a
      medication (fromMed / fromAfc) stay in MyPopPro - they are its own wording and leave with the medication. The
      Intake list is the truth: sent even when empty, so a condition taken off there comes off here. */
+  /* the ManhattanLife check's answers given on the Intake come back to the call */
+  var am={}, ac={}; (I.medList||[]).forEach(function(m){ if(m&&m.name&&m.afc){ if(m.forS!==true) am["p|"+m.name]=m.afc; if(m.forS===true) am["s|"+m.name]=m.afc; } });
+  (I.conds||[]).forEach(function(c){ if(c&&c.name&&c.afc&&!c.fromAfc){ if(c.forP!==false) ac["p|"+c.name]=c.afc; if(c.forS===true) ac["s|"+c.name]=c.afc; } });
+  if(Object.keys(am).length) out.afc_med=am; if(Object.keys(ac).length) out.afc_cond=ac;
   if(Array.isArray(I.conds)){ var own=I.conds.filter(function(x){ return x && x.name && !x.fromMed && !x.fromAfc; });
     out.conds=own.filter(function(x){ return x.forP!==false; }).map(function(x){ return x.name; });
     out.sp_conds=own.filter(function(x){ return x.forS===true; }).map(function(x){ return x.name; }); }
@@ -7839,7 +7881,7 @@ if(want && LIB[want]){
    POP Pro frames this page as its Discovery step (?embed=1&script=health&host=poppro). POP Pro hands in the client's
    saved call and the agent's details ("call-init" - a framed page cannot see the stand-alone site's storage), and every
    answer typed here goes straight back to POP Pro, which fills its Intake and keeps the whole call in its save file. */
-var HOST = QS.get("host")==="poppro" && window.self!==window.top, HOST_ORIGIN="*", HOST_T=null;
+var HOST = QS.get("host")==="poppro" && window.self!==window.top, HOST_ORIGIN="*", HOST_T=null, HOST_AFC=false, HOST_AFC_LOADING=false;
 function hostOk(o){ return ["https://mypoppro.com","https://www.mypoppro.com"].indexOf(o)>=0 || /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/.test(o); }
 function hostPush(){ if(!HOST || HOST_ORIGIN==="*") return;   /* nothing leaves until a page that passed hostOk has sent call-init */
   clearTimeout(HOST_T); HOST_T=setTimeout(function(){
@@ -7856,6 +7898,8 @@ if(HOST){
   var _pStoreHost=pStore; pStore=function(){ _pStoreHost.apply(null,arguments); hostPush(); };
   window.addEventListener("message",function(e){ if(!hostOk(e.origin)) return; var d=e.data;
     if(!d||d.source!=="optimum-poppro"||d.type!=="call-init") return; HOST_ORIGIN=e.origin;
+    if(!HOST_AFC_LOADING){ HOST_AFC_LOADING=true; var sc=document.createElement("script"); sc.src=HOST_ORIGIN+"/tool/afc-rules.js"+(/localhost|127\.0\.0\.1/.test(HOST_ORIGIN)?"?v="+Date.now():"");
+      sc.onload=function(){ HOST_AFC=true; navAfcRefresh(); pMedsRefresh(); }; document.head.appendChild(sc); }
     P=d.pop?profileFromFile(d.pop):{}; delete P._pop;
     if(d.agent) Object.keys(d.agent).forEach(function(k){ if(String(d.agent[k]||"").trim()) A[k]=String(d.agent[k]); });
     if(typeof render==="function") render(); if(document.body.classList.contains("drawer-open")||($("drawer")&&$("drawer").classList.contains("open"))) pOpen(); postHeight(); });
@@ -7865,6 +7909,17 @@ if(HOST){
     new MutationObserver(syncDock).observe(dr,{attributes:true,attributeFilter:["class"]}); syncDock(); }
 }
 </script>
+<style>
+/* ManhattanLife check inside MyPopPro's Discovery (rules from MyPopPro's afc-rules.js) */
+.navafc .afcflag{margin:8px 0;border-radius:8px;padding:9px 12px;font-size:14px;line-height:1.45;display:flex;gap:8px 10px;align-items:center;flex-wrap:wrap}
+.navafc .afcflag.ask{background:#fff8ec;border:1px solid #e8c98a;color:#5a3d05}
+.navafc .afcflag.bad{background:#fdecea;border:1.5px solid #c0392b;color:#8f1d12}
+.navafc .afcflag.chk{background:#fff8ec;border:1px dashed #d8a23a;color:#6b4a07}
+.navafc .afcflag.ok{background:#eef7f0;border:1px solid #9cc9a8;color:#1c5a30;font-size:13px;padding:6px 12px}
+.navafc .afct{flex:1 1 320px}.navafc .afcq{display:block;margin-top:3px;font-size:12px;opacity:.85}.navafc .afcq a{color:inherit}
+.navafc button{border:1px solid currentColor;background:#fff;color:inherit;border-radius:999px;padding:4px 12px;font-size:12.5px;font-weight:700;cursor:pointer}
+.navafc button.y{background:#a12525;border-color:#a12525;color:#fff}.navafc button.lnk{border:0;background:transparent;text-decoration:underline;font-weight:500;padding:3px 4px}
+</style>
 <!-- ===== OPTIMUM SUITE: cross-links to the other free tools (shared across all tools) ===== -->
 <style>
 .o-suite{position:relative;margin-left:8px;font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif}
