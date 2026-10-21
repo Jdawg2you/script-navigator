@@ -3094,10 +3094,13 @@ hs_history:{s:"5",pf:"health",t:"Health history",l:[
 
 
 hs_conds:{s:"5",pf:"health",t:"Recent history",l:[
-{t:"ask",x:"In the last two years, any surgeries? {{recent_stay}}"},
+{t:"ask",x:"In the last five years, any surgeries? {{recent_stay}}"},
 {t:"ask",when:["recent_stay","Yes"],x:"What was that for? ___(what for)"},
 {t:"ask",x:"And any hospital stays in the last two years? {{hosp_stay}}"},
 {t:"ask",when:["hosp_stay","Yes"],x:"What was that for? ___(hospital stay)"},
+{t:"ask",x:"Has a doctor recommended any surgery, procedure or tests you haven't had yet &mdash; or are you still being followed up after one? {{pending_care}}"},
+{t:"ask",when:["pending_care",["Surgery or procedure recommended","Tests or results pending","Still being followed up after surgery"]],x:"What is it, and where are you with it? ___(pending what)"},
+{t:"pendflag"},
 {t:"note",x:"<b>Standing rule on every yes:</b> when was it, what was it for, and what are they taking for it now."}
 ],b:[{k:"Next",to:"hs_famhist",c:"go"}]},
 
@@ -3120,8 +3123,7 @@ hs_recent:{s:"5",pf:"health",t:"Doctors to keep \u2014 and coverage wanted",l:[
 {t:"ask",x:"Would you like me to look into dental coverage for you? {{want_dental}}"},
 {t:"ask",x:"Vision? {{want_vision}}"},
 {t:"ask",x:"And hearing? {{want_hearing}}"},
-{t:"do",x:"Three quick asks. They cost nothing here and they are the easiest thing to add to a package later."},
-{t:"ask",x:"Is anything planned in the next year &mdash; a surgery, a baby, a procedure? ___(planned next year)"}
+{t:"do",x:"Three quick asks. They cost nothing here and they are the easiest thing to add to a package later."}
 ],bh:"Is there a spouse or partner on the plan?",b:[
 {k:"Do their spouse\u2019s / partner\u2019s health history",to:"hs_sp_history",c:"go",when:["married",["Married","Partnered"]]},
 {k:"Skip spouse health \u2014 move to income",to:"hs_income",when:["married",["Married","Partnered"]]},
@@ -3146,10 +3148,13 @@ hs_sp_history:{s:"5",pf:"sphealth",t:"Spouse health history",l:[
 ],b:[{k:"Next",to:"hs_sp_conds",c:"go"}]},
 
 hs_sp_conds:{s:"5",pf:"sphealth",t:"Spouse recent history",l:[
-{t:"ask",x:"In the last two years, any surgeries for ___(spouse first name)? {{sp_recent_stay}}"},
+{t:"ask",x:"In the last five years, any surgeries for ___(spouse first name)? {{sp_recent_stay}}"},
 {t:"ask",when:["sp_recent_stay","Yes"],x:"What was that for? ___(spouse what for)"},
 {t:"ask",x:"And any hospital stays in the last two years? {{sp_hosp_stay}}"},
 {t:"ask",when:["sp_hosp_stay","Yes"],x:"What was that for? ___(spouse stay what)"},
+{t:"ask",x:"Has a doctor recommended any surgery, procedure or tests ___(spouse first name) hasn't had yet &mdash; or are they still being followed up after one? {{sp_pending_care}}"},
+{t:"ask",when:["sp_pending_care",["Surgery or procedure recommended","Tests or results pending","Still being followed up after surgery"]],x:"What is it, and where are they with it? ___(spouse pending what)"},
+{t:"pendflag",who:"sp"},
 {t:"note",x:"<b>Standing rule on every yes:</b> when was it, what was it for, and what are they taking for it now."},
 {t:"train",x:"<b>Doctors, dental, vision and hearing were asked once, for the household.</b> If the spouse has a doctor they want to keep that you have not recorded, go back to 5.3 and add them &mdash; that list is shared."}
 ],b:[{k:"Move to income",to:"hs_income",c:"go"}]},
@@ -4539,6 +4544,9 @@ function render(){
   });
   $("script").innerHTML=n.l.map(function(L){
     if(L.t==="cfollow") return cfollowHTML(L.meds ? medCondsOn(L.who) : cardConds, L.all, L.who);
+    if(L.t==="pendflag"){ if(!(typeof navAfcOn==="function"&&navAfcOn()&&typeof AFC_PENDING!=="undefined")) return "";
+      var pv=String(pVal(L.who?"sp_pending_care":"pending_care")||""), pr=AFC_PENDING[pv]; if(!pr) return "";
+      return '<div class="line navafc"><div class="afcflag '+(pr.res==="bad"?"bad":"chk")+'"><span class="afct">'+(pr.res==="bad"?"✕ <b>ManhattanLife Affordable Choice is unlikely for now.</b> ":"⚠ ")+esc(pr.m)+'<span class="afcq">'+afcGuideLink(pr.pg)+'</span></span></div></div>'; }
     /* Conditions searched like medications (Jesse, 21 Oct) - for the ones no medication pointed at. Inside MyPopPro the
        ManhattanLife question for each condition sits right under it. */
     if(L.t==="condsearch") return !PROFILE_ON ? "" : '<div class="line">'+condSearchHTML(L.who)+
@@ -4903,7 +4911,9 @@ PF_SPEC_HEALTH=[
  {k:"sp_glp1_since",l:"How long on it",w:1,showIf:["sp_glp1","Yes"]},
  {k:"sp_glp1_cost",l:"What they pay a month",money:"plain",w:1,showIf:["sp_glp1","Yes"]},
  {k:"sp_glp1_source",l:"Where they get it",w:1,opt:["","Pharmacy","Telehealth","Compounded","Other"],showIf:["sp_glp1","Yes"]},
- {k:"sp_recent_stay",l:"Surgery, last 2 yrs",w:1,opt:["","No","Yes"]},
+ {k:"sp_recent_stay",l:"Surgery, last 5 yrs",w:1,opt:["","No","Yes"]},
+ {k:"sp_pending_care",drives:true,l:"Care a doctor recommended, not done yet",w:3,opt:["","No","Surgery or procedure recommended","Tests or results pending","Still being followed up after surgery"]},
+ {k:"sp_pending_what",l:"What it is",w:3},
  {k:"sp_recent_what",l:"What for",w:2},
  {k:"sp_hosp_stay",l:"Hospital stay, last 2 yrs",w:1,opt:["","No","Yes"]},
  {k:"sp_stay_what",l:"What for",w:2},
@@ -4928,6 +4938,8 @@ PF_SPEC_HEALTH=[
  {k:"glp1_source",l:"Where they get it",w:1,opt:["","Pharmacy","Telehealth","Compounded","Other"],showIf:["glp1","Yes"]},
  {k:"recent_stay",drives:true,l:"Surgery or overnight stay, last 5 yrs",w:1,opt:["","No","Yes"]},
  {k:"recent_what",l:"What for",w:2,showIf:["recent_stay","Yes"]},
+ {k:"pending_care",drives:true,l:"Care a doctor recommended, not done yet",w:3,opt:["","No","Surgery or procedure recommended","Tests or results pending","Still being followed up after surgery"]},
+ {k:"pending_what",l:"What it is",w:3},
  {k:"hosp_stay",drives:true,l:"Hospital stay, last 2 yrs",w:1,opt:["","No","Yes"]},
  {k:"stay_what",l:"What for",w:2,showIf:["hosp_stay","Yes"]},
  {k:"keep_docs",drives:true,l:"Doctors they want to keep?",w:1,opt:["","No","Yes"]},
@@ -5064,7 +5076,7 @@ var BLANKMAP={
  "current carrier":"cur_carrier","plan name":"cur_plan","they pay":"cur_prem",
  "employer pays":"cur_emp_prem","total cost":"cur_total","deductible":"cur_ded",
  "visits a year":"cur_visits","copay":"cur_copay","what was missing":"cov_gap",
- "out-of-pocket max":"cur_oop","planned next year":"planned","life insurance now":"life_now","bill tomorrow":"bill_tomorrow",
+ "out-of-pocket max":"cur_oop","planned next year":"planned","pending what":"pending_what","spouse pending what":"sp_pending_what","life insurance now":"life_now","bill tomorrow":"bill_tomorrow",
  "spouse what for":"sp_recent_what","spouse stay what":"sp_stay_what",
  "spouse anything else":"sp_health_notes","kids health":"kids_health",
  "which GLP-1":"glp1_drug","how long on it":"glp1_since","what the GLP-1 costs":"glp1_cost",
@@ -6529,6 +6541,7 @@ function popClient(){
       spFhCancer:P.sp_fh_cancer||"", spFhHeart:P.sp_fh_heart||"", spFhStroke:P.sp_fh_stroke||"",
       spMhNeeds:P.sp_mh_needs||"", spMatNeeds:P.sp_mat_needs||"",
       spSurgery:P.sp_recent_stay||"", spSurgeryWhat:P.sp_recent_what||"",
+      pendingCare:P.pending_care||"", pendingWhat:P.pending_what||"", spPendingCare:P.sp_pending_care||"", spPendingWhat:P.sp_pending_what||"",
       spHospStay:P.sp_hosp_stay||"", spHealthNotes:P.sp_health_notes||"",
       incomeNext:P.income_next||"", spIncomeNext:P.sp_income_next||"", hhIncomeNext:P.hh_income_next||"",
       assetWhere:P.asset_where||"", assetEmployer:P.asset_employer||"",

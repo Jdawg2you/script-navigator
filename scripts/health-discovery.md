@@ -1,6 +1,6 @@
 # Health Discovery — the live script
 
-**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 0278379 2026-10-21 + uncommitted changes) by
+**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 09bd18c 2026-10-21 + uncommitted changes) by
 `node tools/emit-health-md.mjs`. The cards in `index.html` are the script; change them there and regenerate.
 
 Every line of every card, in card-number order. Tags:
@@ -415,10 +415,13 @@ _Card: opens the profile at *Health*._
 
 _Card: opens the profile at *Health*._
 
-- **ASK** — In the last two years, any surgeries? [Surgery or overnight stay, last 5 yrs: No · Yes]
+- **ASK** — In the last five years, any surgeries? [Surgery or overnight stay, last 5 yrs: No · Yes]
 - **ASK** _only when Surgery or overnight stay, last 5 yrs (`recent_stay`) is “Yes”_ — What was that for? ___(what for)
 - **ASK** — And any hospital stays in the last two years? [Hospital stay, last 2 yrs: No · Yes]
 - **ASK** _only when Hospital stay, last 2 yrs (`hosp_stay`) is “Yes”_ — What was that for? ___(hospital stay)
+- **ASK** — Has a doctor recommended any surgery, procedure or tests you haven't had yet — or are you still being followed up after one? [Care a doctor recommended, not done yet: No · Surgery or procedure recommended · Tests or results pending · Still being followed up after surgery]
+- **ASK** _only when Care a doctor recommended, not done yet (`pending_care`) is “Surgery or procedure recommended” or “Tests or results pending” or “Still being followed up after surgery”_ — What is it, and where are you with it? ___(pending what)
+- **ON SCREEN** — Inside MyPopPro: ManhattanLife flag for recommended care not done yet (pending/suggested surgery = uninsurable p.19; pending tests = postponed p.23)
 - **NOTE** — **Standing rule on every yes:** when was it, what was it for, and what are they taking for it now.
 
 **Buttons**
@@ -454,7 +457,6 @@ _Card: opens the profile at *Health*._
 - **ASK** — Vision? [Vision: No · Yes]
 - **ASK** — And hearing? [Hearing: No · Yes]
 - **DO** — Three quick asks. They cost nothing here and they are the easiest thing to add to a package later.
-- **ASK** — Is anything planned in the next year — a surgery, a baby, a procedure? ___(planned next year)
 
 **Is there a spouse or partner on the plan?**
 
@@ -488,10 +490,13 @@ _Card: opens the profile at *Spouse health*._
 
 _Card: opens the profile at *Spouse health*._
 
-- **ASK** — In the last two years, any surgeries for ___(spouse first name)? [Surgery, last 2 yrs: No · Yes]
-- **ASK** _only when Surgery, last 2 yrs (`sp_recent_stay`) is “Yes”_ — What was that for? ___(spouse what for)
+- **ASK** — In the last five years, any surgeries for ___(spouse first name)? [Surgery, last 5 yrs: No · Yes]
+- **ASK** _only when Surgery, last 5 yrs (`sp_recent_stay`) is “Yes”_ — What was that for? ___(spouse what for)
 - **ASK** — And any hospital stays in the last two years? [Hospital stay, last 2 yrs: No · Yes]
 - **ASK** _only when Hospital stay, last 2 yrs (`sp_hosp_stay`) is “Yes”_ — What was that for? ___(spouse stay what)
+- **ASK** — Has a doctor recommended any surgery, procedure or tests ___(spouse first name) hasn't had yet — or are they still being followed up after one? [Care a doctor recommended, not done yet: No · Surgery or procedure recommended · Tests or results pending · Still being followed up after surgery]
+- **ASK** _only when Care a doctor recommended, not done yet (`sp_pending_care`) is “Surgery or procedure recommended” or “Tests or results pending” or “Still being followed up after surgery”_ — What is it, and where are they with it? ___(spouse pending what)
+- **ON SCREEN** — Inside MyPopPro: ManhattanLife flag for recommended care not done yet (pending/suggested surgery = uninsurable p.19; pending tests = postponed p.23)
 - **NOTE** — **Standing rule on every yes:** when was it, what was it for, and what are they taking for it now.
 - **TRAIN** — **Doctors, dental, vision and hearing were asked once, for the household.** If the spouse has a doctor they want to keep that you have not recorded, go back to 5.3 and add them — that list is shared.
 
@@ -614,13 +619,14 @@ Each `___(label)` in the cards, the card it first appears on, and the profile fi
 | ___(anything else about their health) | 5.1 | Anything else about their health (`health_other`) |
 | ___(what for) | 5.2 | What for (`recent_what`) |
 | ___(hospital stay) | 5.2 | What for (`stay_what`) |
-| ___(planned next year) | 5.3 | Planned in the next 12 months (`planned`) |
+| ___(pending what) | 5.2 | What it is (`pending_what`) |
 | ___(which GLP-1 for the spouse) | 5.4 | Which one (`sp_glp1_drug`) |
 | ___(how long the spouse has been on it) | 5.4 | How long on it (`sp_glp1_since`) |
 | ___(what the spouse pays for it) | 5.4 | What they pay a month (`sp_glp1_cost`) |
 | ___(spouse anything else) | 5.4 | Anything else about their health (`sp_health_notes`) |
 | ___(spouse what for) | 5.5 | What for (`sp_recent_what`) |
 | ___(spouse stay what) | 5.5 | What for (`sp_stay_what`) |
+| ___(spouse pending what) | 5.5 | What it is (`sp_pending_what`) |
 | ___(your income) | 6.1 | Income this year (`income_this`) |
 | ___(your retirement age) | 6.1 | Target retirement age (`i_retire`) |
 | ___(approximate savings) | 6.1 | Liquid savings (`i_liquid`) |

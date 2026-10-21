@@ -133,6 +133,7 @@ const WIDGET = {
   meds: L => "Medication entry" + (L.who === "sp" ? " — spouse's list" : "") + (L.warn ? " — then ★ " + md(L.warn).text : ""),
   cfollow: L => "Follow-up questions for the conditions the medications point to" + (L.who === "sp" ? " — spouse" : ""),
   conds: L => "Condition checklist" + (L.who === "sp" ? " — spouse" : ""),
+  pendflag: () => "Inside MyPopPro: ManhattanLife flag for recommended care not done yet (pending/suggested surgery = uninsurable p.19; pending tests = postponed p.23)",
   condsearch: L => "Condition search — type any condition (the ones no medication pointed at)" + (L.who === "sp" ? " — spouse" : ""),
   deps: () => "Children: name, date of birth, gender for each",
   docs: () => "Doctors to keep: name, must-keep, checked with their plan",
