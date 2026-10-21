@@ -3069,11 +3069,11 @@ hs_household:{s:"4",t:"Household",l:[
 hs_history:{s:"5",pf:"health",t:"Health history",l:[
 {t:"say",x:"Now a few health questions, so I know what you'll actually qualify for."},
 {t:"ask",x:"Are you on any medications right now?"},
-{t:"meds"},
-{t:"tip",x:"Type them here and they land on the profile. It knows brand names and copes with a rough spelling. Working off paper instead? Just write them down."},
-{t:"cfollow",all:true},
+{t:"meds",warn:"<b>Spell them, per person.</b> &ldquo;Alma Sartin&rdquo; turned out to be olmesartan and cost a follow-up call on the Cosgriff case."},
 {t:"do",x:"The medications tell you the conditions. Answer the follow-ups they raise &mdash; you do not need to read a list of illnesses at someone."},
-{t:"warn",x:"<b>Spell them, per person.</b> &ldquo;Alma Sartin&rdquo; turned out to be olmesartan and cost a follow-up call on the Cosgriff case."},
+{t:"ask",x:"Do you have any conditions we haven't covered yet &mdash; anything with your heart, or anything else major or worth noting? It all comes back when they do your review."},
+{t:"condsearch"},
+{t:"cfollow",all:true},
 {t:"ask",x:"And one I ask everybody &mdash; are you on any of the weight-loss or diabetes injections? Ozempic, Wegovy, Mounjaro, Zepbound, Saxenda, anything in that family? {{glp1}}"},
 {t:"ask",when:["glp1","Yes"],x:"Which one is it? ___(which GLP-1) &mdash; and is that for the diabetes, or for the weight? {{glp1_for}}"},
 {t:"ask",when:["glp1","Yes"],x:"How long have you been on it? ___(how long on it)"},
@@ -3125,11 +3125,12 @@ hs_recent:{s:"5",pf:"health",t:"Doctors to keep \u2014 and coverage wanted",l:[
 hs_sp_history:{s:"5",pf:"sphealth",t:"Spouse health history",l:[
 {t:"say",x:"Now the same few questions about ___(spouse first name), so I know what they'll qualify for."},
 {t:"ask",x:"Is ___(spouse first name) on any medications right now?"},
-{t:"meds",who:"sp"},
+{t:"meds",who:"sp",warn:"<b>Spell them, per person.</b> It matters twice as much here: a medication logged against the wrong person rates the wrong life."},
 {t:"tip",x:"This is a separate list from yours. What goes in here is recorded as the spouse's, which is how the plan gets rated on the right person."},
-{t:"cfollow",all:true,who:"sp"},
 {t:"do",x:"Same rule as before &mdash; the medications tell you the conditions. Answer the follow-ups they raise. The full condition list is on the profile if you need it; you do not read it at someone."},
-{t:"warn",x:"<b>Spell them, per person.</b> It matters twice as much here: a medication logged against the wrong person rates the wrong life."},
+{t:"ask",x:"Does ___(spouse first name) have any conditions we haven't covered yet &mdash; anything with the heart, or anything else major or worth noting? It all comes back when they do the review."},
+{t:"condsearch",who:"sp"},
+{t:"cfollow",all:true,who:"sp"},
 {t:"ask",x:"And the same one I asked you &mdash; is ___(spouse first name) on any of the weight-loss or diabetes injections? {{sp_glp1}}"},
 {t:"ask",when:["sp_glp1","Yes"],x:"Which one? ___(which GLP-1 for the spouse) &mdash; for the diabetes or the weight? {{sp_glp1_for}} &hellip; How long? ___(how long the spouse has been on it)"},
 {t:"ask",when:["sp_glp1","Yes"],x:"What do they pay a month for it? ___(what the spouse pays for it) &mdash; and where do they get it? {{sp_glp1_source}}"},
@@ -4528,9 +4529,11 @@ function render(){
     while((m=re.exec(L.x||""))) if(cardConds.indexOf(m[1])<0) cardConds.push(m[1]);
   });
   $("script").innerHTML=n.l.map(function(L){
-    if(L.t==="cfollow") return cfollowHTML(L.meds ? medCondsOn(L.who) : cardConds, L.all, L.who)+
-      /* MyPopPro: the ManhattanLife question for each condition on the case, right where its follow-ups are asked */
-      (L.all&&HOST?'<div class="navafc" data-afcwrap="cond" data-who="'+(L.who||"")+'">'+navAfcCondHTML(L.who)+'</div>':'');
+    if(L.t==="cfollow") return cfollowHTML(L.meds ? medCondsOn(L.who) : cardConds, L.all, L.who);
+    /* Conditions searched like medications (Jesse, 21 Oct) - for the ones no medication pointed at. Inside MyPopPro the
+       ManhattanLife question for each condition sits right under it. */
+    if(L.t==="condsearch") return !PROFILE_ON ? "" : '<div class="line">'+condSearchHTML(L.who)+
+      (HOST?'<div class="navafc" data-afcwrap="cond" data-who="'+(L.who||"")+'">'+navAfcCondHTML(L.who)+'</div>':'')+'</div>';
     var x=fmt(L.x||"");
     if(L.unless && whenHit(L.unless)) return "";   /* e.g. the protected-position ask is pointless for a current employer's plan */
     if(L.when && L.t!=="askif" && L.t!=="alt" && L.t!=="pf"){
@@ -4563,6 +4566,7 @@ function render(){
     if(L.t==="bens") return !PROFILE_ON ? "" : '<div class="line" id="benscard">'+pBensHTML()+'</div>';
     if(L.t==="refs") return !PROFILE_ON ? "" : '<div class="line" id="refscard">'+pRefsHTML()+'</div>';
     if(L.t==="meds") return !PROFILE_ON ? "" : '<div class="line">'+pMedsHTML(true,L.who)+
+        (L.warn?'<div class="note star" style="margin-top:8px"><span class="starbadge">&#9733;</span><div>'+L.warn+'</div></div>':'')+
         '<div id="'+(L.who?'spmedflagwrap':'medflagwrap')+'">'+medFlagHTML(L.who)+'</div>'+
         '<div class="navafc" data-afcwrap="med" data-who="'+(L.who||"")+'">'+navAfcMedHTML(L.who)+'</div></div>';
     if(L.t==="conds") return !PROFILE_ON ? "" : '<div class="line">'+condsHTMLFor(L.who)+
@@ -5291,6 +5295,26 @@ function navAfcRefresh(){ [].forEach.call(document.querySelectorAll("[data-afcwr
 document.addEventListener("click",function(e){ var b=e.target.closest&&e.target.closest("[data-navafc]"); if(!b) return;
   var kind=b.getAttribute("data-navafc"), key=b.getAttribute("data-k"), v=b.getAttribute("data-v"), f=kind==="med"?"afc_med":"afc_cond", o=P[f]||{};
   if(v) o[key]=v; else delete o[key]; P[f]=o; pStore(); navAfcRefresh(); });
+/* ===== Condition search (Jesse, 21 Oct): type a condition the way you type a medication ===== */
+function condSearchHTML(who){ who=who||""; var on=P[CONDKEY(who)]||[];
+  return '<div class="medchips" data-condchips="'+who+'">'+on.map(function(c){ return '<span class="medchip">'+esc(c)+'<button type="button" data-conddel="'+esc(c).replace(/"/g,"&quot;")+'" data-condwho="'+who+'" title="Remove">&times;</button></span>'; }).join("")+'</div>'+
+    '<div class="medbox" data-who="'+who+'"><input class="condsinput" data-condwho="'+who+'" placeholder="Start typing a condition&hellip;" autocomplete="off"><div class="medsug condsug"></div></div>'; }
+function condSugList(q){ q=String(q||"").toLowerCase().trim(); if(!q) return [];
+  var pool=PF_CONDS.slice(); if(typeof navAfcOn==="function"&&navAfcOn()) AFC_CONDS.forEach(function(c){ var n=String(c.n).split(/ [–(]/)[0].trim(); if(pool.indexOf(n)<0) pool.push(n); });
+  var hit=pool.filter(function(c){ return c.toLowerCase().indexOf(q)>=0; });
+  hit.sort(function(a,b){ return (a.toLowerCase().indexOf(q)===0?0:1)-(b.toLowerCase().indexOf(q)===0?0:1); }); return hit.slice(0,8); }
+function condSet(c,who,on){ c=String(c||"").trim(); if(!c) return; var k=CONDKEY(who), a=(P[k]||[]).slice();
+  if(on){ if(a.indexOf(c)<0) a.push(c); } else { a=a.filter(function(x){ return x!==c; }); var fm=P.cond_from_med||{}; delete fm[who+"|"+c]; P.cond_from_med=fm; }
+  P[k]=a; pStore(); if(document.getElementById("profbody")) pRender(); if(typeof render==="function"&&$("script")) render();
+  var inp=document.querySelector('.condsinput[data-condwho="'+who+'"]'); if(inp&&on) inp.focus(); }
+document.addEventListener("input",function(e){ var t=e.target; if(!t.classList||!t.classList.contains("condsinput")) return;
+  var box=t.parentNode.querySelector(".condsug"), q=t.value.trim(), hits=condSugList(q), who=t.getAttribute("data-condwho")||"";
+  box.innerHTML=hits.map(function(c){ return '<button type="button" data-condadd="'+esc(c).replace(/"/g,"&quot;")+'" data-condwho="'+who+'">'+esc(c)+'</button>'; }).join("")+
+    (q&&!hits.some(function(h){ return h.toLowerCase()===q.toLowerCase(); })?'<button type="button" class="medtyped" data-condadd="'+esc(q).replace(/"/g,"&quot;")+'" data-condwho="'+who+'">Add &ldquo;'+esc(q)+'&rdquo;</button>':''); });
+document.addEventListener("keydown",function(e){ var t=e.target; if(e.key!=="Enter"||!t.classList||!t.classList.contains("condsinput")) return; e.preventDefault();
+  var f=t.parentNode.querySelector(".condsug button"); condSet(f?f.getAttribute("data-condadd"):t.value,t.getAttribute("data-condwho")||"",true); });
+document.addEventListener("click",function(e){ var a=e.target.closest&&e.target.closest("[data-condadd]"); if(a){ condSet(a.getAttribute("data-condadd"),a.getAttribute("data-condwho")||"",true); return; }
+  var d=e.target.closest&&e.target.closest("[data-conddel]"); if(d) condSet(d.getAttribute("data-conddel"),d.getAttribute("data-condwho")||"",false); });
 function medFlagHTML(who){
   who=who||"";
   var f=medFlags(who); if(!f.length) return "";

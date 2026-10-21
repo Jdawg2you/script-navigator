@@ -130,9 +130,10 @@ const ref = id => (num(id) ? num(id) + " " : "") + (H.N[id] ? H.N[id].t.replace(
 const TAG = { say: "SAY", ask: "ASK", do: "DO", dobig: "DO (big)", tip: "TIP", train: "TRAIN",
   warn: "WARN ★", note: "NOTE", paper: "PAPER", askif: "ASK" };
 const WIDGET = {
-  meds: L => "Medication entry" + (L.who === "sp" ? " — spouse's list" : ""),
+  meds: L => "Medication entry" + (L.who === "sp" ? " — spouse's list" : "") + (L.warn ? " — then ★ " + md(L.warn).text : ""),
   cfollow: L => "Follow-up questions for the conditions the medications point to" + (L.who === "sp" ? " — spouse" : ""),
   conds: L => "Condition checklist" + (L.who === "sp" ? " — spouse" : ""),
+  condsearch: L => "Condition search — type any condition (the ones no medication pointed at)" + (L.who === "sp" ? " — spouse" : ""),
   deps: () => "Children: name, date of birth, gender for each",
   docs: () => "Doctors to keep: name, must-keep, checked with their plan",
   fhgrid: L => L.rows === "preg"

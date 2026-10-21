@@ -1,6 +1,6 @@
 # Health Discovery — the live script
 
-**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ cae2366 2026-10-18 + uncommitted changes) by
+**Generated — do not edit by hand.** Printed from `LIB.health` in `index.html` (`portable` @ 0278379 2026-10-21 + uncommitted changes) by
 `node tools/emit-health-md.mjs`. The cards in `index.html` are the script; change them there and regenerate.
 
 Every line of every card, in card-number order. Tags:
@@ -392,11 +392,11 @@ _Card: opens the profile at *Health*._
 
 - **SAY** — Now a few health questions, so I know what you'll actually qualify for.
 - **ASK** — Are you on any medications right now?
-- **ON SCREEN** — Medication entry
-- **TIP** — Type them here and they land on the profile. It knows brand names and copes with a rough spelling. Working off paper instead? Just write them down.
-- **ON SCREEN** — Follow-up questions for the conditions the medications point to
+- **ON SCREEN** — Medication entry — then ★ **Spell them, per person.** “Alma Sartin” turned out to be olmesartan and cost a follow-up call on the Cosgriff case.
 - **DO** — The medications tell you the conditions. Answer the follow-ups they raise — you do not need to read a list of illnesses at someone.
-- **WARN ★** — **Spell them, per person.** “Alma Sartin” turned out to be olmesartan and cost a follow-up call on the Cosgriff case.
+- **ASK** — Do you have any conditions we haven't covered yet — anything with your heart, or anything else major or worth noting? It all comes back when they do your review.
+- **ON SCREEN** — Condition search — type any condition (the ones no medication pointed at)
+- **ON SCREEN** — Follow-up questions for the conditions the medications point to
 - **ASK** — And one I ask everybody — are you on any of the weight-loss or diabetes injections? Ozempic, Wegovy, Mounjaro, Zepbound, Saxenda, anything in that family? [On a GLP-1 now?: No · Yes]
 - **ASK** _only when On a GLP-1 now? (`glp1`) is “Yes”_ — Which one is it? ___(which GLP-1) — and is that for the diabetes, or for the weight? [For what: Diabetes · Weight loss · Both]
 - **ASK** _only when On a GLP-1 now? (`glp1`) is “Yes”_ — How long have you been on it? ___(how long on it)
@@ -468,11 +468,12 @@ _Card: opens the profile at *Spouse health*._
 
 - **SAY** — Now the same few questions about ___(spouse first name), so I know what they'll qualify for.
 - **ASK** — Is ___(spouse first name) on any medications right now?
-- **ON SCREEN** — Medication entry — spouse's list
+- **ON SCREEN** — Medication entry — spouse's list — then ★ **Spell them, per person.** It matters twice as much here: a medication logged against the wrong person rates the wrong life.
 - **TIP** — This is a separate list from yours. What goes in here is recorded as the spouse's, which is how the plan gets rated on the right person.
-- **ON SCREEN** — Follow-up questions for the conditions the medications point to — spouse
 - **DO** — Same rule as before — the medications tell you the conditions. Answer the follow-ups they raise. The full condition list is on the profile if you need it; you do not read it at someone.
-- **WARN ★** — **Spell them, per person.** It matters twice as much here: a medication logged against the wrong person rates the wrong life.
+- **ASK** — Does ___(spouse first name) have any conditions we haven't covered yet — anything with the heart, or anything else major or worth noting? It all comes back when they do the review.
+- **ON SCREEN** — Condition search — type any condition (the ones no medication pointed at) — spouse
+- **ON SCREEN** — Follow-up questions for the conditions the medications point to — spouse
 - **ASK** — And the same one I asked you — is ___(spouse first name) on any of the weight-loss or diabetes injections? [On a GLP-1 now?: No · Yes]
 - **ASK** _only when On a GLP-1 now? (`sp_glp1`) is “Yes”_ — Which one? ___(which GLP-1 for the spouse) — for the diabetes or the weight? [For what: Diabetes · Weight loss · Both] … How long? ___(how long the spouse has been on it)
 - **ASK** _only when On a GLP-1 now? (`sp_glp1`) is “Yes”_ — What do they pay a month for it? ___(what the spouse pays for it) — and where do they get it? [Where they get it: Pharmacy · Telehealth · Compounded · Other]
