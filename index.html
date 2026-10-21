@@ -491,6 +491,13 @@ footer{background:var(--navy);padding:10px 20px;display:flex;gap:8px;align-items
 .pfi.drv .chip.on{border-color:var(--golddk)}
 .pfi.drv i{color:var(--golddk)}
 .pfi .autonote{font-style:normal;font-size:11px;color:var(--golddk);margin:0 6px}
+.pfi.afcl i:after{content:none}
+.crule{display:inline-block;background:var(--gold);color:var(--navy)!important;font-weight:800;font-style:normal;margin-left:6px;font-size:8.5px;letter-spacing:.09em;padding:2px 5px;border-radius:4px;vertical-align:1px;text-decoration:none}
+.crule:hover{background:var(--golddk);color:#fff!important}
+.pfi.afcbad input{border-color:#c0392b!important;background:#fdecea!important;box-shadow:0 0 0 3px rgba(192,57,43,.22)!important;color:#8f1d12}
+.pfi.afcbad .chip.on{border-color:#c0392b!important;background:#fdecea!important;color:#8f1d12}
+.pfi.afcwarn input{border-color:#d8a23a!important;background:#fff8ec!important}
+.pfi.afcbad i,.pfi.afcbad i b{color:#8f1d12}
 .pfi.drv i:after{content:"CARRIER RULE";background:var(--gold);color:var(--navy);font-weight:800;
   margin-left:6px;font-size:8.5px;letter-spacing:.09em;padding:2px 5px;border-radius:4px;
   vertical-align:1px}
@@ -4188,10 +4195,12 @@ function cfollowHTML(names,all,who){
         /* The ANSWERS are per person too, not just the condition. Both of them can have
            diabetes, and one A1C box shared between two people records neither. */
         var k=(who?who+"_":"")+f.k;
-        var v=pVal(k), dv=f.drv?" drv":"";
-        if(f.opt) return '<span class="pfi'+dv+'"><i>'+pLabel(f)+'</i>'+(k==="bp_meds"&&P.bp_meds_auto&&!P.bp_meds_set?'<em class="autonote">counted from the medication list</em>':'')+f.opt.filter(function(x){return x!==""}).map(function(oo){
+        var v=pVal(k), dv=f.drv?" drv":"", rk=(f.drv&&typeof navAfcOn==="function"&&navAfcOn())?AFC_CK[c]:null;
+        var crule=rk&&rk[2]?'<a class="crule" href="'+AFC_GUIDE_URL+'" target="_blank" rel="noopener" title="ManhattanLife Affordable Choice guide, p.'+rk[2]+' — '+esc(rk[1]).replace(/"/g,"&quot;")+'">CARRIER RULE p.'+rk[2]+' &#8599;</a>':'';
+        if(crule) dv+=" afcl";
+        if(f.opt) return '<span class="pfi'+dv+'"><i>'+pLabel(f)+'</i>'+crule+(k==="bp_meds"&&P.bp_meds_auto&&!P.bp_meds_set?'<em class="autonote">counted from the medication list</em>':'')+f.opt.filter(function(x){return x!==""}).map(function(oo){
           return '<button type="button" class="chip'+(v===oo?" on":"")+'" data-pfset="'+k+'" data-pfval="'+oo+'">'+oo+'</button>';}).join("")+'</span>';
-        return '<span class="pfi'+dv+'"><i>'+pLabel(f)+'</i><input data-pk="'+k+'" data-inline="1" value="'+
+        return '<span class="pfi'+dv+'"><i>'+pLabel(f)+'</i>'+crule+'<input data-pk="'+k+'" data-inline="1" value="'+
                esc(v).replace(/"/g,"&quot;")+'"></span>';
       }).join("")+'</div>');
   });
@@ -5290,11 +5299,72 @@ function navAfcCondHTML(who){ if(!navAfcOn()) return ""; who=who||"";
     if(res==="bad") return '<div class="afcflag bad"><span class="afct">✕ '+lbl+' — <b>ManhattanLife Affordable Choice is unlikely.</b> '+esc(Q.m[st])+cite+'</span>'+chg+'</div>';
     if(res==="warn") return '<div class="afcflag chk"><span class="afct">'+lbl+' — '+esc(Q.m[st])+cite+'</span>'+chg+'</div>';
     return '<div class="afcflag ok"><span class="afct">✓ '+lbl+' — '+esc(Q.m[st])+'</span>'+chg+'</div>'; }).join(""); }
-function navAfcRefresh(){ [].forEach.call(document.querySelectorAll("[data-afcwrap]"),function(w){ var who=w.getAttribute("data-who")||"";
+/* ===== The follow-up answers decide ManhattanLife's question (Jesse, 21 Oct) =====
+   A "When" of 2024 for a heart attack, "Another heart attack since", insulin, three BP medications... each is the
+   rule itself. Inside MyPopPro the field that breaks the rule turns red (amber if it only might), its CARRIER RULE
+   badge links to the guide page, and the condition's ManhattanLife answer is set from it (the agent can change it). */
+function navAfcWhen(v){ v=String(v||"").trim(); if(!v) return null; var now=new Date(), m;
+  if((m=v.match(/(\d+)\s*(years?|yrs?)\s*ago/i))) return {yrs:+m[1],exact:false};
+  if((m=v.match(/(\d+)\s*(months?|mos?)\s*ago/i))) return {yrs:+m[1]/12,exact:true};
+  if((m=v.match(/^(\d{1,2})\s*[\/\-.]\s*(\d{2}|\d{4})$/))){ var y=+m[2]<100?2000+(+m[2]):+m[2]; return {yrs:(now-new Date(y,+m[1]-1,15))/31557600000,exact:true}; }
+  if((m=v.match(/(19|20)\d{2}/))){ var y2=+m[0], mo=v.match(/jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec/i);
+    if(mo){ var mi="janfebmaraprmayjunjulaugsepoctnovdec".indexOf(mo[0].toLowerCase())/3; return {yrs:(now-new Date(y2,mi,15))/31557600000,exact:true}; }
+    return {yrs:now.getFullYear()-y2,exact:false,year:true}; }
+  return null; }
+function navAfcAgeAt(who,w){ if(!w) return null; var dob=String(P[who?"sp_dob":"dob"]||""), a=+(P[who?"sp_age":"age"]||0), m=dob.match(/(19|20)\d{2}/);
+  var now=(m?new Date().getFullYear()-(+m[0]):a)||0; return now?now-w.yrs:null; }
+/* within N years: true / false / "edge" (a bare year exactly N back) */
+function navAfcWithin(w,n){ if(!w) return null; if(w.year&&!w.exact&&Math.round(w.yrs)===n) return "edge"; return w.yrs<n; }
+function navAfcDerive(who,c){ var g=function(k){ return String(pVal((who?who+"_":"")+k)||""); }, R=function(res,keys,why){ return {res:res,keys:keys,why:why}; };
+  if(c==="Heart attack"){ var w=navAfcWhen(g("dx_ha")), since=g("ha_since"), in5=navAfcWithin(w,5), age=navAfcAgeAt(who,w);
+    if(since==="Another heart attack") return R("bad",["ha_since"],"More than one heart attack.");
+    if(since==="Stent or bypass since") return R("bad",["ha_since"],"A stent or bypass is on the uninsurable list.");
+    if(since==="Chest pain getting worse") return R("bad",["ha_since"],"Angina is on the uninsurable list.");
+    if(in5===true&&age!=null&&age<45) return R("bad",["dx_ha"],"A heart attack before age 45.");
+    if(in5===true||in5==="edge") return R("warn",["dx_ha"],in5==="edge"?"Right at five years — check the month.":(age==null?"Within five years — before age 45 declines; add their date of birth to check.":"Within five years, one heart attack after 45."));
+    if(in5===false) return R("ok",["dx_ha"],"More than five years ago."); return null; }
+  if(c==="Stroke / TIA"){ var w2=navAfcWhen(g("dx_str")), in52=navAfcWithin(w2,5), age2=navAfcAgeAt(who,w2), def=g("str_deficit");
+    if(in52===true&&def==="Yes") return R("bad",["dx_str","str_deficit"],"Within five years, with lasting effects.");
+    if(in52===true&&age2!=null&&age2<45) return R("bad",["dx_str"],"Before age 45.");
+    if(in52===true||in52==="edge") return R("warn",["dx_str"],"Within five years.");
+    if(in52===false) return R("ok",["dx_str"],"More than five years ago."); return null; }
+  var five=function(k){ var w=navAfcWhen(g(k)), i=navAfcWithin(w,5); if(i===true) return R("bad",[k],"Within the five-year look-back."); if(i==="edge") return R("warn",[k],"Right at five years — check the month."); if(i===false) return R("ok",[k],"More than five years ago."); return null; };
+  if(c==="Stent") return five("dx_stent");
+  if(c==="Heart surgery") return five("dx_hs");
+  if(c==="Cancer"||c==="Active cancer"){ var st=g("ca_status"), ty=g("ca_type");
+    if(st==="In treatment"||st==="Active") return R("bad",["ca_status"],"Treatment within the last five years.");
+    if(/melanoma|leuk|lymphoma|hodgkin/i.test(ty)) return R("bad",["ca_type"],"Melanoma, leukemia, Hodgkin’s or non-Hodgkin’s.");
+    var lt=five(g("ca_last")?"ca_last":"dx_ca"); if(lt&&lt.res==="ok") return null;   /* still one cancer only? - the question asks */
+    return lt; }
+  if(c==="Defibrillator / pacemaker"){ var w3=navAfcWhen(g("dx_pace")), i2=navAfcWithin(w3,2); if(i2===true) return R("bad",["dx_pace"],"Not yet stable for two years."); if(i2===false||i2==="edge") return R("warn",["dx_pace"],"Two years or more — can be considered."); return null; }
+  if(c==="Diabetes"){ var tx=g("dia_tx"); if(tx==="Insulin"||tx==="Both") return R("bad",["dia_tx"],"Insulin within the last five years declines.");
+    if(g("dia_neuro")==="Yes") return R("bad",["dia_neuro"],"A diabetic complication.");
+    if(parseFloat(g("a1c"))>7.9) return R("warn",["a1c"],"A1c over 7.9 — declines if they also have high blood pressure and cholesterol."); return null; }
+  if(c==="High blood pressure"){ var bm=g("bp_meds"); if(bm==="3"||bm==="4 or more") return R("bad",["bp_meds"],"More than two blood-pressure medications."); return null; }
+  if(c==="COPD"&&g("copd_ox")==="Yes") return R("bad",["copd_ox"],"On oxygen.");
+  if(c==="Kidney disease / failure"&&/Advanced|dialysis/.test(g("kid_stage"))) return R("bad",["kid_stage"],"Kidney failure or dialysis.");
+  return null; }
+/* the answer to ManhattanLife's question that this result means, for this condition's kind */
+function navAfcDeriveSet(who){ if(!navAfcOn()) return; var o=P.afc_cond||{}, auto=P.afc_auto||{}, changed=false;
+  (P[CONDKEY(who)]||[]).forEach(function(c){ var k0=AFC_CK[c]; if(!k0) return; var Q=AFC_CQ[k0[0]], d=navAfcDerive(who,c), key=navAfcWho(who)+"|"+c; if(!Q) return;
+    var v=null; if(d) Q.b.some(function(b){ if(Q.r[b[0]]===(d.res==="warn"?"warn":d.res)){ v=b[0]; return true; } return false; });
+    if(d&&!v&&d.res==="ok"&&Q.r.old) v="old";   /* outside the look-back - no button says that, the date does */
+    if(v&&o[key]!==v&&(!o[key]||auto[key])){ o[key]=v; auto[key]=d.why; changed=true; }
+    else if(!v&&auto[key]&&o[key]){ delete o[key]; delete auto[key]; changed=true; } });
+  if(changed){ P.afc_cond=o; P.afc_auto=auto; pStore(); } }
+function navAfcPaint(){ if(!navAfcOn()) return; ["",'sp'].forEach(function(who){ navAfcDeriveSet(who); (P[CONDKEY(who)]||[]).forEach(function(c){ var d=navAfcDerive(who,c);
+    (PF_FOLLOW[c]||[]).forEach(function(f){ var k=(who?who+"_":"")+f.k; [].forEach.call(document.querySelectorAll('.cfollow [data-pk="'+k+'"], .cfollow [data-pfset="'+k+'"]'),function(el){ var box=el.closest(".pfi"); if(!box) return;
+      var hit=d&&d.keys.indexOf(f.k)>=0; box.classList.toggle("afcbad",!!hit&&d.res==="bad"); box.classList.toggle("afcwarn",!!hit&&d.res==="warn"); box.title=hit?d.why:""; }); }); }); });
+  navAfcRefresh(); }
+document.addEventListener("input",function(e){ if(e.target.closest&&e.target.closest(".cfollow")) setTimeout(navAfcPaint,0); });
+document.addEventListener("click",function(e){ if(e.target.closest&&e.target.closest(".cfollow [data-pfset]")) setTimeout(navAfcPaint,60); });
+function navAfcRefresh(){ if(!navAfcRefresh.busy&&typeof navAfcPaint==="function"){ navAfcRefresh.busy=true; try{ navAfcPaint(); } finally{ navAfcRefresh.busy=false; } return; }
+  [].forEach.call(document.querySelectorAll("[data-afcwrap]"),function(w){ var who=w.getAttribute("data-who")||"";
   w.innerHTML=w.getAttribute("data-afcwrap")==="med"?navAfcMedHTML(who):navAfcCondHTML(who); }); }
 document.addEventListener("click",function(e){ var b=e.target.closest&&e.target.closest("[data-navafc]"); if(!b) return;
   var kind=b.getAttribute("data-navafc"), key=b.getAttribute("data-k"), v=b.getAttribute("data-v"), f=kind==="med"?"afc_med":"afc_cond", o=P[f]||{};
-  if(v) o[key]=v; else delete o[key]; P[f]=o; pStore(); navAfcRefresh(); });
+  if(v) o[key]=v; else delete o[key]; P[f]=o; if(P.afc_auto) delete P.afc_auto[key];   /* the agent's own answer: the dates stop overriding it */
+  pStore(); navAfcRefresh(); });
 /* ===== Condition search (Jesse, 21 Oct): type a condition the way you type a medication ===== */
 function condSearchHTML(who){ who=who||""; var on=P[CONDKEY(who)]||[];
   return '<div class="medchips" data-condchips="'+who+'">'+on.map(function(c){ return '<span class="medchip">'+esc(c)+'<button type="button" data-conddel="'+esc(c).replace(/"/g,"&quot;")+'" data-condwho="'+who+'" title="Remove">&times;</button></span>'; }).join("")+'</div>'+
@@ -7916,6 +7986,8 @@ if(HOST){
      slide-out starts closed and is there only if the agent wants it. Stand-alone, nothing here changes. */
   var _closeDrawerHost=closeDrawer; closeDrawer=function(){ _closeDrawerHost.apply(null,arguments); PROFILE_ON=true; if(typeof render==="function"&&$("script")) render(); };
   var _openDrawerHost=openDrawer; openDrawer=function(){ _openDrawerHost.apply(null,arguments); PROFILE_ON=true; };
+  /* the ManhattanLife colouring of follow-up fields is applied after each card draws */
+  var _renderHost=render; render=function(){ var r=_renderHost.apply(this,arguments); setTimeout(function(){ if(typeof navAfcPaint==="function") navAfcPaint(); },0); return r; };
   /* openScript('health') queues its own pOpen() for the next tick - close after it, so the call starts with the slide-out shut */
   var hostShut=function(){ if($("drawer")&&$("drawer").classList.contains("open")) _closeDrawerHost(); PROFILE_ON=true; if(typeof render==="function"&&$("script")) render(); };
   hostShut(); setTimeout(hostShut,0);
