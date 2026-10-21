@@ -5303,7 +5303,8 @@ function pMedsHTML(inCard,who){
 function condsHTMLFor(who){
   who=who||"";
   var key=CONDKEY(who), on=(P[key]||[]);
-  return '<div class="conds">'+PF_CONDS.map(function(c){
+  /* any condition on the case that isn't one of these names (typed in MyPopPro) still shows, ticked, so it can be taken off */
+  return '<div class="conds">'+PF_CONDS.concat(on.filter(function(c){ return PF_CONDS.indexOf(c)<0; })).map(function(c){
     var isOn=on.indexOf(c)>-1;
     return '<label class="'+(isOn?"on":"")+'"><input type="checkbox" data-cond="'+esc(c).replace(/"/g,"&quot;")+
            '" data-condwho="'+who+'"'+(isOn?" checked":"")+'>'+c+'</label>';
@@ -6493,7 +6494,7 @@ function isPopProFile(o){ return !!(o && o.intake && (o.packages||o.aca||o.clien
 function profileFromFile(o){
   if(!isPopProFile(o)) return o;                                   /* a navigator profile, with or without _pop */
   var base=o.nav&&typeof o.nav==="object"?JSON.parse(JSON.stringify(o.nav)):{}, mapped=fromPopPro(o);
-  for(var k in mapped){ var v=mapped[k]; if(v!==undefined && v!==null && v!=="" && !(Array.isArray(v)&&!v.length)) base[k]=v; }
+  for(var k in mapped){ var v=mapped[k]; if(v!==undefined && v!==null && v!=="" && (!(Array.isArray(v)&&!v.length)||k==="conds"||k==="sp_conds")) base[k]=v; }
   base._pop=popPart(o); return base; }
 function fromPopPro(o){
   var c=o.client||{}, I=o.intake||{}, out={};
@@ -6551,8 +6552,12 @@ function fromPopPro(o){
   var theirs=ml.filter(function(m){ return m.forS===true; }).map(function(m){ return m.name; });
   if(mine.length){ out.meds_list=mine; out.meds=mine.join(", "); }
   if(theirs.length) out.sp_meds_list=theirs;
-  var cs=(I.conds||[]).map(function(x){ return x && x.name; }).filter(Boolean);
-  if(cs.length) out.conds=cs;
+  /* Conditions come back to the person they were ticked against (Jesse, 21 Oct). Ones MyPopPro added because of a
+     medication (fromMed / fromAfc) stay in MyPopPro - they are its own wording and leave with the medication. The
+     Intake list is the truth: sent even when empty, so a condition taken off there comes off here. */
+  if(Array.isArray(I.conds)){ var own=I.conds.filter(function(x){ return x && x.name && !x.fromMed && !x.fromAfc; });
+    out.conds=own.filter(function(x){ return x.forP!==false; }).map(function(x){ return x.name; });
+    out.sp_conds=own.filter(function(x){ return x.forS===true; }).map(function(x){ return x.name; }); }
   var docs=[I.docs1,I.docs2,I.docs3].filter(Boolean);
   var onAca=I.keepaca==="yes"?"Yes":(I.keepaca==="no"?"No":"");
   if(docs.length){ out.keep_docs="Yes"; out.docs=docs.map(function(d){ return onAca?{n:d,aca:onAca}:{n:d}; }); }
