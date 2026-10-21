@@ -6630,7 +6630,12 @@ function isPopProFile(o){ return !!(o && o.intake && (o.packages||o.aca||o.clien
 function profileFromFile(o){
   if(!isPopProFile(o)) return o;                                   /* a navigator profile, with or without _pop */
   var base=o.nav&&typeof o.nav==="object"?JSON.parse(JSON.stringify(o.nav)):{}, mapped=fromPopPro(o);
-  for(var k in mapped){ var v=mapped[k]; if(v!==undefined && v!==null && v!=="" && (!(Array.isArray(v)&&!v.length)||k==="conds"||k==="sp_conds")) base[k]=v; }
+  /* Discovery is the record of the call (Jesse, 21 Oct): once there is a saved call, its own medication and condition
+     lists stand - deleting one on the Intake (after more conversation) leaves it here as it was said. Before any call,
+     the Intake's lists seed it. */
+  var CALLKEYS={meds_list:1,sp_meds_list:1,meds:1,conds:1,sp_conds:1}, hadCall=!!(o.nav&&typeof o.nav==="object"&&(Array.isArray(o.nav.meds_list)||Array.isArray(o.nav.conds)||Array.isArray(o.nav.sp_meds_list)||Array.isArray(o.nav.sp_conds)));
+  for(var k in mapped){ var v=mapped[k]; if(hadCall&&CALLKEYS[k]) continue;
+    if(v!==undefined && v!==null && v!=="" && !(Array.isArray(v)&&!v.length)) base[k]=v; }
   base._pop=popPart(o); return base; }
 function fromPopPro(o){
   var c=o.client||{}, I=o.intake||{}, out={};
