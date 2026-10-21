@@ -5689,7 +5689,11 @@ document.addEventListener("click",function(e){
          medAdd(a.getAttribute("data-medadd"), inp, inp&&inp.value); return; }
   var d=e.target.closest && e.target.closest("[data-meddel]");
   if(d){ var dw=d.getAttribute("data-medwho")||"", dk=MEDKEY(dw);
-         var i=+d.getAttribute("data-meddel"); var arr=(P[dk]||[]).slice(); arr.splice(i,1);
+         var i=+d.getAttribute("data-meddel"); var arr=(P[dk]||[]).slice(), gone=arr[i]; arr.splice(i,1);
+         /* Deleted = forgotten everywhere (Jesse, 21 Oct): its "No, that's not why" answers and its ManhattanLife answer go
+            with it, so typing it again asks again - unless it is still on the list another time. */
+         if(gone!=null&&arr.indexOf(gone)<0){ P.med_skip=(P.med_skip||[]).filter(function(k){ return k.indexOf(dw+gone+"|")!==0; });
+           if(P.afc_med) delete P.afc_med[(dw?"s":"p")+"|"+gone]; }
          P[dk]=arr; if(!dw){ P.meds=arr.join(", "); bpSync(); }
          medCondPrune(dw);
          pStore(); pMedsRefresh(); pFlash();
