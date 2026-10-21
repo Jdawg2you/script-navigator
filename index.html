@@ -4303,6 +4303,12 @@ function medCondsOn(who){
   });
   return out;
 }
+/* Jesse, 21 Oct: a condition added from "X is usually for Y - Yes, add it" comes off when the last medication
+   pointing at it does. Conditions ticked or typed in their own right are never touched. */
+function medCondPrune(who){ who=who||""; var fm=P.cond_from_med||{}, ck=CONDKEY(who), keep={};
+  (P[MEDKEY(who)]||[]).forEach(function(m){ (MED_FOR[m.replace(/\s*\(.*\)$/,"")]||[]).forEach(function(c){ keep[c]=1; }); });
+  P[ck]=(P[ck]||[]).filter(function(c){ if(fm[who+"|"+c]&&!keep[c]){ delete fm[who+"|"+c]; return false; } return true; });
+  P.cond_from_med=fm; }
 function medFlags(who){
   who=who||"";
   var on=(P[CONDKEY(who)]||[]), out=[];
@@ -5263,7 +5269,8 @@ document.addEventListener("click",function(e){
   var a=e.target.closest && e.target.closest("[data-cond-add]");
   if(a){ var c=a.getAttribute("data-cond-add"), aw=a.getAttribute("data-condwho")||"", ak=CONDKEY(aw);
          var arr=(P[ak]||[]).slice();
-         if(arr.indexOf(c)<0) arr.push(c); P[ak]=arr; pStore();
+         if(arr.indexOf(c)<0){ arr.push(c); var fm=P.cond_from_med||{}; fm[aw+"|"+c]=1; P.cond_from_med=fm; }   /* added because of a medication - goes when no medication points at it */
+         P[ak]=arr; pStore();
          if(document.getElementById("profbody")) pRender();
          /* The card carries the follow-up questions for this condition. Accepting the
             suggestion without redrawing left them on the profile panel only, which is the
@@ -5553,6 +5560,7 @@ document.addEventListener("click",function(e){
   if(d){ var dw=d.getAttribute("data-medwho")||"", dk=MEDKEY(dw);
          var i=+d.getAttribute("data-meddel"); var arr=(P[dk]||[]).slice(); arr.splice(i,1);
          P[dk]=arr; if(!dw){ P.meds=arr.join(", "); bpSync(); }
+         medCondPrune(dw);
          pStore(); pMedsRefresh(); pFlash();
          if(typeof render==="function" && $("script")) render(); }
 });
